@@ -1,8 +1,0 @@
-#ifndef __sun_security_jca_GetInstance_S_Instance__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\jca\GetInstance$Instance.smali
-namespace sun::security::jca{
-class GetInstance_S_Instance;
-}; // namespace sun::security::jca
-
-#endif //__sun_security_jca_GetInstance_S_Instance__
-

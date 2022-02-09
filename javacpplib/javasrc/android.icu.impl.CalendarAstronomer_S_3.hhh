@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_CalendarAstronomer_S_3__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\CalendarAstronomer$3.smali
+namespace android::icu::impl{
+class CalendarAstronomer_S_3;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_CalendarAstronomer_S_3__
+

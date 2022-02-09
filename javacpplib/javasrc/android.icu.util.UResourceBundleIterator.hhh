@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_UResourceBundleIterator__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\UResourceBundleIterator.smali
+namespace android::icu::util{
+class UResourceBundleIterator;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_UResourceBundleIterator__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_util_calendar_LocalGregorianCalendar__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\calendar\LocalGregorianCalendar.smali
-namespace sun::util::calendar{
-class LocalGregorianCalendar;
-}; // namespace sun::util::calendar
-
-#endif //__sun_util_calendar_LocalGregorianCalendar__
-

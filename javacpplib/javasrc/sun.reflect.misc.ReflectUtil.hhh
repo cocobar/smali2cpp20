@@ -1,8 +1,0 @@
-#ifndef __sun_reflect_misc_ReflectUtil__
-// Type L:\smali2cpp20\x64\Release\out\sun\reflect\misc\ReflectUtil.smali
-namespace sun::reflect::misc{
-class ReflectUtil;
-}; // namespace sun::reflect::misc
-
-#endif //__sun_reflect_misc_ReflectUtil__
-

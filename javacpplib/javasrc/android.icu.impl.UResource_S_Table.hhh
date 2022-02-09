@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_UResource_S_Table__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\UResource$Table.smali
+namespace android::icu::impl{
+class UResource_S_Table;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_UResource_S_Table__
+

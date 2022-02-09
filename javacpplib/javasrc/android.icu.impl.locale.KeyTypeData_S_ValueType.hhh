@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_locale_KeyTypeData_S_ValueType__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\locale\KeyTypeData$ValueType.smali
+namespace android::icu::impl::locale{
+class KeyTypeData_S_ValueType;
+}; // namespace android::icu::impl::locale
+
+#endif //__android_icu_impl_locale_KeyTypeData_S_ValueType__
+

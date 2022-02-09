@@ -1,8 +1,0 @@
-#ifndef __sun_security_util_ObjectIdentifier_S_HugeOidNotSupportedByOldJDK__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\util\ObjectIdentifier$HugeOidNotSupportedByOldJDK.smali
-namespace sun::security::util{
-class ObjectIdentifier_S_HugeOidNotSupportedByOldJDK;
-}; // namespace sun::security::util
-
-#endif //__sun_security_util_ObjectIdentifier_S_HugeOidNotSupportedByOldJDK__
-

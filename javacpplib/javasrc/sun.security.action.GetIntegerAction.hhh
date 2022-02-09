@@ -1,8 +1,0 @@
-#ifndef __sun_security_action_GetIntegerAction__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\action\GetIntegerAction.smali
-namespace sun::security::action{
-class GetIntegerAction;
-}; // namespace sun::security::action
-
-#endif //__sun_security_action_GetIntegerAction__
-

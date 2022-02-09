@@ -1,0 +1,8 @@
+#ifndef __android_system_ErrnoException__
+// Type L:\smali2cpp20\x64\Release\out\android\system\ErrnoException.smali
+namespace android::system{
+class ErrnoException;
+}; // namespace android::system
+
+#endif //__android_system_ErrnoException__
+

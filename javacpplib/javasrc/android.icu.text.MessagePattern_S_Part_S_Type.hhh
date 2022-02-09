@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_MessagePattern_S_Part_S_Type__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\MessagePattern$Part$Type.smali
+namespace android::icu::text{
+class MessagePattern_S_Part_S_Type;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_MessagePattern_S_Part_S_Type__
+

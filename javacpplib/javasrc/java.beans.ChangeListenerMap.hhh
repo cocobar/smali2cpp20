@@ -1,0 +1,8 @@
+#ifndef __java_beans_ChangeListenerMap__
+// Type L:\smali2cpp20\x64\Release\out\java\beans\ChangeListenerMap.smali
+namespace java::beans{
+class ChangeListenerMap;
+}; // namespace java::beans
+
+#endif //__java_beans_ChangeListenerMap__
+

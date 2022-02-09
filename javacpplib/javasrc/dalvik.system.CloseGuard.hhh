@@ -1,0 +1,8 @@
+#ifndef __dalvik_system_CloseGuard__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\system\CloseGuard.smali
+namespace dalvik::system{
+class CloseGuard;
+}; // namespace dalvik::system
+
+#endif //__dalvik_system_CloseGuard__
+

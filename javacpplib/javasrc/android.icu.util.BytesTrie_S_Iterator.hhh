@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_BytesTrie_S_Iterator__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\BytesTrie$Iterator.smali
+namespace android::icu::util{
+class BytesTrie_S_Iterator;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_BytesTrie_S_Iterator__
+

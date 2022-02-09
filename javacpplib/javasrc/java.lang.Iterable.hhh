@@ -1,0 +1,9 @@
+#ifndef __java_lang_Iterable__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\Iterable.smali
+namespace java::lang{
+template <typename T>
+class Iterable;
+}; // namespace java::lang
+
+#endif //__java_lang_Iterable__
+

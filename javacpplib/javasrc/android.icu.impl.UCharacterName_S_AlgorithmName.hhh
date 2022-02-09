@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_UCharacterName_S_AlgorithmName__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\UCharacterName$AlgorithmName.smali
+namespace android::icu::impl{
+class UCharacterName_S_AlgorithmName;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_UCharacterName_S_AlgorithmName__
+

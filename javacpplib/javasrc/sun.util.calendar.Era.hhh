@@ -1,8 +1,0 @@
-#ifndef __sun_util_calendar_Era__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\calendar\Era.smali
-namespace sun::util::calendar{
-class Era;
-}; // namespace sun::util::calendar
-
-#endif //__sun_util_calendar_Era__
-

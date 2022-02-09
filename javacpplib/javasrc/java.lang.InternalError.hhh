@@ -1,0 +1,8 @@
+#ifndef __java_lang_InternalError__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\InternalError.smali
+namespace java::lang{
+class InternalError;
+}; // namespace java::lang
+
+#endif //__java_lang_InternalError__
+

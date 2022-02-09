@@ -1,8 +1,0 @@
-#ifndef __sun_security_x509_KeyUsageExtension__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\KeyUsageExtension.smali
-namespace sun::security::x509{
-class KeyUsageExtension;
-}; // namespace sun::security::x509
-
-#endif //__sun_security_x509_KeyUsageExtension__
-

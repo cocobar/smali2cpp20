@@ -1,8 +1,0 @@
-#ifndef __sun_security_x509_CertificateValidity__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\CertificateValidity.smali
-namespace sun::security::x509{
-class CertificateValidity;
-}; // namespace sun::security::x509
-
-#endif //__sun_security_x509_CertificateValidity__
-

@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_duration_impl_RecordReader__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\duration\impl\RecordReader.smali
+namespace android::icu::impl::duration::impl{
+class RecordReader;
+}; // namespace android::icu::impl::duration::impl
+
+#endif //__android_icu_impl_duration_impl_RecordReader__
+

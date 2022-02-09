@@ -1,0 +1,8 @@
+#ifndef __java_lang_CharSequence__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\CharSequence.smali
+namespace java::lang{
+class CharSequence;
+}; // namespace java::lang
+
+#endif //__java_lang_CharSequence__
+

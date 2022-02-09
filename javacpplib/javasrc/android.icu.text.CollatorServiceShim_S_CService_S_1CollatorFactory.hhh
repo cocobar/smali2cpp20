@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_CollatorServiceShim_S_CService_S_1CollatorFactory__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\CollatorServiceShim$CService$1CollatorFactory.smali
+namespace android::icu::text{
+class CollatorServiceShim_S_CService_S_1CollatorFactory;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_CollatorServiceShim_S_CService_S_1CollatorFactory__
+

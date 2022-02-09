@@ -1,0 +1,8 @@
+#ifndef __com_sun_security_cert_internal_x509_X509V1CertImpl__
+// Type L:\smali2cpp20\x64\Release\out\com\sun\security\cert\internal\x509\X509V1CertImpl.smali
+namespace com::sun::security::cert::internal::x509{
+class X509V1CertImpl;
+}; // namespace com::sun::security::cert::internal::x509
+
+#endif //__com_sun_security_cert_internal_x509_X509V1CertImpl__
+

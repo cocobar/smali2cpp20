@@ -1,0 +1,8 @@
+#ifndef __java_io_CharArrayWriter__
+// Type L:\smali2cpp20\x64\Release\out\java\io\CharArrayWriter.smali
+namespace java::io{
+class CharArrayWriter;
+}; // namespace java::io
+
+#endif //__java_io_CharArrayWriter__
+

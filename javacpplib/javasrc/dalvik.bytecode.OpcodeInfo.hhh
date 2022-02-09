@@ -1,0 +1,8 @@
+#ifndef __dalvik_bytecode_OpcodeInfo__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\bytecode\OpcodeInfo.smali
+namespace dalvik::bytecode{
+class OpcodeInfo;
+}; // namespace dalvik::bytecode
+
+#endif //__dalvik_bytecode_OpcodeInfo__
+

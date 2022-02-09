@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_Calendar_S_CalType__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\Calendar$CalType.smali
+namespace android::icu::util{
+class Calendar_S_CalType;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_Calendar_S_CalType__
+

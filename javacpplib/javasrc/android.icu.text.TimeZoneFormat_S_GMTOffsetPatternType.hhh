@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_TimeZoneFormat_S_GMTOffsetPatternType__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\TimeZoneFormat$GMTOffsetPatternType.smali
+namespace android::icu::text{
+class TimeZoneFormat_S_GMTOffsetPatternType;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_TimeZoneFormat_S_GMTOffsetPatternType__
+

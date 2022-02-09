@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_RelativeDateTimeFormatter_S_RelativeDateTimeUnit__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\RelativeDateTimeFormatter$RelativeDateTimeUnit.smali
+namespace android::icu::text{
+class RelativeDateTimeFormatter_S_RelativeDateTimeUnit;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_RelativeDateTimeFormatter_S_RelativeDateTimeUnit__
+

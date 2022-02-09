@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_LocaleMatcher_S_ScoreData__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\LocaleMatcher$ScoreData.smali
+namespace android::icu::util{
+class LocaleMatcher_S_ScoreData;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_LocaleMatcher_S_ScoreData__
+

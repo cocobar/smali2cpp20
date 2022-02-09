@@ -1,0 +1,8 @@
+#ifndef __java_lang_InterruptedException__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\InterruptedException.smali
+namespace java::lang{
+class InterruptedException;
+}; // namespace java::lang
+
+#endif //__java_lang_InterruptedException__
+

@@ -1,0 +1,8 @@
+#ifndef __android_util_MutableFloat__
+// Type L:\smali2cpp20\x64\Release\out\android\util\MutableFloat.smali
+namespace android::util{
+class MutableFloat;
+}; // namespace android::util
+
+#endif //__android_util_MutableFloat__
+

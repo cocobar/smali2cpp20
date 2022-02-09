@@ -1,0 +1,8 @@
+#ifndef __android_icu_lang_UScriptRun_S_ParenStackEntry__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\lang\UScriptRun$ParenStackEntry.smali
+namespace android::icu::lang{
+class UScriptRun_S_ParenStackEntry;
+}; // namespace android::icu::lang
+
+#endif //__android_icu_lang_UScriptRun_S_ParenStackEntry__
+

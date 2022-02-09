@@ -1,0 +1,8 @@
+#ifndef __java_beans_PropertyChangeListener__
+// Type L:\smali2cpp20\x64\Release\out\java\beans\PropertyChangeListener.smali
+namespace java::beans{
+class PropertyChangeListener;
+}; // namespace java::beans
+
+#endif //__java_beans_PropertyChangeListener__
+

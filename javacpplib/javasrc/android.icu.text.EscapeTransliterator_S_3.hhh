@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_EscapeTransliterator_S_3__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\EscapeTransliterator$3.smali
+namespace android::icu::text{
+class EscapeTransliterator_S_3;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_EscapeTransliterator_S_3__
+

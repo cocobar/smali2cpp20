@@ -1,0 +1,8 @@
+#ifndef __dalvik_system___S_Lambda_S_xxvwQBVHC44UYbpcpA8j0sUqLOo__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\system\-$Lambda$xxvwQBVHC44UYbpcpA8j0sUqLOo.smali
+namespace dalvik::system{
+class __S_Lambda_S_xxvwQBVHC44UYbpcpA8j0sUqLOo;
+}; // namespace dalvik::system
+
+#endif //__dalvik_system___S_Lambda_S_xxvwQBVHC44UYbpcpA8j0sUqLOo__
+

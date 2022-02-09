@@ -1,0 +1,8 @@
+#ifndef __dalvik_system_AllocationLimitError__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\system\AllocationLimitError.smali
+namespace dalvik::system{
+class AllocationLimitError;
+}; // namespace dalvik::system
+
+#endif //__dalvik_system_AllocationLimitError__
+

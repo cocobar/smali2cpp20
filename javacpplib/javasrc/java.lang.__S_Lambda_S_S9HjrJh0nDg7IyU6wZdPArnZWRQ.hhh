@@ -1,0 +1,8 @@
+#ifndef __java_lang___S_Lambda_S_S9HjrJh0nDg7IyU6wZdPArnZWRQ__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\-$Lambda$S9HjrJh0nDg7IyU6wZdPArnZWRQ.smali
+namespace java::lang{
+class __S_Lambda_S_S9HjrJh0nDg7IyU6wZdPArnZWRQ;
+}; // namespace java::lang
+
+#endif //__java_lang___S_Lambda_S_S9HjrJh0nDg7IyU6wZdPArnZWRQ__
+

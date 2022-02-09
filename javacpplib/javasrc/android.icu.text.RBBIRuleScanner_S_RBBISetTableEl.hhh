@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_RBBIRuleScanner_S_RBBISetTableEl__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\RBBIRuleScanner$RBBISetTableEl.smali
+namespace android::icu::text{
+class RBBIRuleScanner_S_RBBISetTableEl;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_RBBIRuleScanner_S_RBBISetTableEl__
+

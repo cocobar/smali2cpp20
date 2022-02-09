@@ -1,0 +1,8 @@
+#ifndef __java_lang_AbstractStringBuilder__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\AbstractStringBuilder.smali
+namespace java::lang{
+class AbstractStringBuilder;
+}; // namespace java::lang
+
+#endif //__java_lang_AbstractStringBuilder__
+

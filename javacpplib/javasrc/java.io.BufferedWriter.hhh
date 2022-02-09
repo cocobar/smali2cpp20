@@ -1,0 +1,8 @@
+#ifndef __java_io_BufferedWriter__
+// Type L:\smali2cpp20\x64\Release\out\java\io\BufferedWriter.smali
+namespace java::io{
+class BufferedWriter;
+}; // namespace java::io
+
+#endif //__java_io_BufferedWriter__
+

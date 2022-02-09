@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_DictionaryBreakEngine_S_PossibleWord__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\DictionaryBreakEngine$PossibleWord.smali
+namespace android::icu::text{
+class DictionaryBreakEngine_S_PossibleWord;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_DictionaryBreakEngine_S_PossibleWord__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_ICUResourceBundleImpl__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ICUResourceBundleImpl.smali
+namespace android::icu::impl{
+class ICUResourceBundleImpl;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_ICUResourceBundleImpl__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_LocaleDisplayNames_S_UiListItem__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\LocaleDisplayNames$UiListItem.smali
+namespace android::icu::text{
+class LocaleDisplayNames_S_UiListItem;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_LocaleDisplayNames_S_UiListItem__
+

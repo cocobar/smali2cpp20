@@ -1,8 +1,0 @@
-#ifndef __sun_nio_fs_UnixDirectoryStream__
-// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixDirectoryStream.smali
-namespace sun::nio::fs{
-class UnixDirectoryStream;
-}; // namespace sun::nio::fs
-
-#endif //__sun_nio_fs_UnixDirectoryStream__
-

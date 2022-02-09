@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_UCharacterNameChoice__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\UCharacterNameChoice.smali
+namespace android::icu::impl{
+class UCharacterNameChoice;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_UCharacterNameChoice__
+

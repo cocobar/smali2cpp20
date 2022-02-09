@@ -1,0 +1,9 @@
+#ifndef __android_icu_impl_ICUCurrencyMetaInfo_S_UniqueList__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ICUCurrencyMetaInfo$UniqueList.smali
+namespace android::icu::impl{
+template <typename T>
+class ICUCurrencyMetaInfo_S_UniqueList;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_ICUCurrencyMetaInfo_S_UniqueList__
+

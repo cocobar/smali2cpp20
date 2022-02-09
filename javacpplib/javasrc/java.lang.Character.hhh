@@ -1,0 +1,8 @@
+#ifndef __java_lang_Character__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\Character.smali
+namespace java::lang{
+class Character;
+}; // namespace java::lang
+
+#endif //__java_lang_Character__
+

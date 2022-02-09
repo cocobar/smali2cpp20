@@ -1,0 +1,8 @@
+#ifndef __android_util_MutableByte__
+// Type L:\smali2cpp20\x64\Release\out\android\util\MutableByte.smali
+namespace android::util{
+class MutableByte;
+}; // namespace android::util
+
+#endif //__android_util_MutableByte__
+

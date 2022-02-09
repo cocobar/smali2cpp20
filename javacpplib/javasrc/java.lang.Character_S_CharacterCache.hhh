@@ -1,0 +1,8 @@
+#ifndef __java_lang_Character_S_CharacterCache__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\Character$CharacterCache.smali
+namespace java::lang{
+class Character_S_CharacterCache;
+}; // namespace java::lang
+
+#endif //__java_lang_Character_S_CharacterCache__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_ICUResourceBundleImpl_S_ResourceBinary__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ICUResourceBundleImpl$ResourceBinary.smali
+namespace android::icu::impl{
+class ICUResourceBundleImpl_S_ResourceBinary;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_ICUResourceBundleImpl_S_ResourceBinary__
+

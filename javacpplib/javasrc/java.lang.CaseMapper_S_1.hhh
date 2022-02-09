@@ -1,0 +1,8 @@
+#ifndef __java_lang_CaseMapper_S_1__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\CaseMapper$1.smali
+namespace java::lang{
+class CaseMapper_S_1;
+}; // namespace java::lang
+
+#endif //__java_lang_CaseMapper_S_1__
+

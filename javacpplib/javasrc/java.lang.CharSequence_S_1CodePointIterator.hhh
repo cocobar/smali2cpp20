@@ -1,0 +1,8 @@
+#ifndef __java_lang_CharSequence_S_1CodePointIterator__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\CharSequence$1CodePointIterator.smali
+namespace java::lang{
+class CharSequence_S_1CodePointIterator;
+}; // namespace java::lang
+
+#endif //__java_lang_CharSequence_S_1CodePointIterator__
+

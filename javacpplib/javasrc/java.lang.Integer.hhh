@@ -1,0 +1,8 @@
+#ifndef __java_lang_Integer__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\Integer.smali
+namespace java::lang{
+class Integer;
+}; // namespace java::lang
+
+#endif //__java_lang_Integer__
+

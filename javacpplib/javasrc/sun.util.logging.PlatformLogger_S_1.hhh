@@ -1,8 +1,0 @@
-#ifndef __sun_util_logging_PlatformLogger_S_1__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\logging\PlatformLogger$1.smali
-namespace sun::util::logging{
-class PlatformLogger_S_1;
-}; // namespace sun::util::logging
-
-#endif //__sun_util_logging_PlatformLogger_S_1__
-

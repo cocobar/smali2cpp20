@@ -1,0 +1,8 @@
+#ifndef __java_lang_Boolean__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\Boolean.smali
+namespace java::lang{
+class Boolean;
+}; // namespace java::lang
+
+#endif //__java_lang_Boolean__
+

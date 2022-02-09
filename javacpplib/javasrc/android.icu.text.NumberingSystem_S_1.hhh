@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_NumberingSystem_S_1__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\NumberingSystem$1.smali
+namespace android::icu::text{
+class NumberingSystem_S_1;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_NumberingSystem_S_1__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_StringTrieBuilder__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\StringTrieBuilder.smali
+namespace android::icu::util{
+class StringTrieBuilder;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_StringTrieBuilder__
+

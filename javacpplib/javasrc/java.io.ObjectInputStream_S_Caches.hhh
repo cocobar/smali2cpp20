@@ -1,0 +1,8 @@
+#ifndef __java_io_ObjectInputStream_S_Caches__
+// Type L:\smali2cpp20\x64\Release\out\java\io\ObjectInputStream$Caches.smali
+namespace java::io{
+class ObjectInputStream_S_Caches;
+}; // namespace java::io
+
+#endif //__java_io_ObjectInputStream_S_Caches__
+

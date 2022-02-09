@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_TimeZoneNames_S_DefaultTimeZoneNames__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\TimeZoneNames$DefaultTimeZoneNames.smali
+namespace android::icu::text{
+class TimeZoneNames_S_DefaultTimeZoneNames;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_TimeZoneNames_S_DefaultTimeZoneNames__
+

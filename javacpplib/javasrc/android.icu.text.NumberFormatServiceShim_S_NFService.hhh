@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_NumberFormatServiceShim_S_NFService__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\NumberFormatServiceShim$NFService.smali
+namespace android::icu::text{
+class NumberFormatServiceShim_S_NFService;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_NumberFormatServiceShim_S_NFService__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_nio_fs_UnixFileModeAttribute__
-// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixFileModeAttribute.smali
-namespace sun::nio::fs{
-class UnixFileModeAttribute;
-}; // namespace sun::nio::fs
-
-#endif //__sun_nio_fs_UnixFileModeAttribute__
-

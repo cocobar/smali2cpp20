@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_coll_FCDIterCollationIterator__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\coll\FCDIterCollationIterator.smali
+namespace android::icu::impl::coll{
+class FCDIterCollationIterator;
+}; // namespace android::icu::impl::coll
+
+#endif //__android_icu_impl_coll_FCDIterCollationIterator__
+

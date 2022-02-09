@@ -1,8 +1,0 @@
-#ifndef __sun_security_provider_certpath_PKIX_S_BuilderParams__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\certpath\PKIX$BuilderParams.smali
-namespace sun::security::provider::certpath{
-class PKIX_S_BuilderParams;
-}; // namespace sun::security::provider::certpath
-
-#endif //__sun_security_provider_certpath_PKIX_S_BuilderParams__
-

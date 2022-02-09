@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_PluralRulesSerialProxy__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\PluralRulesSerialProxy.smali
+namespace android::icu::text{
+class PluralRulesSerialProxy;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_PluralRulesSerialProxy__
+

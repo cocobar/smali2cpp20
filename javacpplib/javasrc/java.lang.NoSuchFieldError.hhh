@@ -1,0 +1,8 @@
+#ifndef __java_lang_NoSuchFieldError__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\NoSuchFieldError.smali
+namespace java::lang{
+class NoSuchFieldError;
+}; // namespace java::lang
+
+#endif //__java_lang_NoSuchFieldError__
+

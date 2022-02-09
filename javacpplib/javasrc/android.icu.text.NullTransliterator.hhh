@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_NullTransliterator__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\NullTransliterator.smali
+namespace android::icu::text{
+class NullTransliterator;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_NullTransliterator__
+

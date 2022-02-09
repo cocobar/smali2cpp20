@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_CaseMapImpl_S_StringContextIterator__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\CaseMapImpl$StringContextIterator.smali
+namespace android::icu::impl{
+class CaseMapImpl_S_StringContextIterator;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_CaseMapImpl_S_StringContextIterator__
+

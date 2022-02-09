@@ -1,8 +1,0 @@
-#ifndef __sun_security_jca_JCAUtil_S_CachedSecureRandomHolder__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\jca\JCAUtil$CachedSecureRandomHolder.smali
-namespace sun::security::jca{
-class JCAUtil_S_CachedSecureRandomHolder;
-}; // namespace sun::security::jca
-
-#endif //__sun_security_jca_JCAUtil_S_CachedSecureRandomHolder__
-

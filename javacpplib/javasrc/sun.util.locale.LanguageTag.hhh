@@ -1,8 +1,0 @@
-#ifndef __sun_util_locale_LanguageTag__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\locale\LanguageTag.smali
-namespace sun::util::locale{
-class LanguageTag;
-}; // namespace sun::util::locale
-
-#endif //__sun_util_locale_LanguageTag__
-

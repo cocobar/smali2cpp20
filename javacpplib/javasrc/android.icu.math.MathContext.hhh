@@ -1,0 +1,8 @@
+#ifndef __android_icu_math_MathContext__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\math\MathContext.smali
+namespace android::icu::math{
+class MathContext;
+}; // namespace android::icu::math
+
+#endif //__android_icu_math_MathContext__
+

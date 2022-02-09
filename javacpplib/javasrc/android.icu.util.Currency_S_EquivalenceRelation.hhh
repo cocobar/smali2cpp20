@@ -1,0 +1,9 @@
+#ifndef __android_icu_util_Currency_S_EquivalenceRelation__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\Currency$EquivalenceRelation.smali
+namespace android::icu::util{
+template <typename T>
+class Currency_S_EquivalenceRelation;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_Currency_S_EquivalenceRelation__
+

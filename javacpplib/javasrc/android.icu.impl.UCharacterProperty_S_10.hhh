@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_UCharacterProperty_S_10__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\UCharacterProperty$10.smali
+namespace android::icu::impl{
+class UCharacterProperty_S_10;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_UCharacterProperty_S_10__
+

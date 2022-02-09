@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_Holiday__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\Holiday.smali
+namespace android::icu::util{
+class Holiday;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_Holiday__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_security_x509_RFC822Name__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\RFC822Name.smali
-namespace sun::security::x509{
-class RFC822Name;
-}; // namespace sun::security::x509
-
-#endif //__sun_security_x509_RFC822Name__
-

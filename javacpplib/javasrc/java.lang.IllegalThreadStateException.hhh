@@ -1,0 +1,8 @@
+#ifndef __java_lang_IllegalThreadStateException__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\IllegalThreadStateException.smali
+namespace java::lang{
+class IllegalThreadStateException;
+}; // namespace java::lang
+
+#endif //__java_lang_IllegalThreadStateException__
+

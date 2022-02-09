@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_CopticCalendar__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\CopticCalendar.smali
+namespace android::icu::util{
+class CopticCalendar;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_CopticCalendar__
+

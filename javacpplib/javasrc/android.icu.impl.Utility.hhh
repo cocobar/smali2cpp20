@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_Utility__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\Utility.smali
+namespace android::icu::impl{
+class Utility;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_Utility__
+

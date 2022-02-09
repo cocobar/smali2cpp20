@@ -1,0 +1,8 @@
+#ifndef __java_lang_Double__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\Double.smali
+namespace java::lang{
+class Double;
+}; // namespace java::lang
+
+#endif //__java_lang_Double__
+

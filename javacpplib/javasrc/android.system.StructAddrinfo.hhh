@@ -1,0 +1,8 @@
+#ifndef __android_system_StructAddrinfo__
+// Type L:\smali2cpp20\x64\Release\out\android\system\StructAddrinfo.smali
+namespace android::system{
+class StructAddrinfo;
+}; // namespace android::system
+
+#endif //__android_system_StructAddrinfo__
+

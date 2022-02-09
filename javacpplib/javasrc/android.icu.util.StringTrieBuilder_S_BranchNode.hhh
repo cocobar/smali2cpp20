@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_StringTrieBuilder_S_BranchNode__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\StringTrieBuilder$BranchNode.smali
+namespace android::icu::util{
+class StringTrieBuilder_S_BranchNode;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_StringTrieBuilder_S_BranchNode__
+

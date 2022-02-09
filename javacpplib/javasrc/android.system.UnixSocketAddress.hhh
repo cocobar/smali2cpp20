@@ -1,0 +1,8 @@
+#ifndef __android_system_UnixSocketAddress__
+// Type L:\smali2cpp20\x64\Release\out\android\system\UnixSocketAddress.smali
+namespace android::system{
+class UnixSocketAddress;
+}; // namespace android::system
+
+#endif //__android_system_UnixSocketAddress__
+

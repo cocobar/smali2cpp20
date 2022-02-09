@@ -1,0 +1,8 @@
+#ifndef __java_lang_BootstrapMethodError__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\BootstrapMethodError.smali
+namespace java::lang{
+class BootstrapMethodError;
+}; // namespace java::lang
+
+#endif //__java_lang_BootstrapMethodError__
+

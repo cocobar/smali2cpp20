@@ -1,0 +1,9 @@
+#ifndef __android_icu_impl_CacheValue_S_NullValue__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\CacheValue$NullValue.smali
+namespace android::icu::impl{
+template <typename V>
+class CacheValue_S_NullValue;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_CacheValue_S_NullValue__
+

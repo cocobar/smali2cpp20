@@ -1,0 +1,8 @@
+#ifndef __dalvik_annotation_KnownFailure__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\annotation\KnownFailure.smali
+namespace dalvik::annotation{
+class KnownFailure;
+}; // namespace dalvik::annotation
+
+#endif //__dalvik_annotation_KnownFailure__
+

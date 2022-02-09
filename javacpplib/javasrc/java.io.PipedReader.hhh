@@ -1,0 +1,8 @@
+#ifndef __java_io_PipedReader__
+// Type L:\smali2cpp20\x64\Release\out\java\io\PipedReader.smali
+namespace java::io{
+class PipedReader;
+}; // namespace java::io
+
+#endif //__java_io_PipedReader__
+

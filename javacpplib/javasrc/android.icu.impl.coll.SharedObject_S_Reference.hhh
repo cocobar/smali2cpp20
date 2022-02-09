@@ -1,0 +1,9 @@
+#ifndef __android_icu_impl_coll_SharedObject_S_Reference__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\coll\SharedObject$Reference.smali
+namespace android::icu::impl::coll{
+template <typename T>
+class SharedObject_S_Reference;
+}; // namespace android::icu::impl::coll
+
+#endif //__android_icu_impl_coll_SharedObject_S_Reference__
+

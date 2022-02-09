@@ -1,8 +1,0 @@
-#ifndef __sun_security_jca_ServiceId__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\jca\ServiceId.smali
-namespace sun::security::jca{
-class ServiceId;
-}; // namespace sun::security::jca
-
-#endif //__sun_security_jca_ServiceId__
-

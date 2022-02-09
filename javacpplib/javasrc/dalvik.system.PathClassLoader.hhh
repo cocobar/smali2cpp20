@@ -1,0 +1,8 @@
+#ifndef __dalvik_system_PathClassLoader__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\system\PathClassLoader.smali
+namespace dalvik::system{
+class PathClassLoader;
+}; // namespace dalvik::system
+
+#endif //__dalvik_system_PathClassLoader__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_security_action_GetPropertyAction__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\action\GetPropertyAction.smali
-namespace sun::security::action{
-class GetPropertyAction;
-}; // namespace sun::security::action
-
-#endif //__sun_security_action_GetPropertyAction__
-

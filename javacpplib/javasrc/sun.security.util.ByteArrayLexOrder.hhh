@@ -1,8 +1,0 @@
-#ifndef __sun_security_util_ByteArrayLexOrder__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\util\ByteArrayLexOrder.smali
-namespace sun::security::util{
-class ByteArrayLexOrder;
-}; // namespace sun::security::util
-
-#endif //__sun_security_util_ByteArrayLexOrder__
-

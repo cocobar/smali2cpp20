@@ -1,8 +1,0 @@
-#ifndef __sun_security_util_ManifestEntryVerifier__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\util\ManifestEntryVerifier.smali
-namespace sun::security::util{
-class ManifestEntryVerifier;
-}; // namespace sun::security::util
-
-#endif //__sun_security_util_ManifestEntryVerifier__
-

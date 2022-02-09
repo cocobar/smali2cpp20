@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_ValidIdentifiers_S_ValidityData__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ValidIdentifiers$ValidityData.smali
+namespace android::icu::impl{
+class ValidIdentifiers_S_ValidityData;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_ValidIdentifiers_S_ValidityData__
+

@@ -1,0 +1,8 @@
+#ifndef __java_lang_AbstractMethodError__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\AbstractMethodError.smali
+namespace java::lang{
+class AbstractMethodError;
+}; // namespace java::lang
+
+#endif //__java_lang_AbstractMethodError__
+

@@ -1,0 +1,8 @@
+#ifndef __android_system_OsConstants__
+// Type L:\smali2cpp20\x64\Release\out\android\system\OsConstants.smali
+namespace android::system{
+class OsConstants;
+}; // namespace android::system
+
+#endif //__android_system_OsConstants__
+

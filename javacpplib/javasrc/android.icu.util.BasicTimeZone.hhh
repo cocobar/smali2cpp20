@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_BasicTimeZone__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\BasicTimeZone.smali
+namespace android::icu::util{
+class BasicTimeZone;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_BasicTimeZone__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_util_locale_BaseLocale_S_Key__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\locale\BaseLocale$Key.smali
-namespace sun::util::locale{
-class BaseLocale_S_Key;
-}; // namespace sun::util::locale
-
-#endif //__sun_util_locale_BaseLocale_S_Key__
-

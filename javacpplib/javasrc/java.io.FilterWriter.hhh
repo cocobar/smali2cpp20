@@ -1,0 +1,8 @@
+#ifndef __java_io_FilterWriter__
+// Type L:\smali2cpp20\x64\Release\out\java\io\FilterWriter.smali
+namespace java::io{
+class FilterWriter;
+}; // namespace java::io
+
+#endif //__java_io_FilterWriter__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_security_provider_certpath_PKIX_S_CertStoreComparator__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\certpath\PKIX$CertStoreComparator.smali
-namespace sun::security::provider::certpath{
-class PKIX_S_CertStoreComparator;
-}; // namespace sun::security::provider::certpath
-
-#endif //__sun_security_provider_certpath_PKIX_S_CertStoreComparator__
-

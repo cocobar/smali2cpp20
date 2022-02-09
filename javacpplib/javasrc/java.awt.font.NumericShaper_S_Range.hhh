@@ -1,0 +1,8 @@
+#ifndef __java_awt_font_NumericShaper_S_Range__
+// Type L:\smali2cpp20\x64\Release\out\java\awt\font\NumericShaper$Range.smali
+namespace java::awt::font{
+class NumericShaper_S_Range;
+}; // namespace java::awt::font
+
+#endif //__java_awt_font_NumericShaper_S_Range__
+

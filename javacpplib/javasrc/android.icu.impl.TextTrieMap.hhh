@@ -1,0 +1,9 @@
+#ifndef __android_icu_impl_TextTrieMap__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\TextTrieMap.smali
+namespace android::icu::impl{
+template <typename V>
+class TextTrieMap;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_TextTrieMap__
+

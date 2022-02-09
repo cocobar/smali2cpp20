@@ -1,8 +1,0 @@
-#ifndef __sun_nio_fs_UnixFileStore_S_1__
-// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixFileStore$1.smali
-namespace sun::nio::fs{
-class UnixFileStore_S_1;
-}; // namespace sun::nio::fs
-
-#endif //__sun_nio_fs_UnixFileStore_S_1__
-

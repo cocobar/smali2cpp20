@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_GenderInfo_S_Cache__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\GenderInfo$Cache.smali
+namespace android::icu::util{
+class GenderInfo_S_Cache;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_GenderInfo_S_Cache__
+

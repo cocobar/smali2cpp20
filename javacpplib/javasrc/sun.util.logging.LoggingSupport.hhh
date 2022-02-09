@@ -1,8 +1,0 @@
-#ifndef __sun_util_logging_LoggingSupport__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\logging\LoggingSupport.smali
-namespace sun::util::logging{
-class LoggingSupport;
-}; // namespace sun::util::logging
-
-#endif //__sun_util_logging_LoggingSupport__
-

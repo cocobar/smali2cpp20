@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_URLHandler_S_URLVisitor__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\URLHandler$URLVisitor.smali
+namespace android::icu::impl{
+class URLHandler_S_URLVisitor;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_URLHandler_S_URLVisitor__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_RangeValueIterator_S_Element__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\RangeValueIterator$Element.smali
+namespace android::icu::util{
+class RangeValueIterator_S_Element;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_RangeValueIterator_S_Element__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_PropsVectors_S_DefaultGetFoldingOffset__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\PropsVectors$DefaultGetFoldingOffset.smali
+namespace android::icu::impl{
+class PropsVectors_S_DefaultGetFoldingOffset;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_PropsVectors_S_DefaultGetFoldingOffset__
+

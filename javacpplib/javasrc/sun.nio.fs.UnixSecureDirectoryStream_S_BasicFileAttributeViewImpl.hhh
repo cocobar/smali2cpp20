@@ -1,8 +1,0 @@
-#ifndef __sun_nio_fs_UnixSecureDirectoryStream_S_BasicFileAttributeViewImpl__
-// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixSecureDirectoryStream$BasicFileAttributeViewImpl.smali
-namespace sun::nio::fs{
-class UnixSecureDirectoryStream_S_BasicFileAttributeViewImpl;
-}; // namespace sun::nio::fs
-
-#endif //__sun_nio_fs_UnixSecureDirectoryStream_S_BasicFileAttributeViewImpl__
-

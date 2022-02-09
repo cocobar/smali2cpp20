@@ -1,0 +1,8 @@
+#ifndef __java_io_PipedWriter__
+// Type L:\smali2cpp20\x64\Release\out\java\io\PipedWriter.smali
+namespace java::io{
+class PipedWriter;
+}; // namespace java::io
+
+#endif //__java_io_PipedWriter__
+

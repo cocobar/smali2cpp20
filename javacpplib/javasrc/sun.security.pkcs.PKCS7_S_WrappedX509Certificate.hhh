@@ -1,8 +1,0 @@
-#ifndef __sun_security_pkcs_PKCS7_S_WrappedX509Certificate__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\pkcs\PKCS7$WrappedX509Certificate.smali
-namespace sun::security::pkcs{
-class PKCS7_S_WrappedX509Certificate;
-}; // namespace sun::security::pkcs
-
-#endif //__sun_security_pkcs_PKCS7_S_WrappedX509Certificate__
-

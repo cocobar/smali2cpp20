@@ -1,8 +1,0 @@
-#ifndef __sun_security_provider_certpath_ForwardState__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\certpath\ForwardState.smali
-namespace sun::security::provider::certpath{
-class ForwardState;
-}; // namespace sun::security::provider::certpath
-
-#endif //__sun_security_provider_certpath_ForwardState__
-

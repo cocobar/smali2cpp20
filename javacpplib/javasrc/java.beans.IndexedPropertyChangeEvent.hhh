@@ -1,0 +1,8 @@
+#ifndef __java_beans_IndexedPropertyChangeEvent__
+// Type L:\smali2cpp20\x64\Release\out\java\beans\IndexedPropertyChangeEvent.smali
+namespace java::beans{
+class IndexedPropertyChangeEvent;
+}; // namespace java::beans
+
+#endif //__java_beans_IndexedPropertyChangeEvent__
+

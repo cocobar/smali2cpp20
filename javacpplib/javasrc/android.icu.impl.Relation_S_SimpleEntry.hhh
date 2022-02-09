@@ -1,0 +1,9 @@
+#ifndef __android_icu_impl_Relation_S_SimpleEntry__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\Relation$SimpleEntry.smali
+namespace android::icu::impl{
+template <typename K,typename V>
+class Relation_S_SimpleEntry;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_Relation_S_SimpleEntry__
+

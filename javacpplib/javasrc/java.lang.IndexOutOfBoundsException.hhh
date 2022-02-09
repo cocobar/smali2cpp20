@@ -1,0 +1,8 @@
+#ifndef __java_lang_IndexOutOfBoundsException__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\IndexOutOfBoundsException.smali
+namespace java::lang{
+class IndexOutOfBoundsException;
+}; // namespace java::lang
+
+#endif //__java_lang_IndexOutOfBoundsException__
+

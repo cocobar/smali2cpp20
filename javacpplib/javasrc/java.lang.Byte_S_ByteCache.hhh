@@ -1,0 +1,8 @@
+#ifndef __java_lang_Byte_S_ByteCache__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\Byte$ByteCache.smali
+namespace java::lang{
+class Byte_S_ByteCache;
+}; // namespace java::lang
+
+#endif //__java_lang_Byte_S_ByteCache__
+

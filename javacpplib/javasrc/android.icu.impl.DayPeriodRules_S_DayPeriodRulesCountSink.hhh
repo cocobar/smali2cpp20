@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_DayPeriodRules_S_DayPeriodRulesCountSink__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\DayPeriodRules$DayPeriodRulesCountSink.smali
+namespace android::icu::impl{
+class DayPeriodRules_S_DayPeriodRulesCountSink;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_DayPeriodRules_S_DayPeriodRulesCountSink__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_util_ResourceBundleEnumeration__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\ResourceBundleEnumeration.smali
-namespace sun::util{
-class ResourceBundleEnumeration;
-}; // namespace sun::util
-
-#endif //__sun_util_ResourceBundleEnumeration__
-

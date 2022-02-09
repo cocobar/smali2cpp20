@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_data_HolidayBundle__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\data\HolidayBundle.smali
+namespace android::icu::impl::data{
+class HolidayBundle;
+}; // namespace android::icu::impl::data
+
+#endif //__android_icu_impl_data_HolidayBundle__
+

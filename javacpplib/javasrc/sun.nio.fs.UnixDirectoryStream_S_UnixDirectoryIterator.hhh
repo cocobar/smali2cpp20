@@ -1,8 +1,0 @@
-#ifndef __sun_nio_fs_UnixDirectoryStream_S_UnixDirectoryIterator__
-// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixDirectoryStream$UnixDirectoryIterator.smali
-namespace sun::nio::fs{
-class UnixDirectoryStream_S_UnixDirectoryIterator;
-}; // namespace sun::nio::fs
-
-#endif //__sun_nio_fs_UnixDirectoryStream_S_UnixDirectoryIterator__
-

@@ -1,0 +1,8 @@
+#ifndef __java_io_DataOutput__
+// Type L:\smali2cpp20\x64\Release\out\java\io\DataOutput.smali
+namespace java::io{
+class DataOutput;
+}; // namespace java::io
+
+#endif //__java_io_DataOutput__
+

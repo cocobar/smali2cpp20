@@ -1,0 +1,8 @@
+#ifndef __java_io_Console_S_LineReader__
+// Type L:\smali2cpp20\x64\Release\out\java\io\Console$LineReader.smali
+namespace java::io{
+class Console_S_LineReader;
+}; // namespace java::io
+
+#endif //__java_io_Console_S_LineReader__
+

@@ -1,0 +1,8 @@
+#ifndef __dalvik_system_PotentialDeadlockError__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\system\PotentialDeadlockError.smali
+namespace dalvik::system{
+class PotentialDeadlockError;
+}; // namespace dalvik::system
+
+#endif //__dalvik_system_PotentialDeadlockError__
+

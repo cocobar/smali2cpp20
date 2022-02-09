@@ -1,8 +1,0 @@
-#ifndef __sun_security_jca_ProviderConfig__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\jca\ProviderConfig.smali
-namespace sun::security::jca{
-class ProviderConfig;
-}; // namespace sun::security::jca
-
-#endif //__sun_security_jca_ProviderConfig__
-

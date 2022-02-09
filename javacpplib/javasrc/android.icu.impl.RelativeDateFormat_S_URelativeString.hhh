@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_RelativeDateFormat_S_URelativeString__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\RelativeDateFormat$URelativeString.smali
+namespace android::icu::impl{
+class RelativeDateFormat_S_URelativeString;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_RelativeDateFormat_S_URelativeString__
+

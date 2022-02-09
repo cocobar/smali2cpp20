@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_ICUBinary_S_DataFile__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ICUBinary$DataFile.smali
+namespace android::icu::impl{
+class ICUBinary_S_DataFile;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_ICUBinary_S_DataFile__
+

@@ -1,0 +1,8 @@
+#ifndef __android_util_MutableBoolean__
+// Type L:\smali2cpp20\x64\Release\out\android\util\MutableBoolean.smali
+namespace android::util{
+class MutableBoolean;
+}; // namespace android::util
+
+#endif //__android_util_MutableBoolean__
+

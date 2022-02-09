@@ -1,8 +1,0 @@
-#ifndef __sun_security_provider_certpath_KeyChecker__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\certpath\KeyChecker.smali
-namespace sun::security::provider::certpath{
-class KeyChecker;
-}; // namespace sun::security::provider::certpath
-
-#endif //__sun_security_provider_certpath_KeyChecker__
-

@@ -1,0 +1,8 @@
+#ifndef __com_sun_net_ssl_internal_ssl_X509ExtendedTrustManager__
+// Type L:\smali2cpp20\x64\Release\out\com\sun\net\ssl\internal\ssl\X509ExtendedTrustManager.smali
+namespace com::sun::net::ssl::internal::ssl{
+class X509ExtendedTrustManager;
+}; // namespace com::sun::net::ssl::internal::ssl
+
+#endif //__com_sun_net_ssl_internal_ssl_X509ExtendedTrustManager__
+

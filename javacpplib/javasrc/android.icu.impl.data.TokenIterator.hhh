@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_data_TokenIterator__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\data\TokenIterator.smali
+namespace android::icu::impl::data{
+class TokenIterator;
+}; // namespace android::icu::impl::data
+
+#endif //__android_icu_impl_data_TokenIterator__
+

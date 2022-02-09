@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_CaseInsensitiveString__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\CaseInsensitiveString.smali
+namespace android::icu::util{
+class CaseInsensitiveString;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_CaseInsensitiveString__
+

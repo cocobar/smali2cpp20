@@ -1,8 +1,0 @@
-#ifndef __sun_nio_fs_UnixConstants__
-// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixConstants.smali
-namespace sun::nio::fs{
-class UnixConstants;
-}; // namespace sun::nio::fs
-
-#endif //__sun_nio_fs_UnixConstants__
-

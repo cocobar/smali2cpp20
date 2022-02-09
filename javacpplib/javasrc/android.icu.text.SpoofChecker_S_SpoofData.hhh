@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_SpoofChecker_S_SpoofData__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\SpoofChecker$SpoofData.smali
+namespace android::icu::text{
+class SpoofChecker_S_SpoofData;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_SpoofChecker_S_SpoofData__
+

@@ -1,0 +1,8 @@
+#ifndef __java_beans_PropertyChangeEvent__
+// Type L:\smali2cpp20\x64\Release\out\java\beans\PropertyChangeEvent.smali
+namespace java::beans{
+class PropertyChangeEvent;
+}; // namespace java::beans
+
+#endif //__java_beans_PropertyChangeEvent__
+

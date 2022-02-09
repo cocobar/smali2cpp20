@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_locale_KeyTypeData_S_ReorderCodeTypeHandler__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\locale\KeyTypeData$ReorderCodeTypeHandler.smali
+namespace android::icu::impl::locale{
+class KeyTypeData_S_ReorderCodeTypeHandler;
+}; // namespace android::icu::impl::locale
+
+#endif //__android_icu_impl_locale_KeyTypeData_S_ReorderCodeTypeHandler__
+

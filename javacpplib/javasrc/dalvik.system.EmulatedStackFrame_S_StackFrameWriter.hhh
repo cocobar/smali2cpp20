@@ -1,0 +1,8 @@
+#ifndef __dalvik_system_EmulatedStackFrame_S_StackFrameWriter__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\system\EmulatedStackFrame$StackFrameWriter.smali
+namespace dalvik::system{
+class EmulatedStackFrame_S_StackFrameWriter;
+}; // namespace dalvik::system
+
+#endif //__dalvik_system_EmulatedStackFrame_S_StackFrameWriter__
+

@@ -1,0 +1,9 @@
+#ifndef __java_lang_InheritableThreadLocal__
+// Type L:\smali2cpp20\x64\Release\out\java\lang\InheritableThreadLocal.smali
+namespace java::lang{
+template <typename T>
+class InheritableThreadLocal;
+}; // namespace java::lang
+
+#endif //__java_lang_InheritableThreadLocal__
+

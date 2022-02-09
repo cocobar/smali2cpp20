@@ -1,8 +1,0 @@
-#ifndef __sun_util_calendar_ImmutableGregorianDate__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\calendar\ImmutableGregorianDate.smali
-namespace sun::util::calendar{
-class ImmutableGregorianDate;
-}; // namespace sun::util::calendar
-
-#endif //__sun_util_calendar_ImmutableGregorianDate__
-

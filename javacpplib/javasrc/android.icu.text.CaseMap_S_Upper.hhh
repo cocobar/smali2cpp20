@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_CaseMap_S_Upper__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\CaseMap$Upper.smali
+namespace android::icu::text{
+class CaseMap_S_Upper;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_CaseMap_S_Upper__
+

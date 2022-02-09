@@ -1,0 +1,8 @@
+#ifndef __java_beans_PropertyChangeListenerProxy__
+// Type L:\smali2cpp20\x64\Release\out\java\beans\PropertyChangeListenerProxy.smali
+namespace java::beans{
+class PropertyChangeListenerProxy;
+}; // namespace java::beans
+
+#endif //__java_beans_PropertyChangeListenerProxy__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_MeasureUnit_S_MeasureUnitProxy__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\MeasureUnit$MeasureUnitProxy.smali
+namespace android::icu::util{
+class MeasureUnit_S_MeasureUnitProxy;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_MeasureUnit_S_MeasureUnitProxy__
+

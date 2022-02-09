@@ -1,0 +1,8 @@
+#ifndef __java_io_FileFilter__
+// Type L:\smali2cpp20\x64\Release\out\java\io\FileFilter.smali
+namespace java::io{
+class FileFilter;
+}; // namespace java::io
+
+#endif //__java_io_FileFilter__
+

@@ -1,8 +1,0 @@
-#ifndef __sun_security_util_ManifestDigester_S_Entry__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\util\ManifestDigester$Entry.smali
-namespace sun::security::util{
-class ManifestDigester_S_Entry;
-}; // namespace sun::security::util
-
-#endif //__sun_security_util_ManifestDigester_S_Entry__
-

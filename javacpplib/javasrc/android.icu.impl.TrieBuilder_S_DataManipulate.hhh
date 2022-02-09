@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_TrieBuilder_S_DataManipulate__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\TrieBuilder$DataManipulate.smali
+namespace android::icu::impl{
+class TrieBuilder_S_DataManipulate;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_TrieBuilder_S_DataManipulate__
+

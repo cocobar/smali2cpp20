@@ -1,8 +1,0 @@
-#ifndef __sun_security_provider_CertPathProvider__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\CertPathProvider.smali
-namespace sun::security::provider{
-class CertPathProvider;
-}; // namespace sun::security::provider
-
-#endif //__sun_security_provider_CertPathProvider__
-

@@ -1,8 +1,0 @@
-#ifndef __sun_reflect_CallerSensitive__
-// Type L:\smali2cpp20\x64\Release\out\sun\reflect\CallerSensitive.smali
-namespace sun::reflect{
-class CallerSensitive;
-}; // namespace sun::reflect
-
-#endif //__sun_reflect_CallerSensitive__
-

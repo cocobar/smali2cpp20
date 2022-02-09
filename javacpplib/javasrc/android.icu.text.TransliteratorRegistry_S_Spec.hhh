@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_TransliteratorRegistry_S_Spec__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\TransliteratorRegistry$Spec.smali
+namespace android::icu::text{
+class TransliteratorRegistry_S_Spec;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_TransliteratorRegistry_S_Spec__
+

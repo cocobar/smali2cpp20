@@ -1,0 +1,8 @@
+#ifndef __android_util_MutableInt__
+// Type L:\smali2cpp20\x64\Release\out\android\util\MutableInt.smali
+namespace android::util{
+class MutableInt;
+}; // namespace android::util
+
+#endif //__android_util_MutableInt__
+

@@ -1,0 +1,8 @@
+#ifndef __dalvik_system_SocketTagger__
+// Type L:\smali2cpp20\x64\Release\out\dalvik\system\SocketTagger.smali
+namespace dalvik::system{
+class SocketTagger;
+}; // namespace dalvik::system
+
+#endif //__dalvik_system_SocketTagger__
+

@@ -1,0 +1,8 @@
+#ifndef __android_icu_util_SimpleTimeZone__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\util\SimpleTimeZone.smali
+namespace android::icu::util{
+class SimpleTimeZone;
+}; // namespace android::icu::util
+
+#endif //__android_icu_util_SimpleTimeZone__
+

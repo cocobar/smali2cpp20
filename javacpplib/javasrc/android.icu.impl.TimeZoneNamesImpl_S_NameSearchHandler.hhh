@@ -1,0 +1,8 @@
+#ifndef __android_icu_impl_TimeZoneNamesImpl_S_NameSearchHandler__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\TimeZoneNamesImpl$NameSearchHandler.smali
+namespace android::icu::impl{
+class TimeZoneNamesImpl_S_NameSearchHandler;
+}; // namespace android::icu::impl
+
+#endif //__android_icu_impl_TimeZoneNamesImpl_S_NameSearchHandler__
+

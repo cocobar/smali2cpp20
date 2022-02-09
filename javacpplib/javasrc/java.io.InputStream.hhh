@@ -1,0 +1,8 @@
+#ifndef __java_io_InputStream__
+// Type L:\smali2cpp20\x64\Release\out\java\io\InputStream.smali
+namespace java::io{
+class InputStream;
+}; // namespace java::io
+
+#endif //__java_io_InputStream__
+

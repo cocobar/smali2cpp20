@@ -1,0 +1,8 @@
+#ifndef __android_util_MutableDouble__
+// Type L:\smali2cpp20\x64\Release\out\android\util\MutableDouble.smali
+namespace android::util{
+class MutableDouble;
+}; // namespace android::util
+
+#endif //__android_util_MutableDouble__
+

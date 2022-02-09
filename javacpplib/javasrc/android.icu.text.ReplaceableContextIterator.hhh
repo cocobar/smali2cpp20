@@ -1,0 +1,8 @@
+#ifndef __android_icu_text_ReplaceableContextIterator__
+// Type L:\smali2cpp20\x64\Release\out\android\icu\text\ReplaceableContextIterator.smali
+namespace android::icu::text{
+class ReplaceableContextIterator;
+}; // namespace android::icu::text
+
+#endif //__android_icu_text_ReplaceableContextIterator__
+

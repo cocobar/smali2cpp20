@@ -1,8 +1,0 @@
-#ifndef __sun_security_util_DerInputBuffer__
-// Type L:\smali2cpp20\x64\Release\out\sun\security\util\DerInputBuffer.smali
-namespace sun::security::util{
-class DerInputBuffer;
-}; // namespace sun::security::util
-
-#endif //__sun_security_util_DerInputBuffer__
-

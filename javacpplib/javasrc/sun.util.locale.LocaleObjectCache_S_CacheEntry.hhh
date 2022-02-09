@@ -1,9 +1,0 @@
-#ifndef __sun_util_locale_LocaleObjectCache_S_CacheEntry__
-// Type L:\smali2cpp20\x64\Release\out\sun\util\locale\LocaleObjectCache$CacheEntry.smali
-namespace sun::util::locale{
-template <typename K,typename V>
-class LocaleObjectCache_S_CacheEntry;
-}; // namespace sun::util::locale
-
-#endif //__sun_util_locale_LocaleObjectCache_S_CacheEntry__
-
