@@ -1,0 +1,9 @@
+#ifndef __sun_security_util_Cache__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\Cache.smali
+namespace sun::security::util{
+template <typename K,typename V>
+class Cache;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_Cache__
+

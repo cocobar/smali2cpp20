@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_UnixFileAttributeViews__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixFileAttributeViews.smali
+namespace sun::nio::fs{
+class UnixFileAttributeViews;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_UnixFileAttributeViews__
+

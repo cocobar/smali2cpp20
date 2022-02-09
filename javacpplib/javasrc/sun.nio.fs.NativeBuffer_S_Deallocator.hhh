@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_NativeBuffer_S_Deallocator__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\NativeBuffer$Deallocator.smali
+namespace sun::nio::fs{
+class NativeBuffer_S_Deallocator;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_NativeBuffer_S_Deallocator__
+

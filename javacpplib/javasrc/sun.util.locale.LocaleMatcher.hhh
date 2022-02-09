@@ -1,0 +1,8 @@
+#ifndef __sun_util_locale_LocaleMatcher__
+// Type L:\smali2cpp20\x64\Release\out\sun\util\locale\LocaleMatcher.smali
+namespace sun::util::locale{
+class LocaleMatcher;
+}; // namespace sun::util::locale
+
+#endif //__sun_util_locale_LocaleMatcher__
+

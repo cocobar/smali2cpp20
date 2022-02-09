@@ -1,0 +1,8 @@
+#ifndef __sun_security_timestamp_TimestampToken__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\timestamp\TimestampToken.smali
+namespace sun::security::timestamp{
+class TimestampToken;
+}; // namespace sun::security::timestamp
+
+#endif //__sun_security_timestamp_TimestampToken__
+

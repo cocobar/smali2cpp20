@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_PollingWatchService_S_3__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\PollingWatchService$3.smali
+namespace sun::nio::fs{
+class PollingWatchService_S_3;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_PollingWatchService_S_3__
+

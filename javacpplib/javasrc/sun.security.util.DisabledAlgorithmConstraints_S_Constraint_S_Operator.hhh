@@ -1,0 +1,8 @@
+#ifndef __sun_security_util_DisabledAlgorithmConstraints_S_Constraint_S_Operator__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\DisabledAlgorithmConstraints$Constraint$Operator.smali
+namespace sun::security::util{
+class DisabledAlgorithmConstraints_S_Constraint_S_Operator;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_DisabledAlgorithmConstraints_S_Constraint_S_Operator__
+

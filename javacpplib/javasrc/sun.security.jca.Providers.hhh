@@ -1,0 +1,8 @@
+#ifndef __sun_security_jca_Providers__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\jca\Providers.smali
+namespace sun::security::jca{
+class Providers;
+}; // namespace sun::security::jca
+
+#endif //__sun_security_jca_Providers__
+

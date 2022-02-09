@@ -1,0 +1,8 @@
+#ifndef __sun_security_provider_certpath_URICertStore_S_UCS__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\certpath\URICertStore$UCS.smali
+namespace sun::security::provider::certpath{
+class URICertStore_S_UCS;
+}; // namespace sun::security::provider::certpath
+
+#endif //__sun_security_provider_certpath_URICertStore_S_UCS__
+

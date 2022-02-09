@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_UnixFileAttributeViews_S_Posix__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixFileAttributeViews$Posix.smali
+namespace sun::nio::fs{
+class UnixFileAttributeViews_S_Posix;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_UnixFileAttributeViews_S_Posix__
+

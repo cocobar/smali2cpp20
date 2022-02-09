@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_UnixFileSystemProvider__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixFileSystemProvider.smali
+namespace sun::nio::fs{
+class UnixFileSystemProvider;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_UnixFileSystemProvider__
+

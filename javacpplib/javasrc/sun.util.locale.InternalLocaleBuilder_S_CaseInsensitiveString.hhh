@@ -1,0 +1,8 @@
+#ifndef __sun_util_locale_InternalLocaleBuilder_S_CaseInsensitiveString__
+// Type L:\smali2cpp20\x64\Release\out\sun\util\locale\InternalLocaleBuilder$CaseInsensitiveString.smali
+namespace sun::util::locale{
+class InternalLocaleBuilder_S_CaseInsensitiveString;
+}; // namespace sun::util::locale
+
+#endif //__sun_util_locale_InternalLocaleBuilder_S_CaseInsensitiveString__
+

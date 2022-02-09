@@ -1,0 +1,8 @@
+#ifndef __sun_security_pkcs_PKCS9Attribute__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\pkcs\PKCS9Attribute.smali
+namespace sun::security::pkcs{
+class PKCS9Attribute;
+}; // namespace sun::security::pkcs
+
+#endif //__sun_security_pkcs_PKCS9Attribute__
+

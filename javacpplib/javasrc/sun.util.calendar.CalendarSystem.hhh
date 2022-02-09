@@ -1,0 +1,8 @@
+#ifndef __sun_util_calendar_CalendarSystem__
+// Type L:\smali2cpp20\x64\Release\out\sun\util\calendar\CalendarSystem.smali
+namespace sun::util::calendar{
+class CalendarSystem;
+}; // namespace sun::util::calendar
+
+#endif //__sun_util_calendar_CalendarSystem__
+

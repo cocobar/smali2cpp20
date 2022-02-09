@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_UnixFileAttributes_S_UnixAsBasicFileAttributes__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixFileAttributes$UnixAsBasicFileAttributes.smali
+namespace sun::nio::fs{
+class UnixFileAttributes_S_UnixAsBasicFileAttributes;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_UnixFileAttributes_S_UnixAsBasicFileAttributes__
+

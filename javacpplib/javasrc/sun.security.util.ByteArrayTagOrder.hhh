@@ -1,0 +1,8 @@
+#ifndef __sun_security_util_ByteArrayTagOrder__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\ByteArrayTagOrder.smali
+namespace sun::security::util{
+class ByteArrayTagOrder;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_ByteArrayTagOrder__
+

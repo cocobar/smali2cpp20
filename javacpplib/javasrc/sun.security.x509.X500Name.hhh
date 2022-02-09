@@ -1,0 +1,8 @@
+#ifndef __sun_security_x509_X500Name__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\X500Name.smali
+namespace sun::security::x509{
+class X500Name;
+}; // namespace sun::security::x509
+
+#endif //__sun_security_x509_X500Name__
+

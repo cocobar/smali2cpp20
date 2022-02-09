@@ -1,0 +1,8 @@
+#ifndef __sun_security_x509_CertificatePolicyMap__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\CertificatePolicyMap.smali
+namespace sun::security::x509{
+class CertificatePolicyMap;
+}; // namespace sun::security::x509
+
+#endif //__sun_security_x509_CertificatePolicyMap__
+

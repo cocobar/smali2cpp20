@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_UnixCopyFile__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixCopyFile.smali
+namespace sun::nio::fs{
+class UnixCopyFile;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_UnixCopyFile__
+

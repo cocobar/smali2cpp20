@@ -1,0 +1,8 @@
+#ifndef __sun_security_x509_CRLNumberExtension__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\CRLNumberExtension.smali
+namespace sun::security::x509{
+class CRLNumberExtension;
+}; // namespace sun::security::x509
+
+#endif //__sun_security_x509_CRLNumberExtension__
+

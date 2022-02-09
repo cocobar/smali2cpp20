@@ -1,0 +1,8 @@
+#ifndef __sun_security_util_SecurityConstants__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\SecurityConstants.smali
+namespace sun::security::util{
+class SecurityConstants;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_SecurityConstants__
+

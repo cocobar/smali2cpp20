@@ -1,0 +1,8 @@
+#ifndef __sun_security_provider_certpath_RevocationChecker_S_Mode__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\certpath\RevocationChecker$Mode.smali
+namespace sun::security::provider::certpath{
+class RevocationChecker_S_Mode;
+}; // namespace sun::security::provider::certpath
+
+#endif //__sun_security_provider_certpath_RevocationChecker_S_Mode__
+

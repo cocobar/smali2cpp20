@@ -1,0 +1,8 @@
+#ifndef __sun_security_util_PropertyExpander_S_ExpandException__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\PropertyExpander$ExpandException.smali
+namespace sun::security::util{
+class PropertyExpander_S_ExpandException;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_PropertyExpander_S_ExpandException__
+

@@ -1,0 +1,8 @@
+#ifndef __sun_nio_fs_UnixUserPrincipals_S_Group__
+// Type L:\smali2cpp20\x64\Release\out\sun\nio\fs\UnixUserPrincipals$Group.smali
+namespace sun::nio::fs{
+class UnixUserPrincipals_S_Group;
+}; // namespace sun::nio::fs
+
+#endif //__sun_nio_fs_UnixUserPrincipals_S_Group__
+

@@ -1,0 +1,8 @@
+#ifndef __sun_security_util_ManifestEntryVerifier_S_SunProviderHolder__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\ManifestEntryVerifier$SunProviderHolder.smali
+namespace sun::security::util{
+class ManifestEntryVerifier_S_SunProviderHolder;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_ManifestEntryVerifier_S_SunProviderHolder__
+

@@ -1,0 +1,8 @@
+#ifndef __sun_security_provider_certpath_PolicyNodeImpl__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\certpath\PolicyNodeImpl.smali
+namespace sun::security::provider::certpath{
+class PolicyNodeImpl;
+}; // namespace sun::security::provider::certpath
+
+#endif //__sun_security_provider_certpath_PolicyNodeImpl__
+

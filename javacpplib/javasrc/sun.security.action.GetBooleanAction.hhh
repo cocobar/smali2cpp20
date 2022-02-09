@@ -1,0 +1,8 @@
+#ifndef __sun_security_action_GetBooleanAction__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\action\GetBooleanAction.smali
+namespace sun::security::action{
+class GetBooleanAction;
+}; // namespace sun::security::action
+
+#endif //__sun_security_action_GetBooleanAction__
+

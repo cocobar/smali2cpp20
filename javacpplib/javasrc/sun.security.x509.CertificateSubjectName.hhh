@@ -1,0 +1,8 @@
+#ifndef __sun_security_x509_CertificateSubjectName__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\CertificateSubjectName.smali
+namespace sun::security::x509{
+class CertificateSubjectName;
+}; // namespace sun::security::x509
+
+#endif //__sun_security_x509_CertificateSubjectName__
+

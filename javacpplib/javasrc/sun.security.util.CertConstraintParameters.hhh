@@ -1,0 +1,8 @@
+#ifndef __sun_security_util_CertConstraintParameters__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\CertConstraintParameters.smali
+namespace sun::security::util{
+class CertConstraintParameters;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_CertConstraintParameters__
+

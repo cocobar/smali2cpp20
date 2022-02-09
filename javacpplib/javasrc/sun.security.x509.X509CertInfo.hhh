@@ -1,0 +1,8 @@
+#ifndef __sun_security_x509_X509CertInfo__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\X509CertInfo.smali
+namespace sun::security::x509{
+class X509CertInfo;
+}; // namespace sun::security::x509
+
+#endif //__sun_security_x509_X509CertInfo__
+

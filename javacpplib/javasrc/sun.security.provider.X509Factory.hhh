@@ -1,0 +1,8 @@
+#ifndef __sun_security_provider_X509Factory__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\provider\X509Factory.smali
+namespace sun::security::provider{
+class X509Factory;
+}; // namespace sun::security::provider
+
+#endif //__sun_security_provider_X509Factory__
+

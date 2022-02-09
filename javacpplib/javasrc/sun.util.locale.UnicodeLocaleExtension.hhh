@@ -1,0 +1,8 @@
+#ifndef __sun_util_locale_UnicodeLocaleExtension__
+// Type L:\smali2cpp20\x64\Release\out\sun\util\locale\UnicodeLocaleExtension.smali
+namespace sun::util::locale{
+class UnicodeLocaleExtension;
+}; // namespace sun::util::locale
+
+#endif //__sun_util_locale_UnicodeLocaleExtension__
+

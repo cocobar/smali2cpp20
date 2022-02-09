@@ -1,0 +1,8 @@
+#ifndef __sun_util_calendar_BaseCalendar_S_Date__
+// Type L:\smali2cpp20\x64\Release\out\sun\util\calendar\BaseCalendar$Date.smali
+namespace sun::util::calendar{
+class BaseCalendar_S_Date;
+}; // namespace sun::util::calendar
+
+#endif //__sun_util_calendar_BaseCalendar_S_Date__
+

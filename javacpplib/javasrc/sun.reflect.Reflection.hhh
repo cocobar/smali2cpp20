@@ -1,0 +1,8 @@
+#ifndef __sun_reflect_Reflection__
+// Type L:\smali2cpp20\x64\Release\out\sun\reflect\Reflection.smali
+namespace sun::reflect{
+class Reflection;
+}; // namespace sun::reflect
+
+#endif //__sun_reflect_Reflection__
+

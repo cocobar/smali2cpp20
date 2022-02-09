@@ -1,0 +1,8 @@
+#ifndef __sun_security_util_ResourcesMgr_S_1__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\util\ResourcesMgr$1.smali
+namespace sun::security::util{
+class ResourcesMgr_S_1;
+}; // namespace sun::security::util
+
+#endif //__sun_security_util_ResourcesMgr_S_1__
+

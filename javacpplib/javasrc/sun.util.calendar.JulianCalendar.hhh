@@ -1,0 +1,8 @@
+#ifndef __sun_util_calendar_JulianCalendar__
+// Type L:\smali2cpp20\x64\Release\out\sun\util\calendar\JulianCalendar.smali
+namespace sun::util::calendar{
+class JulianCalendar;
+}; // namespace sun::util::calendar
+
+#endif //__sun_util_calendar_JulianCalendar__
+

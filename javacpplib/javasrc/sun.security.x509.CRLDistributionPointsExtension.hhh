@@ -1,0 +1,8 @@
+#ifndef __sun_security_x509_CRLDistributionPointsExtension__
+// Type L:\smali2cpp20\x64\Release\out\sun\security\x509\CRLDistributionPointsExtension.smali
+namespace sun::security::x509{
+class CRLDistributionPointsExtension;
+}; // namespace sun::security::x509
+
+#endif //__sun_security_x509_CRLDistributionPointsExtension__
+
