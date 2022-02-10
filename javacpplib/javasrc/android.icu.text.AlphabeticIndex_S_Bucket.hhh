@@ -1,9 +1,0 @@
-#ifndef __android_icu_text_AlphabeticIndex_S_Bucket__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\AlphabeticIndex$Bucket.smali
-namespace android::icu::text{
-template <typename V>
-class AlphabeticIndex_S_Bucket;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_AlphabeticIndex_S_Bucket__
-

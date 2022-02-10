@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_CalendarUtil_S_CalendarPreferences__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\CalendarUtil$CalendarPreferences.smali
-namespace android::icu::impl{
-class CalendarUtil_S_CalendarPreferences;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_CalendarUtil_S_CalendarPreferences__
-

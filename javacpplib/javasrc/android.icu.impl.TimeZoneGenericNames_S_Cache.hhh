@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_TimeZoneGenericNames_S_Cache__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\TimeZoneGenericNames$Cache.smali
-namespace android::icu::impl{
-class TimeZoneGenericNames_S_Cache;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_TimeZoneGenericNames_S_Cache__
-

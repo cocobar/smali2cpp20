@@ -1,8 +1,0 @@
-#ifndef __java_beans_PropertyChangeSupport__
-// Type L:\smali2cpp20\x64\Release\out\java\beans\PropertyChangeSupport.smali
-namespace java::beans{
-class PropertyChangeSupport;
-}; // namespace java::beans
-
-#endif //__java_beans_PropertyChangeSupport__
-

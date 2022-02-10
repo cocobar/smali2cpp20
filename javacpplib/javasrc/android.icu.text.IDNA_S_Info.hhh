@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_IDNA_S_Info__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\IDNA$Info.smali
-namespace android::icu::text{
-class IDNA_S_Info;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_IDNA_S_Info__
-

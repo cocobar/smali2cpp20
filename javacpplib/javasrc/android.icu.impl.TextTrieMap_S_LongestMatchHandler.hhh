@@ -1,9 +1,0 @@
-#ifndef __android_icu_impl_TextTrieMap_S_LongestMatchHandler__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\TextTrieMap$LongestMatchHandler.smali
-namespace android::icu::impl{
-template <typename V>
-class TextTrieMap_S_LongestMatchHandler;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_TextTrieMap_S_LongestMatchHandler__
-

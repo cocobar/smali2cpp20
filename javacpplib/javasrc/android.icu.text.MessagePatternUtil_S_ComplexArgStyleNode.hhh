@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_MessagePatternUtil_S_ComplexArgStyleNode__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\MessagePatternUtil$ComplexArgStyleNode.smali
-namespace android::icu::text{
-class MessagePatternUtil_S_ComplexArgStyleNode;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_MessagePatternUtil_S_ComplexArgStyleNode__
-

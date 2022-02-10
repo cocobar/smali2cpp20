@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_CaseFoldTransliterator_S_2__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\CaseFoldTransliterator$2.smali
-namespace android::icu::text{
-class CaseFoldTransliterator_S_2;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_CaseFoldTransliterator_S_2__
-

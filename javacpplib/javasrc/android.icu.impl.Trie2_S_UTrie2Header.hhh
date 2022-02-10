@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_Trie2_S_UTrie2Header__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\Trie2$UTrie2Header.smali
-namespace android::icu::impl{
-class Trie2_S_UTrie2Header;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_Trie2_S_UTrie2Header__
-

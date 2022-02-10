@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_CompactDecimalDataCache_S_PatternsTableKey__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\CompactDecimalDataCache$PatternsTableKey.smali
-namespace android::icu::text{
-class CompactDecimalDataCache_S_PatternsTableKey;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_CompactDecimalDataCache_S_PatternsTableKey__
-

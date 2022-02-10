@@ -1,8 +1,0 @@
-#ifndef __java_io_PushbackReader__
-// Type L:\smali2cpp20\x64\Release\out\java\io\PushbackReader.smali
-namespace java::io{
-class PushbackReader;
-}; // namespace java::io
-
-#endif //__java_io_PushbackReader__
-

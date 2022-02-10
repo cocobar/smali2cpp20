@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_DexFile_S_DFEnum__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\DexFile$DFEnum.smali
-namespace dalvik::system{
-class DexFile_S_DFEnum;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_DexFile_S_DFEnum__
-

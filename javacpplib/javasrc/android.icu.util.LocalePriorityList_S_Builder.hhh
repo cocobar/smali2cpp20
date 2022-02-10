@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_LocalePriorityList_S_Builder__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\LocalePriorityList$Builder.smali
-namespace android::icu::util{
-class LocalePriorityList_S_Builder;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_LocalePriorityList_S_Builder__
-

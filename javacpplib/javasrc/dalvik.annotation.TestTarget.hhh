@@ -1,8 +1,0 @@
-#ifndef __dalvik_annotation_TestTarget__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\annotation\TestTarget.smali
-namespace dalvik::annotation{
-class TestTarget;
-}; // namespace dalvik::annotation
-
-#endif //__dalvik_annotation_TestTarget__
-

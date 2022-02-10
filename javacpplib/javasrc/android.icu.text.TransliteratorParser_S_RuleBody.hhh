@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_TransliteratorParser_S_RuleBody__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\TransliteratorParser$RuleBody.smali
-namespace android::icu::text{
-class TransliteratorParser_S_RuleBody;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_TransliteratorParser_S_RuleBody__
-

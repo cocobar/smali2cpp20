@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_CacheValue_S_Strength__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\CacheValue$Strength.smali
-namespace android::icu::impl{
-class CacheValue_S_Strength;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_CacheValue_S_Strength__
-

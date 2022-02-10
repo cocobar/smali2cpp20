@@ -1,8 +1,0 @@
-#ifndef __java_io_DataInput__
-// Type L:\smali2cpp20\x64\Release\out\java\io\DataInput.smali
-namespace java::io{
-class DataInput;
-}; // namespace java::io
-
-#endif //__java_io_DataInput__
-

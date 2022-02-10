@@ -1,8 +1,0 @@
-#ifndef __java_lang_Cloneable__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\Cloneable.smali
-namespace java::lang{
-class Cloneable;
-}; // namespace java::lang
-
-#endif //__java_lang_Cloneable__
-

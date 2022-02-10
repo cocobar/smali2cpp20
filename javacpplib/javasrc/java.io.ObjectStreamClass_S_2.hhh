@@ -1,8 +1,0 @@
-#ifndef __java_io_ObjectStreamClass_S_2__
-// Type L:\smali2cpp20\x64\Release\out\java\io\ObjectStreamClass$2.smali
-namespace java::io{
-class ObjectStreamClass_S_2;
-}; // namespace java::io
-
-#endif //__java_io_ObjectStreamClass_S_2__
-

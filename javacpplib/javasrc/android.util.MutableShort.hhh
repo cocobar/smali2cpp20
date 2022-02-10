@@ -1,8 +1,0 @@
-#ifndef __android_util_MutableShort__
-// Type L:\smali2cpp20\x64\Release\out\android\util\MutableShort.smali
-namespace android::util{
-class MutableShort;
-}; // namespace android::util
-
-#endif //__android_util_MutableShort__
-

@@ -1,8 +1,0 @@
-#ifndef __java_io_PipedInputStream__
-// Type L:\smali2cpp20\x64\Release\out\java\io\PipedInputStream.smali
-namespace java::io{
-class PipedInputStream;
-}; // namespace java::io
-
-#endif //__java_io_PipedInputStream__
-

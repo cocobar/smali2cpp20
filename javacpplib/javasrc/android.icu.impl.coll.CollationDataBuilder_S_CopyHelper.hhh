@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_coll_CollationDataBuilder_S_CopyHelper__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\coll\CollationDataBuilder$CopyHelper.smali
-namespace android::icu::impl::coll{
-class CollationDataBuilder_S_CopyHelper;
-}; // namespace android::icu::impl::coll
-
-#endif //__android_icu_impl_coll_CollationDataBuilder_S_CopyHelper__
-

@@ -1,8 +1,0 @@
-#ifndef __android_system_StructFlock__
-// Type L:\smali2cpp20\x64\Release\out\android\system\StructFlock.smali
-namespace android::system{
-class StructFlock;
-}; // namespace android::system
-
-#endif //__android_system_StructFlock__
-

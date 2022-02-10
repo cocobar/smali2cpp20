@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_Transliterator_S_Position__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\Transliterator$Position.smali
-namespace android::icu::text{
-class Transliterator_S_Position;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_Transliterator_S_Position__
-

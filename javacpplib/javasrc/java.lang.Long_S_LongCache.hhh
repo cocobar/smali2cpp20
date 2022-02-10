@@ -1,8 +1,0 @@
-#ifndef __java_lang_Long_S_LongCache__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\Long$LongCache.smali
-namespace java::lang{
-class Long_S_LongCache;
-}; // namespace java::lang
-
-#endif //__java_lang_Long_S_LongCache__
-

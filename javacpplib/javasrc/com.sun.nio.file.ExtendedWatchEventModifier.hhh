@@ -1,8 +1,0 @@
-#ifndef __com_sun_nio_file_ExtendedWatchEventModifier__
-// Type L:\smali2cpp20\x64\Release\out\com\sun\nio\file\ExtendedWatchEventModifier.smali
-namespace com::sun::nio::file{
-class ExtendedWatchEventModifier;
-}; // namespace com::sun::nio::file
-
-#endif //__com_sun_nio_file_ExtendedWatchEventModifier__
-

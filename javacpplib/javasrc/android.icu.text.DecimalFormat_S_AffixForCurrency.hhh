@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_DecimalFormat_S_AffixForCurrency__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\DecimalFormat$AffixForCurrency.smali
-namespace android::icu::text{
-class DecimalFormat_S_AffixForCurrency;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_DecimalFormat_S_AffixForCurrency__
-

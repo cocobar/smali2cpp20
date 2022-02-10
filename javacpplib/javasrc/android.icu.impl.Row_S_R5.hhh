@@ -1,9 +1,0 @@
-#ifndef __android_icu_impl_Row_S_R5__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\Row$R5.smali
-namespace android::icu::impl{
-template <typename C0,typename C1,typename C2,typename C3,typename C4>
-class Row_S_R5;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_Row_S_R5__
-

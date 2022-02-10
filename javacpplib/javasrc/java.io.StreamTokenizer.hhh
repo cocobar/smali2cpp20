@@ -1,8 +1,0 @@
-#ifndef __java_io_StreamTokenizer__
-// Type L:\smali2cpp20\x64\Release\out\java\io\StreamTokenizer.smali
-namespace java::io{
-class StreamTokenizer;
-}; // namespace java::io
-
-#endif //__java_io_StreamTokenizer__
-

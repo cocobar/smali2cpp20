@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_LocaleMatcher_S_LocalePatternMatcher__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\LocaleMatcher$LocalePatternMatcher.smali
-namespace android::icu::util{
-class LocaleMatcher_S_LocalePatternMatcher;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_LocaleMatcher_S_LocalePatternMatcher__
-

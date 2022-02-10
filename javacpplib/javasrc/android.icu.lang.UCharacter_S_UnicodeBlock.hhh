@@ -1,8 +1,0 @@
-#ifndef __android_icu_lang_UCharacter_S_UnicodeBlock__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\lang\UCharacter$UnicodeBlock.smali
-namespace android::icu::lang{
-class UCharacter_S_UnicodeBlock;
-}; // namespace android::icu::lang
-
-#endif //__android_icu_lang_UCharacter_S_UnicodeBlock__
-

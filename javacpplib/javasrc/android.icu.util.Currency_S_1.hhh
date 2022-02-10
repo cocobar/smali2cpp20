@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_Currency_S_1__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\Currency$1.smali
-namespace android::icu::util{
-class Currency_S_1;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_Currency_S_1__
-

@@ -1,8 +1,0 @@
-#ifndef __java_lang_Enum_S_1__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\Enum$1.smali
-namespace java::lang{
-class Enum_S_1;
-}; // namespace java::lang
-
-#endif //__java_lang_Enum_S_1__
-

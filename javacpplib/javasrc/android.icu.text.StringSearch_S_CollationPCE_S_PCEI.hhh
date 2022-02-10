@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_StringSearch_S_CollationPCE_S_PCEI__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\StringSearch$CollationPCE$PCEI.smali
-namespace android::icu::text{
-class StringSearch_S_CollationPCE_S_PCEI;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_StringSearch_S_CollationPCE_S_PCEI__
-

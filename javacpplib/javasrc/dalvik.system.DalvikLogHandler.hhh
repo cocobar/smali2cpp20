@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_DalvikLogHandler__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\DalvikLogHandler.smali
-namespace dalvik::system{
-class DalvikLogHandler;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_DalvikLogHandler__
-

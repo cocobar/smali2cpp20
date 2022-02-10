@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_ClassExt__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\ClassExt.smali
-namespace dalvik::system{
-class ClassExt;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_ClassExt__
-

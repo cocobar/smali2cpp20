@@ -1,8 +1,0 @@
-#ifndef __dalvik_annotation_optimization_CriticalNative__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\annotation\optimization\CriticalNative.smali
-namespace dalvik::annotation::optimization{
-class CriticalNative;
-}; // namespace dalvik::annotation::optimization
-
-#endif //__dalvik_annotation_optimization_CriticalNative__
-

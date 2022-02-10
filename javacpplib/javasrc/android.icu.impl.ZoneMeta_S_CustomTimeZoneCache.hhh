@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_ZoneMeta_S_CustomTimeZoneCache__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ZoneMeta$CustomTimeZoneCache.smali
-namespace android::icu::impl{
-class ZoneMeta_S_CustomTimeZoneCache;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_ZoneMeta_S_CustomTimeZoneCache__
-

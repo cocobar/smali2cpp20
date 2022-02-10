@@ -1,8 +1,0 @@
-#ifndef __android_system_NetlinkSocketAddress__
-// Type L:\smali2cpp20\x64\Release\out\android\system\NetlinkSocketAddress.smali
-namespace android::system{
-class NetlinkSocketAddress;
-}; // namespace android::system
-
-#endif //__android_system_NetlinkSocketAddress__
-

@@ -1,8 +1,0 @@
-#ifndef __java_lang_DexCache__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\DexCache.smali
-namespace java::lang{
-class DexCache;
-}; // namespace java::lang
-
-#endif //__java_lang_DexCache__
-

@@ -1,8 +1,0 @@
-#ifndef __java_lang_IllegalAccessError__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\IllegalAccessError.smali
-namespace java::lang{
-class IllegalAccessError;
-}; // namespace java::lang
-
-#endif //__java_lang_IllegalAccessError__
-

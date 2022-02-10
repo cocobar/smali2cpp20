@@ -1,8 +1,0 @@
-#ifndef __java_lang_Integer_S_IntegerCache__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\Integer$IntegerCache.smali
-namespace java::lang{
-class Integer_S_IntegerCache;
-}; // namespace java::lang
-
-#endif //__java_lang_Integer_S_IntegerCache__
-

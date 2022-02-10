@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_HebrewHoliday__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\HebrewHoliday.smali
-namespace android::icu::util{
-class HebrewHoliday;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_HebrewHoliday__
-

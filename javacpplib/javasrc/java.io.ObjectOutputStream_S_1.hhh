@@ -1,8 +1,0 @@
-#ifndef __java_io_ObjectOutputStream_S_1__
-// Type L:\smali2cpp20\x64\Release\out\java\io\ObjectOutputStream$1.smali
-namespace java::io{
-class ObjectOutputStream_S_1;
-}; // namespace java::io
-
-#endif //__java_io_ObjectOutputStream_S_1__
-

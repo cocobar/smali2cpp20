@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_LowercaseTransliterator_S_2__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\LowercaseTransliterator$2.smali
-namespace android::icu::text{
-class LowercaseTransliterator_S_2;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_LowercaseTransliterator_S_2__
-

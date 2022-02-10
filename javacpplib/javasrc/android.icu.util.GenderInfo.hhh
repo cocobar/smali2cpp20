@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_GenderInfo__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\GenderInfo.smali
-namespace android::icu::util{
-class GenderInfo;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_GenderInfo__
-

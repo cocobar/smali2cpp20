@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_VMRuntime__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\VMRuntime.smali
-namespace dalvik::system{
-class VMRuntime;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_VMRuntime__
-

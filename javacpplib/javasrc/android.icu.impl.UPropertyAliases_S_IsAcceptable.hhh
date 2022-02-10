@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_UPropertyAliases_S_IsAcceptable__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\UPropertyAliases$IsAcceptable.smali
-namespace android::icu::impl{
-class UPropertyAliases_S_IsAcceptable;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_UPropertyAliases_S_IsAcceptable__
-

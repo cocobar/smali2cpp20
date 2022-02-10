@@ -42,16 +42,14 @@ void CMultiWorkThread::doOneFile(std::string strInputFile, std::string strOutput
 	std::filesystem::path toSavePathHfile = toSavePath;
 	std::filesystem::path toSavePathTfile = toSavePath;
 	std::filesystem::path toSavePathTHeaderfile = toSavePath;
-
 	std::filesystem::path toSavePathCPP20file = toSavePath;
 
 	std::shared_ptr<CSmaliClass> cSmaliClass = std::make_shared<CSmaliClass>(strInputFile);
 
-	//mtxClang.lock();
 	cSmaliClass->loadFile();
-	//mtxClang.unlock();
 	cSmaliClass->processAllLine();
 
+	// 所有的类不清除，全部保存下来，用于生成 Class 类
 	mtxSmaliFileMap.lock();
 	this->mapSmaliFile.insert(std::make_pair(cSmaliClass->getClassCppSaveName(), cSmaliClass));
 	mtxSmaliFileMap.unlock();
@@ -77,19 +75,6 @@ void CMultiWorkThread::doOneFile(std::string strInputFile, std::string strOutput
 	d->dumpToFile(toSavePathHfile.string());
 	d->clear();
 
-	// 输出 T 文件
-	// 申明了只带有默认构造函数的类型
-	cSmaliClass->dumpToType(d.get());
-	toSavePathTfile.append(cSmaliClass->getClassCppSaveName() + ".hh");
-	d->dumpToFile(toSavePathTfile.string());
-	d->clear();
-
-	// 输出 THeader 文件
-	// 只申明了类型
-	cSmaliClass->dumpToTypeHHH(d.get());
-	toSavePathTHeaderfile.append(cSmaliClass->getClassCppSaveName() + ".hhh");
-	d->dumpToFile(toSavePathTHeaderfile.string());
-	d->clear();
 #endif
 
 	// 输出 CPP20 文件
@@ -206,7 +191,7 @@ bool CMultiWorkThread::checkClassInheritLink(std::vector<std::vector<std::string
 					}
 
 					if (strCppOneFile.size() > 1) {
-						if (("T_CONS" != strCppOneFile) 
+						if (("T_CONS" != strCppOneFile)
 							&& ("P_OUT" != strCppOneFile)
 							&& ("P_IN" != strCppOneFile)
 							&& ("T_SPLITR" != strCppOneFile)
@@ -228,7 +213,7 @@ bool CMultiWorkThread::checkClassInheritLink(std::vector<std::vector<std::string
 							&& ("C4" != strCppOneFile)
 							) {
 							//std::cout << "to find the class " << strCppOneFile << std::endl;
-							if ((".BaseSpliterator" == strCppOneFile) 
+							if ((".BaseSpliterator" == strCppOneFile)
 								|| ("std.vector" == strCppOneFile)
 								) {
 								std::cout << "--->" << strCppSuper << std::endl;
@@ -273,7 +258,7 @@ void CMultiWorkThread::work() {
 	nCurrentIndex = 0;
 
 	/*
-	* 
+	*
 # 生成`add.o`文件
 clang++ -c add.cc
 # 生成`libadd.a`静态链接库

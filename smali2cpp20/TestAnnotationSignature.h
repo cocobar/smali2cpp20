@@ -83,7 +83,7 @@ public:
 		std::filesystem::path fsPath(strPath);
 		std::filesystem::path toSavePath = fsPath.parent_path();
 		//toSavePath.append("smalilist_error.txt");
-		toSavePath.append("smalilist_degbug.txt");
+		toSavePath.append("smalilist_debug.txt");
 
 		std::cout << "error files: " << listErrorFile.size() << std::endl;
 

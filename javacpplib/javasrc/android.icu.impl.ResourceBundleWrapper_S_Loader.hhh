@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_ResourceBundleWrapper_S_Loader__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ResourceBundleWrapper$Loader.smali
-namespace android::icu::impl{
-class ResourceBundleWrapper_S_Loader;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_ResourceBundleWrapper_S_Loader__
-

@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_MeasureUnit_S_Factory__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\MeasureUnit$Factory.smali
-namespace android::icu::util{
-class MeasureUnit_S_Factory;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_MeasureUnit_S_Factory__
-

@@ -20,11 +20,12 @@
 #include "SmaliType.h"
 #include <regex>
 #include "config.hpp"
+#include "CTypeDefine.h"
 
 class CSmaliClass :public CBaseObject {
 
 private:
-	CSmaliClass() {};
+	CSmaliClass();
 
 	std::string strFilePath;
 	std::string strFileName;
@@ -64,7 +65,11 @@ private:
 	unsigned long isJavaAccessFlags(std::string str);
 	bool isJavaClassName(std::string str);
 
+	std::map<std::string, std::shared_ptr<CTypeDefine>> usedTypeMap;
+
 public:
+
+	std::shared_ptr<CTypeDefine> findUsedType(std::string strClass);
 
 	std::string& getFilePath() {
 		return strFilePath;
@@ -168,8 +173,6 @@ public:
 	void dumpToCpp(CodeDumper* d);
 	void dumpToCpp20Cpp(CodeDumper* d);
 	void dumpToH(CodeDumper* d);
-	void dumpToType(CodeDumper* d);
-	void dumpToTypeHHH(CodeDumper* d);
 	void dumpToModule(CodeDumper* d);
 };
 

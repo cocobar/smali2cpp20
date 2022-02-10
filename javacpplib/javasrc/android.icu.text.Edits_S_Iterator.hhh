@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_Edits_S_Iterator__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\Edits$Iterator.smali
-namespace android::icu::text{
-class Edits_S_Iterator;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_Edits_S_Iterator__
-

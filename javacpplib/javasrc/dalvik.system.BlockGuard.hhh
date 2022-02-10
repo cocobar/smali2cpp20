@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_BlockGuard__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\BlockGuard.smali
-namespace dalvik::system{
-class BlockGuard;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_BlockGuard__
-

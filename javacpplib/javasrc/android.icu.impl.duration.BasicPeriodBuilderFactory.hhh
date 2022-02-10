@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_duration_BasicPeriodBuilderFactory__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\duration\BasicPeriodBuilderFactory.smali
-namespace android::icu::impl::duration{
-class BasicPeriodBuilderFactory;
-}; // namespace android::icu::impl::duration
-
-#endif //__android_icu_impl_duration_BasicPeriodBuilderFactory__
-

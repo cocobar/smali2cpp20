@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_DexPathList_S_Element__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\DexPathList$Element.smali
-namespace dalvik::system{
-class DexPathList_S_Element;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_DexPathList_S_Element__
-

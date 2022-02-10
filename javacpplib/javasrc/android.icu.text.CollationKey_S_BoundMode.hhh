@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_CollationKey_S_BoundMode__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\CollationKey$BoundMode.smali
-namespace android::icu::text{
-class CollationKey_S_BoundMode;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_CollationKey_S_BoundMode__
-

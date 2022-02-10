@@ -59256,7 +59256,7 @@
     <Text Include="javasrc\AnnotationSignature.txt">
       <Filter>javasrc</Filter>
     </Text>
-    <Text Include="javasrc\smalilist_degbug.txt">
+    <Text Include="javasrc\smalilist_debug.txt">
       <Filter>javasrc</Filter>
     </Text>
   </ItemGroup>

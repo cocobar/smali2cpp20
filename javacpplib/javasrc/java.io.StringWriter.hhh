@@ -1,8 +1,0 @@
-#ifndef __java_io_StringWriter__
-// Type L:\smali2cpp20\x64\Release\out\java\io\StringWriter.smali
-namespace java::io{
-class StringWriter;
-}; // namespace java::io
-
-#endif //__java_io_StringWriter__
-

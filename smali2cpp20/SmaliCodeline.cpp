@@ -16,11 +16,11 @@ CSmaliCodeline::CSmaliCodeline() {
 CSmaliCodeline::~CSmaliCodeline() {
 }
 
-std::vector<std::shared_ptr<CSmaliRegister>> & CSmaliCodeline::getInputRegs() {
+std::vector<std::shared_ptr<CSmaliRegister>>& CSmaliCodeline::getInputRegs() {
 	return this->regsIn;
 }
 
-std::vector<std::shared_ptr<CSmaliRegister>> & CSmaliCodeline::getOutputRegs() {
+std::vector<std::shared_ptr<CSmaliRegister>>& CSmaliCodeline::getOutputRegs() {
 	return this->regsOut;
 }
 
@@ -39,7 +39,7 @@ unsigned long CSmaliCodeline::isJavaMathodTypeFlags(std::string str) {
 	return 0;
 }
 
-CSmaliCodeline::CSmaliCodeline(CSmaliMethod* pMethod, CSmaliCodeCache * pHostCache, int nLine, std::string& strCodeLine) {
+CSmaliCodeline::CSmaliCodeline(CSmaliMethod* pMethod, CSmaliCodeCache* pHostCache, int nLine, std::string& strCodeLine) {
 	this->assign.reset();
 	this->pMethod = pMethod;
 	this->pCache = pHostCache;
@@ -78,7 +78,7 @@ bool CSmaliCodeline::regCheckIn(std::shared_ptr<CSmaliRegister> reg) {
 	if (reg->isOutput()) {
 		// 是输出寄存器,那么就分配一个变量
 		if (reg->getVar() == nullptr) {
-			this->assign = std::make_shared<CVar>(reg, ((CSmaliMethod *)(this->pMethod))->GroupSameVar, this->pMethod);
+			this->assign = std::make_shared<CVar>(reg, ((CSmaliMethod*)(this->pMethod))->GroupSameVar, this->pMethod);
 			reg->setVar(this->assign);
 		}
 	}
@@ -115,7 +115,7 @@ std::string CSmaliCodeline::getMethodString(bool inTemplate) {
 	if (strTmp.size() > 0) {
 		strMethodNameTmp = strTmp;
 	}
-	
+
 
 	if (strMethodNameTmp == "delete") {
 		strMethodNameTmp = "_delete_";
@@ -506,6 +506,7 @@ void CSmaliCodeline::listCodeLineReg() {
 	}
 
 	if (this->symbols[0][0] == ':') {		// 行号标签
+
 	}
 	if (this->symbols[0] == ".method") {
 		std::string strMethodS;

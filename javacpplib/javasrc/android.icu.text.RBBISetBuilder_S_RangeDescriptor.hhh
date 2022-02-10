@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_RBBISetBuilder_S_RangeDescriptor__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\RBBISetBuilder$RangeDescriptor.smali
-namespace android::icu::text{
-class RBBISetBuilder_S_RangeDescriptor;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_RBBISetBuilder_S_RangeDescriptor__
-

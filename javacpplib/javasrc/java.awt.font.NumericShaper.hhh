@@ -1,8 +1,0 @@
-#ifndef __java_awt_font_NumericShaper__
-// Type L:\smali2cpp20\x64\Release\out\java\awt\font\NumericShaper.smali
-namespace java::awt::font{
-class NumericShaper;
-}; // namespace java::awt::font
-
-#endif //__java_awt_font_NumericShaper__
-

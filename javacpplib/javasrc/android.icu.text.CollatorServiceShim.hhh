@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_CollatorServiceShim__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\CollatorServiceShim.smali
-namespace android::icu::text{
-class CollatorServiceShim;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_CollatorServiceShim__
-

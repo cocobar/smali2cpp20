@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_ICUUncheckedIOException__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\ICUUncheckedIOException.smali
-namespace android::icu::util{
-class ICUUncheckedIOException;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_ICUUncheckedIOException__
-

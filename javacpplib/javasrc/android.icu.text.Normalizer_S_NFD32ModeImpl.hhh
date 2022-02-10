@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_Normalizer_S_NFD32ModeImpl__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\Normalizer$NFD32ModeImpl.smali
-namespace android::icu::text{
-class Normalizer_S_NFD32ModeImpl;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_Normalizer_S_NFD32ModeImpl__
-

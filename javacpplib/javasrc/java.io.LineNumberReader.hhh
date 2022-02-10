@@ -1,8 +1,0 @@
-#ifndef __java_io_LineNumberReader__
-// Type L:\smali2cpp20\x64\Release\out\java\io\LineNumberReader.smali
-namespace java::io{
-class LineNumberReader;
-}; // namespace java::io
-
-#endif //__java_io_LineNumberReader__
-

@@ -1,8 +1,0 @@
-#ifndef __java_lang_AssertionError__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\AssertionError.smali
-namespace java::lang{
-class AssertionError;
-}; // namespace java::lang
-
-#endif //__java_lang_AssertionError__
-

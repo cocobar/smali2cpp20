@@ -1,8 +1,0 @@
-#ifndef __java_io_PrintWriter__
-// Type L:\smali2cpp20\x64\Release\out\java\io\PrintWriter.smali
-namespace java::io{
-class PrintWriter;
-}; // namespace java::io
-
-#endif //__java_io_PrintWriter__
-

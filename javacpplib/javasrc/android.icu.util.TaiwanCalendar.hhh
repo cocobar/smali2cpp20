@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_TaiwanCalendar__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\TaiwanCalendar.smali
-namespace android::icu::util{
-class TaiwanCalendar;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_TaiwanCalendar__
-

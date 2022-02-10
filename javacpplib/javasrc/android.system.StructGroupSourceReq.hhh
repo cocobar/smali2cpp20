@@ -1,8 +1,0 @@
-#ifndef __android_system_StructGroupSourceReq__
-// Type L:\smali2cpp20\x64\Release\out\android\system\StructGroupSourceReq.smali
-namespace android::system{
-class StructGroupSourceReq;
-}; // namespace android::system
-
-#endif //__android_system_StructGroupSourceReq__
-

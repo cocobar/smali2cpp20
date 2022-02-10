@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_EmulatedStackFrame_S_StackFrameReader__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\EmulatedStackFrame$StackFrameReader.smali
-namespace dalvik::system{
-class EmulatedStackFrame_S_StackFrameReader;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_EmulatedStackFrame_S_StackFrameReader__
-

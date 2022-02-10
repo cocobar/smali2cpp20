@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_Bidi_S_Isolate__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\Bidi$Isolate.smali
-namespace android::icu::text{
-class Bidi_S_Isolate;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_Bidi_S_Isolate__
-

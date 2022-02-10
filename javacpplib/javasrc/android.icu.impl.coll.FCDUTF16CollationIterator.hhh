@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_coll_FCDUTF16CollationIterator__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\coll\FCDUTF16CollationIterator.smali
-namespace android::icu::impl::coll{
-class FCDUTF16CollationIterator;
-}; // namespace android::icu::impl::coll
-
-#endif //__android_icu_impl_coll_FCDUTF16CollationIterator__
-

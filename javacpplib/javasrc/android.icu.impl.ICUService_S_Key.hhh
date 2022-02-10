@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_ICUService_S_Key__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ICUService$Key.smali
-namespace android::icu::impl{
-class ICUService_S_Key;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_ICUService_S_Key__
-

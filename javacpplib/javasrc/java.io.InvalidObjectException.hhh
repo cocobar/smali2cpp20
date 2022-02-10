@@ -1,8 +1,0 @@
-#ifndef __java_io_InvalidObjectException__
-// Type L:\smali2cpp20\x64\Release\out\java\io\InvalidObjectException.smali
-namespace java::io{
-class InvalidObjectException;
-}; // namespace java::io
-
-#endif //__java_io_InvalidObjectException__
-

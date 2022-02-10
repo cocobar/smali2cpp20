@@ -1,8 +1,0 @@
-#ifndef __java_lang_Math_S_RandomNumberGeneratorHolder__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\Math$RandomNumberGeneratorHolder.smali
-namespace java::lang{
-class Math_S_RandomNumberGeneratorHolder;
-}; // namespace java::lang
-
-#endif //__java_lang_Math_S_RandomNumberGeneratorHolder__
-

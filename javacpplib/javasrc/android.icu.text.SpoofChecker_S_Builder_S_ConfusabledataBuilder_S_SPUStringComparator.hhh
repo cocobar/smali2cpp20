@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_SpoofChecker_S_Builder_S_ConfusabledataBuilder_S_SPUStringComparator__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\SpoofChecker$Builder$ConfusabledataBuilder$SPUStringComparator.smali
-namespace android::icu::text{
-class SpoofChecker_S_Builder_S_ConfusabledataBuilder_S_SPUStringComparator;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_SpoofChecker_S_Builder_S_ConfusabledataBuilder_S_SPUStringComparator__
-

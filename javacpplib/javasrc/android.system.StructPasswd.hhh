@@ -1,8 +1,0 @@
-#ifndef __android_system_StructPasswd__
-// Type L:\smali2cpp20\x64\Release\out\android\system\StructPasswd.smali
-namespace android::system{
-class StructPasswd;
-}; // namespace android::system
-
-#endif //__android_system_StructPasswd__
-

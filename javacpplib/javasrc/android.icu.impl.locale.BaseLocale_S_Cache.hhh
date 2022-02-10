@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_locale_BaseLocale_S_Cache__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\locale\BaseLocale$Cache.smali
-namespace android::icu::impl::locale{
-class BaseLocale_S_Cache;
-}; // namespace android::icu::impl::locale
-
-#endif //__android_icu_impl_locale_BaseLocale_S_Cache__
-

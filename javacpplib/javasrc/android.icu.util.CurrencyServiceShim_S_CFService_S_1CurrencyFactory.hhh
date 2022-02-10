@@ -1,8 +1,0 @@
-#ifndef __android_icu_util_CurrencyServiceShim_S_CFService_S_1CurrencyFactory__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\util\CurrencyServiceShim$CFService$1CurrencyFactory.smali
-namespace android::icu::util{
-class CurrencyServiceShim_S_CFService_S_1CurrencyFactory;
-}; // namespace android::icu::util
-
-#endif //__android_icu_util_CurrencyServiceShim_S_CFService_S_1CurrencyFactory__
-

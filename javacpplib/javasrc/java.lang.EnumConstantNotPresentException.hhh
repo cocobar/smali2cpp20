@@ -1,8 +1,0 @@
-#ifndef __java_lang_EnumConstantNotPresentException__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\EnumConstantNotPresentException.smali
-namespace java::lang{
-class EnumConstantNotPresentException;
-}; // namespace java::lang
-
-#endif //__java_lang_EnumConstantNotPresentException__
-

@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_coll_CollationBuilder_S_BundleImporter__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\coll\CollationBuilder$BundleImporter.smali
-namespace android::icu::impl::coll{
-class CollationBuilder_S_BundleImporter;
-}; // namespace android::icu::impl::coll
-
-#endif //__android_icu_impl_coll_CollationBuilder_S_BundleImporter__
-

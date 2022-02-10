@@ -1,8 +1,0 @@
-#ifndef __android_icu_lang_UScript_S_ScriptUsage__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\lang\UScript$ScriptUsage.smali
-namespace android::icu::lang{
-class UScript_S_ScriptUsage;
-}; // namespace android::icu::lang
-
-#endif //__android_icu_lang_UScript_S_ScriptUsage__
-

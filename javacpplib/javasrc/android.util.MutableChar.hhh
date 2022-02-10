@@ -1,8 +1,0 @@
-#ifndef __android_util_MutableChar__
-// Type L:\smali2cpp20\x64\Release\out\android\util\MutableChar.smali
-namespace android::util{
-class MutableChar;
-}; // namespace android::util
-
-#endif //__android_util_MutableChar__
-

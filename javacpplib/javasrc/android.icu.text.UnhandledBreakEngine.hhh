@@ -1,8 +1,0 @@
-#ifndef __android_icu_text_UnhandledBreakEngine__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\text\UnhandledBreakEngine.smali
-namespace android::icu::text{
-class UnhandledBreakEngine;
-}; // namespace android::icu::text
-
-#endif //__android_icu_text_UnhandledBreakEngine__
-

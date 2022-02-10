@@ -1,8 +1,0 @@
-#ifndef __java_lang_Compiler__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\Compiler.smali
-namespace java::lang{
-class Compiler;
-}; // namespace java::lang
-
-#endif //__java_lang_Compiler__
-

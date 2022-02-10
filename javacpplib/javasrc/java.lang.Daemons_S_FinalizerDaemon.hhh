@@ -1,8 +1,0 @@
-#ifndef __java_lang_Daemons_S_FinalizerDaemon__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\Daemons$FinalizerDaemon.smali
-namespace java::lang{
-class Daemons_S_FinalizerDaemon;
-}; // namespace java::lang
-
-#endif //__java_lang_Daemons_S_FinalizerDaemon__
-

@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_BaseDexClassLoader_S_Reporter__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\BaseDexClassLoader$Reporter.smali
-namespace dalvik::system{
-class BaseDexClassLoader_S_Reporter;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_BaseDexClassLoader_S_Reporter__
-

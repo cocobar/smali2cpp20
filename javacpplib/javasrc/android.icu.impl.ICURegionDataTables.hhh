@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_ICURegionDataTables__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\ICURegionDataTables.smali
-namespace android::icu::impl{
-class ICURegionDataTables;
-}; // namespace android::icu::impl
-
-#endif //__android_icu_impl_ICURegionDataTables__
-

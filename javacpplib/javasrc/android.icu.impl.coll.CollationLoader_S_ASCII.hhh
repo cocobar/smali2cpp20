@@ -1,8 +1,0 @@
-#ifndef __android_icu_impl_coll_CollationLoader_S_ASCII__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\impl\coll\CollationLoader$ASCII.smali
-namespace android::icu::impl::coll{
-class CollationLoader_S_ASCII;
-}; // namespace android::icu::impl::coll
-
-#endif //__android_icu_impl_coll_CollationLoader_S_ASCII__
-

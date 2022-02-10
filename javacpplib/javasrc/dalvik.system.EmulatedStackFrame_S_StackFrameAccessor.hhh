@@ -1,8 +1,0 @@
-#ifndef __dalvik_system_EmulatedStackFrame_S_StackFrameAccessor__
-// Type L:\smali2cpp20\x64\Release\out\dalvik\system\EmulatedStackFrame$StackFrameAccessor.smali
-namespace dalvik::system{
-class EmulatedStackFrame_S_StackFrameAccessor;
-}; // namespace dalvik::system
-
-#endif //__dalvik_system_EmulatedStackFrame_S_StackFrameAccessor__
-

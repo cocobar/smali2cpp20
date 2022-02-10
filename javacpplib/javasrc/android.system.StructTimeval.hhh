@@ -1,8 +1,0 @@
-#ifndef __android_system_StructTimeval__
-// Type L:\smali2cpp20\x64\Release\out\android\system\StructTimeval.smali
-namespace android::system{
-class StructTimeval;
-}; // namespace android::system
-
-#endif //__android_system_StructTimeval__
-

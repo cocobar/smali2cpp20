@@ -1,8 +1,0 @@
-#ifndef __java_lang_ArrayIndexOutOfBoundsException__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\ArrayIndexOutOfBoundsException.smali
-namespace java::lang{
-class ArrayIndexOutOfBoundsException;
-}; // namespace java::lang
-
-#endif //__java_lang_ArrayIndexOutOfBoundsException__
-

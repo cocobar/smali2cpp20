@@ -1,8 +1,0 @@
-#ifndef __java_lang_ClassLoader__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\ClassLoader.smali
-namespace java::lang{
-class ClassLoader;
-}; // namespace java::lang
-
-#endif //__java_lang_ClassLoader__
-

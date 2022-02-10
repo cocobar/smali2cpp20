@@ -1,8 +1,0 @@
-#ifndef __android_icu_lang_UProperty_S_NameChoice__
-// Type L:\smali2cpp20\x64\Release\out\android\icu\lang\UProperty$NameChoice.smali
-namespace android::icu::lang{
-class UProperty_S_NameChoice;
-}; // namespace android::icu::lang
-
-#endif //__android_icu_lang_UProperty_S_NameChoice__
-

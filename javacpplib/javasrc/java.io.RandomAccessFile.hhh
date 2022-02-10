@@ -1,8 +1,0 @@
-#ifndef __java_io_RandomAccessFile__
-// Type L:\smali2cpp20\x64\Release\out\java\io\RandomAccessFile.smali
-namespace java::io{
-class RandomAccessFile;
-}; // namespace java::io
-
-#endif //__java_io_RandomAccessFile__
-

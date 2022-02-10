@@ -1,8 +1,0 @@
-#ifndef __java_lang_ClassFormatError__
-// Type L:\smali2cpp20\x64\Release\out\java\lang\ClassFormatError.smali
-namespace java::lang{
-class ClassFormatError;
-}; // namespace java::lang
-
-#endif //__java_lang_ClassFormatError__
-
