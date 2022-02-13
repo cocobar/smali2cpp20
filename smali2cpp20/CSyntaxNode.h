@@ -1,12 +1,11 @@
 #ifndef __SyntaxNode_H__
 #define __SyntaxNode_H__
 
-#include "BaseObject.h"
+#include "CBaseAssert.h"
 #include <vector>
 #include <memory>
 #include <map>
-#include "SmaliCodeline.h"
-#include "DrawGraph.h"
+#include "CSmaliCodeline.h"
 #include <regex>
 
 struct tryCatchRecordItem {
@@ -149,29 +148,7 @@ public:
 		std::map<int, std::shared_ptr<CSmaliCodeline>>& mapCode,
 		std::vector<std::shared_ptr<CSyntaxNode>> listNode);
 
-	static int hex_to_int(const std::string& input) {
-		std::regex r("^\\s*([-+])?(0[xX])([0-9A-Fa-f]+)\\s*$");
-		std::smatch m;
-		bool bNeg = false;
-		bool found = std::regex_search(input, m, r);
-
-		if (found && m.size() == 4) {
-			if (m[1] == "-") {
-				bNeg = true;
-			}
-			std::string strHex = m[2];
-			strHex.append(m[3]);
-			int decimal = (int)std::strtoll(strHex.c_str(), nullptr, 16);
-
-			std::string strDec;
-			if (bNeg) {
-				return (0 - decimal);
-			}
-			return decimal;
-		}
-		BaseAssert(0);
-		return 0;
-	}
+	static int hex_to_int(const std::string& input);
 };
 
 #endif

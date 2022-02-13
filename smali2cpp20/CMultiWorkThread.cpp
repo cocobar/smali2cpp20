@@ -1,13 +1,12 @@
 #include "CMultiWorkThread.h"
 
 #include <iostream>
-#include "SmaliClass.h"
-#include "config.hpp"
+#include "CSmaliClass.h"
 #include <map>
 #include <string>
 #include <vector>
 #include "TestAnnotationSignature.h"
-#include "BaseThread.h"
+#include "CBaseThread.h"
 
 
 CMultiWorkThread::CMultiWorkThread() {
@@ -51,72 +50,9 @@ void CMultiWorkThread::doOneFile(std::string strInputFile, std::string strOutput
 
 	// 所有的类不清除，全部保存下来，用于生成 Class 类
 	mtxSmaliFileMap.lock();
-	this->mapSmaliFile.insert(std::make_pair(cSmaliClass->getClassCppSaveName(), cSmaliClass));
+	// CSmaliType(h->second->strClassName, nullptr).getBaseType()->getCppFileName();
+	mapSmaliFile.insert(std::make_pair(cSmaliClass->getClassCppSaveName(), cSmaliClass));
 	mtxSmaliFileMap.unlock();
-
-#if 1
-	// 输出 CPP 文件
-	cSmaliClass->dumpToCpp(d.get());
-	//d->dumpAll();
-	toSavePath.append(cSmaliClass->getClassCppSaveName() + ".cpp");
-	d->dumpToFile(toSavePath.string());
-	d->clear();
-	//system
-
-	mtxOutputList.lock();
-	std::string strCppFileName = toSavePath.filename().string();
-	this->listOutputFile.push_back(strCppFileName);
-	mtxOutputList.unlock();
-
-	// 输出 H 文件
-	// 完整的类型申明
-	cSmaliClass->dumpToH(d.get());
-	toSavePathHfile.append(cSmaliClass->getClassCppSaveName() + ".h");
-	d->dumpToFile(toSavePathHfile.string());
-	d->clear();
-
-#endif
-
-	// 输出 CPP20 文件
-	// 只申明了类型
-#if 0
-	cSmaliClass.dumpToModule(d.get());
-	toSavePathCPP20file.append(cSmaliClass.getClassCppSaveName() + ".ixx");
-	d->dumpToFile(toSavePathCPP20file.string());
-	d->clear();
-	mtxOutputList.lock();
-	std::string strCpp20FileName = toSavePathCPP20file.filename().string();
-	this->listOutputFile.push_back(strCpp20FileName);
-	mtxOutputList.unlock();
-
-
-	// 输出 CPP 文件
-	cSmaliClass.dumpToCpp20Cpp(d.get());
-	toSavePath.append(cSmaliClass.getClassCppSaveName() + ".cpp");
-	d->dumpToFile(toSavePath.string());
-	d->clear();
-	mtxOutputList.lock();
-	std::string strCppFileName = toSavePath.filename().string();
-	this->listOutputFile.push_back(strCppFileName);
-	mtxOutputList.unlock();
-#endif
-
-#if 0
-	mtxClang.lock();
-	{
-		std::string strFormatCmd = "clang-format";
-		strFormatCmd.append(" -style=WebKit -i ");
-		strFormatCmd.append(toSavePath.string());
-		system(strFormatCmd.c_str());
-	}
-	{
-		std::string strFormatCmd = "clang-format";
-		strFormatCmd.append(" -style=WebKit -i ");
-		strFormatCmd.append(toSavePathHfile.string());
-		system(strFormatCmd.c_str());
-	}
-	mtxClang.unlock();
-#endif
 }
 
 void CMultiWorkThread::doOneThread() {
@@ -149,110 +85,6 @@ void CMultiWorkThread::doOneThread() {
 	} while (nIndex >= 0);
 }
 
-bool CMultiWorkThread::checkClassInheritLink(std::vector<std::vector<std::string>>& savedLink, std::vector<std::string> listLink, std::string strCurrentClass) {
-	if (std::find(listLink.begin(), listLink.end(), strCurrentClass) != listLink.end()) {
-
-		auto a = listLink.rbegin();
-		if ((*a) != strCurrentClass) {
-			listLink.push_back(strCurrentClass);
-			savedLink.push_back(listLink);
-		}
-
-		return false;
-	}
-
-	auto a = mapSmaliFile.find(strCurrentClass);
-	if (a != mapSmaliFile.end()) {
-		listLink.push_back(a->first);
-		std::vector<std::string> listInheritClass;
-		std::string strSuper = a->second->getSuperName();
-		std::vector<std::string> listImp = a->second->getListImplements();
-		if (strSuper.size() > 0) {
-			listInheritClass.push_back(strSuper);
-		}
-		for (auto b = listImp.begin(); b != listImp.end(); b++) {
-			listInheritClass.push_back(*b);
-		}
-
-		for (auto c = listInheritClass.begin(); c != listInheritClass.end(); c++) {
-			std::string strCppSuper = SmaliType(*c).getCppFileName();
-			std::string strCppOneFile;
-			std::string strCppOneFull;
-			int nIndex = 0;
-			//std::cout << "--->" << strCppSuper << std::endl;
-			for (int i = 0; i < strCppSuper.size(); i++) {
-				if ((strCppSuper[i] == '<') || (strCppSuper[i] == '>') || (strCppSuper[i] == ',')) {
-
-					if ((strCppSuper[i] == '<')) {
-						nIndex++;
-					}
-					else if (strCppSuper[i] == '>') {
-						nIndex--;
-					}
-
-					if (strCppOneFile.size() > 1) {
-						if (("T_CONS" != strCppOneFile)
-							&& ("P_OUT" != strCppOneFile)
-							&& ("P_IN" != strCppOneFile)
-							&& ("T_SPLITR" != strCppOneFile)
-							&& ("E_OUT" != strCppOneFile)
-							&& ("E_IN" != strCppOneFile)
-							&& ("T_ARR" != strCppOneFile)
-							&& ("T_NODE" != strCppOneFile)
-							&& ("long long[]" != strCppOneFile)
-							&& ("double[]" != strCppOneFile)
-							&& ("int[]" != strCppOneFile)
-							&& ("std.vector" != strCppOneFile)
-							&& ("unsigned char[]" != strCppOneFile)
-							&& ("TK;TV;" != strCppOneFile)
-							&& (".Itr" != strCppOneFile)
-							&& ("C0" != strCppOneFile)
-							&& ("C1" != strCppOneFile)
-							&& ("C2" != strCppOneFile)
-							&& ("C3" != strCppOneFile)
-							&& ("C4" != strCppOneFile)
-							) {
-							//std::cout << "to find the class " << strCppOneFile << std::endl;
-							if ((".BaseSpliterator" == strCppOneFile)
-								|| ("std.vector" == strCppOneFile)
-								) {
-								std::cout << "--->" << strCppSuper << std::endl;
-							}
-
-							if (nIndex == 0) {
-								strCppOneFull.append(strCppOneFile);
-							}
-
-							if (strCppOneFile[0] == '.') {
-								if (strCppOneFull.size() > 0) {
-									checkClassInheritLink(savedLink, listLink, strCppOneFull);
-								}
-							}
-							else {
-								checkClassInheritLink(savedLink, listLink, strCppOneFile);
-							}
-
-
-						}
-					}
-					strCppOneFile = "";
-					//break;
-				}
-				else {
-					strCppOneFile += strCppSuper[i];
-				}
-			}
-		}
-	}
-	else {
-		std::cout << "can not find the class [" << strCurrentClass << "]" << std::endl;
-	}
-
-
-	return true;
-}
-
-
 void CMultiWorkThread::work() {
 	int nMaxTh = this->nMaxThreadCounts;
 	nCurrentIndex = 0;
@@ -284,29 +116,59 @@ clang++ -o t main.cc -L./ -l add
 		(*listThreads)[i] = std::make_shared<CBaseThread>(std::make_shared<std::thread>(&CMultiWorkThread::doOneThread, this));
 	}
 
+	// 等到所有线程结束
 	for (int i = 0; i < nMaxTh; i++) {
 		(*listThreads)[i]->join();
 	}
+	listThreads = nullptr;
 
-	// 全部处理结束
-	// 开始分析 class 派生关系是否出现了递归
-	// mapSmaliFile
+	// 单线程方式运行
+	// 开始导出所有文件
+	int nTestCount = 5;
 	for (auto a = mapSmaliFile.begin(); a != mapSmaliFile.end(); a++) {
+		std::string strInputFile = a->second->getFilePath();
+		std::unique_ptr<CodeDumper> d(new CodeDumper());
+		std::filesystem::path fsPath(strInputFile);
+		std::filesystem::path toSavePath = fsPath.parent_path();
+		// 往上退一个目录
+		if (strOutputDir.size() > 0) {
+			toSavePath.append(strOutputDir);
+		}
+		else {
+			toSavePath.append("..");
+		}
 
-		std::vector<std::vector<std::string>> savedLink;
-		std::vector<std::string> currentLink;
-		savedLink.clear();
-		currentLink.clear();
-		checkClassInheritLink(savedLink, currentLink, a->first);
-		if (savedLink.size() > 0) {
-			for (auto b = savedLink.begin(); b != savedLink.end(); b++) {
-				std::cout << "has loop ref ! ";
-				for (auto c = b->begin(); c != b->end(); c++) {
-					std::cout << "[" << *c << "]";
-				}
-				std::cout << std::endl;
-			}
+		std::filesystem::path toSavePathHfile = toSavePath;
+		std::filesystem::path toSavePathTfile = toSavePath;
 
+		try {
+			// 输出 CPP 文件
+			a->second->dumpToCpp(d.get());
+			//d->dumpAll();
+			toSavePath.append(a->second->getClassCppSaveName() + ".cpp");
+			d->dumpToFile(toSavePath.string());
+			d->clear();
+			//system
+
+			// 保存下来文件名，好生成自动编译脚本
+			mtxOutputList.lock();
+			std::string strCppFileName = toSavePath.filename().string();
+			this->listOutputFile.push_back(strCppFileName);
+			mtxOutputList.unlock();
+
+			// 输出 H 文件
+			// 完整的类型申明
+			a->second->dumpToH(d.get());
+			toSavePathHfile.append(a->second->getClassCppSaveName() + ".h");
+			d->dumpToFile(toSavePathHfile.string());
+			d->clear();
+		}
+		catch (std::string strErrorFile) {
+			TestAnnotationSignature::insertErrorFileName(strErrorFile);
+		}
+
+		if (nTestCount-- == 0) {
+			break;
 		}
 	}
 
@@ -320,30 +182,55 @@ clang++ -o t main.cc -L./ -l add
 	// 
 	std::filesystem::path fsPath(strOutputDir);
 	std::filesystem::path toSavePath = fsPath.parent_path();
-	toSavePath.append("build_all.bat");
-
-	std::ofstream ifile(toSavePath.string(), std::ofstream::out);
-	if (ifile.is_open()) {
-
-		std::string strClang = "clang++ -std=c++17 -Wno-inaccessible-base -ferror-limit=5 -c ";
-		//std::string strClang = "clang++ -std=c++20 -c ";
-
-		//ifile << "clang++ -std=c++17 -Wno-inaccessible-base -o t ";
-		ifile << strClang;
-		int nCount = 0;
-		for (auto a = listOutputFile.begin(); a != listOutputFile.end(); a++) {
-
-			nCount++;
-			ifile << (*a) << " ";
-			if (nCount > 0) {
-				nCount = 0;
-				ifile << " -I./" << "\n";
-				ifile << "\n";
-				ifile << strClang;
-			}
+	std::filesystem::path toSaveJava2CppPath = fsPath.parent_path();
+	{// 输出公共头文件
+		toSaveJava2CppPath.append("java2ctype.h");
+		std::ofstream ifile(toSaveJava2CppPath.string(), std::ofstream::out);
+		if (ifile.is_open()) {
+			ifile << "#ifndef __java2ctype_h__" << std::endl;
+			ifile << "#define __java2ctype_h__" << std::endl;
+			ifile << "#include <vector>" << std::endl;
+			ifile << "#include <memory>" << std::endl;
+			ifile << "#include <any>" << std::endl;
+			ifile << "typedef bool boolean;" << std::endl;
+			ifile << "class java2cBase {" << std::endl;
+			ifile << "public:" << std::endl;
+			ifile << "    java2cBase() {};" << std::endl;
+			ifile << "    java2cBase(const java2cBase& mr) {};" << std::endl;
+			ifile << "    virtual java2cBase& operator = (const java2cBase& mr) {" << std::endl;
+			ifile << "        return *this;" << std::endl;
+			ifile << "    };" << std::endl;
+			ifile << "};" << std::endl;
+			ifile << "#endif" << std::endl;
+			ifile.close();
 		}
-		ifile << " -I./" << "\n";
-		ifile << "\n";
-		ifile.close();
+	}
+
+	{
+		toSavePath.append("build_all.bat");
+		std::ofstream ifile(toSavePath.string(), std::ofstream::out);
+		if (ifile.is_open()) {
+
+			std::string strClang = "clang++ -std=c++17 -Wno-inaccessible-base -ferror-limit=5 -c ";
+			//std::string strClang = "clang++ -std=c++20 -c ";
+
+			//ifile << "clang++ -std=c++17 -Wno-inaccessible-base -o t ";
+			ifile << strClang;
+			int nCount = 0;
+			for (auto a = listOutputFile.begin(); a != listOutputFile.end(); a++) {
+
+				nCount++;
+				ifile << (*a) << " ";
+				if (nCount > 0) {
+					nCount = 0;
+					ifile << " -I./" << "\n";
+					ifile << "\n";
+					ifile << strClang;
+				}
+			}
+			ifile << " -I./" << "\n";
+			ifile << "\n";
+			ifile.close();
+		}
 	}
 }

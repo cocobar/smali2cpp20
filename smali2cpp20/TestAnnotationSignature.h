@@ -6,8 +6,8 @@
 #include <vector>
 #include <iostream>
 #include <map>
-#include "regexString.h"
-#include "SmaliClass.h"
+#include "CRegexString.h"
+#include "CSmaliClass.h"
 #include <mutex>
 
 
@@ -133,7 +133,7 @@ public:
 			")([\\S]*)"
 			RegexEnd
 		)) && (m_typeCheck.size() == 3)) {
-			BaseAssert(strType1 == m_typeCheck[1]);
+			CBaseAssert(strType1 == m_typeCheck[1]);
 		}
 		else if (std::regex_search(strType2, m_typeCheck, std::regex(
 			RegexStart
@@ -167,7 +167,7 @@ public:
 				}
 				else if (pString[jj] == '>') {
 					nLevel--;
-					BaseAssert(nLevel >= 0);
+					CBaseAssert(nLevel >= 0);
 					if (nLevel == 0) {
 						nStart = jj + 1;
 					}
@@ -175,16 +175,16 @@ public:
 				else if ((nLevel == 0) && (pString[jj] == ';')) {
 					std::string ss = strType2.substr(nStart, jj - nStart + 1);
 					sss.append(ss);
-					BaseAssert(strType2.size() == (jj + 1));
+					CBaseAssert(strType2.size() == (jj + 1));
 					nStart = jj + 1;
 				}
 			}
-			BaseAssert(strType2.size() == nStart);
+			CBaseAssert(strType2.size() == nStart);
 			stringhelper::replace(sss, ".", "$");
-			BaseAssert(strType1 == sss);
+			CBaseAssert(strType1 == sss);
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 			return false;
 		}
 
@@ -258,7 +258,7 @@ public:
 						if (b != listLocalTypeDef.end()) {
 							strOutputString.append(b->second);
 							if (toCppType) {
-								BaseAssert(0); // 正常不會進這裏
+								CBaseAssert(0); // 正常不會進這裏
 								std::string strTypeTmp = TypeRedefine(b->second, listLocalTypeDef, &bCanCheck, toCppType, pClass);
 								strOutputCppString.append(strTypeTmp);
 							}
@@ -280,7 +280,7 @@ public:
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 
 				}
@@ -308,7 +308,7 @@ public:
 								std::string strBaseClass = m[3];
 								strBaseClass.append(";");
 								if (pClass) {
-									pClass->listImportSaver->checkJavaClass(strBaseClass);
+									//pClass->listImportSaver->checkJavaClass(strBaseClass);
 								}
 								std::string strTmp = m[3];
 								strTmp[0] = ' ';
@@ -325,7 +325,7 @@ public:
 								std::string strBaseClass = m[3];
 								strBaseClass.append(";");
 								if (pClass) {
-									pClass->listImportSaver->checkJavaClass(strBaseClass);
+									//pClass->listImportSaver->checkJavaClass(strBaseClass);
 								}
 								std::string strTmp = m[3];
 								strTmp[0] = ' ';
@@ -350,7 +350,7 @@ public:
 											}
 											else if (pStrLast[j] == '>') {
 												nLevel2--;
-												BaseAssert(nLevel2 >= 0);
+												CBaseAssert(nLevel2 >= 0);
 											}
 											else if ((pStrLast[j] == ';') && (nLevel2 == 0) ) {
 												// 尖括号内的字符串
@@ -383,7 +383,7 @@ public:
 																}
 																else if (pStrLast3[m] == '>') {
 																	nLevel3--;
-																	BaseAssert(nLevel3 >= 0);
+																	CBaseAssert(nLevel3 >= 0);
 																	if (nLevel3 == 0) {
 																		std::string strBefore = strAfterIt.substr(0, k);
 																		std::string strInAngleBrackets3 = strAfterIt.substr(k + 1, m - k - 1);
@@ -407,7 +407,7 @@ public:
 														else if ((pStrLast3[k] == ';') && (nLevel3 == 0)) {
 															// 完整结束
 															if (k == 0) {
-																BaseAssert(0);
+																CBaseAssert(0);
 															}
 															else {
 																std::string strBefore = strAfterIt.substr(0, k);
@@ -421,7 +421,7 @@ public:
 														}
 													}
 												}
-												BaseAssert(strAfterIt==";");
+												CBaseAssert(strAfterIt==";");
 												strOutputString.append(strAfterIt);
 												if (toCppType) {
 													// 
@@ -434,16 +434,16 @@ public:
 												break;
 											}
 										}
-										BaseAssert(bOk);
+										CBaseAssert(bOk);
 
 									}
 									else {
 										nLevel--;
-										BaseAssert(nLevel >= 0);
+										CBaseAssert(nLevel >= 0);
 									}
 								}
 							}
-							BaseAssert(bOk);
+							CBaseAssert(bOk);
 						}
 
 						if (toCppType) {
@@ -474,7 +474,7 @@ public:
 						nArrayCount = (int)m2[2].str().size();
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 					if (toCppType) {
 
@@ -511,14 +511,14 @@ public:
 							strTypeName = "java::lang::Object";
 							if (pClass) {
 								std::string strBaseClass = "Ljava/lang/Object;";
-								pClass->listImportSaver->checkJavaClass(strBaseClass);
+								//pClass->listImportSaver->checkJavaClass(strBaseClass);
 							}
 #else
 							strTypeName = "*";
 #endif
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 
 						strOutputCppString.append(strTypeName);
@@ -540,12 +540,12 @@ public:
 					if (strOrgiString == "W") return "auto";
 				}
 
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 
 		if (bCanCheck) {
-			BaseAssert(strBackForChech == strOutputString);
+			CBaseAssert(strBackForChech == strOutputString);
 		}
 
 		// 类型向上传递
@@ -599,7 +599,7 @@ public:
 						strTypeDefObjectType = TypeRedefine(strTypeDefObjectType, listLocalTypeDef, &bCanCheck, false);
 
 						// Ljava/util/stream/Node$OfPrimitive; 这个 class 的类声明会出错,出现嵌套递归了
-						//BaseAssert(bCanCheck);
+						//CBaseAssert(bCanCheck);
 
 						if (std::regex_search(strTypeDefName, m, std::regex(
 							RegexStart
@@ -624,12 +624,12 @@ public:
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 		return listLocalTypeDef;
@@ -651,7 +651,7 @@ public:
 		constexpr auto pMf = RegexStart
 			"[.]method" "\\s+"
 			"((?:" PatternMethodFlags "\\s+" ")*)"		// 所有的属性
-			"([-\\w$]*|<init>|<cinit>)"								// 函数名
+			"([-\\w$]*|<init>|<clinit>)"								// 函数名
 			"[(]("
 			"(?:" SmaliTypePrefix RegexOnlySmaliBaseType ")*"				// 输入参数
 			")[)]"
@@ -667,7 +667,7 @@ public:
 			std::vector<std::string> listPatam = regexGetStringList(strParamList, "^(" SmaliTypePrefix RegexOnlySmaliBaseType ")", 2, 1);
 
 			if (strParamList.size() == 0) {
-				BaseAssert(listPatam.size() == 0);
+				CBaseAssert(listPatam.size() == 0);
 			}
 			constexpr auto pSf = RegexStart
 				// 类型重新定义,可有可无
@@ -712,10 +712,10 @@ public:
 							strInputParamForCut = m[2];
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
-					BaseAssert(listInputParam.size() > 0);
+					CBaseAssert(listInputParam.size() > 0);
 				}
 
 				// 重写填写 函数变量
@@ -729,7 +729,7 @@ public:
 				std::string strOutputRedefineParam = TypeRedefine(strOutputParam, listLocalTypeDef, nullptr,false);
 
 				// 进行类型验证
-				BaseAssert(listInputRedefineParam.size() <= listPatam.size());
+				CBaseAssert(listInputRedefineParam.size() <= listPatam.size());
 				for (int m = (int)(listPatam.size() - listInputRedefineParam.size()), s = 0; m < (int)listPatam.size(); m++, s++) {
 					std::string strType1 = listPatam[m];
 					std::string strType2 = listInputRedefineParam[s];
@@ -740,11 +740,11 @@ public:
 				ret.strReturnType = strOutputRedefineParam;
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 
 		return ret;
@@ -785,10 +785,10 @@ public:
 						strInputParamForCut = m[2];
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
-				BaseAssert(listInputParam.size() > 0);
+				CBaseAssert(listInputParam.size() > 0);
 			}
 
 			// 重写填写 函数变量
@@ -802,7 +802,7 @@ public:
 
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 
 		return ret;
@@ -866,10 +866,10 @@ public:
 							strInputParamForCut = m[2];
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
-					BaseAssert(listInputParam.size() > 0);
+					CBaseAssert(listInputParam.size() > 0);
 				}
 
 				// 重写填写 函数变量
@@ -879,7 +879,7 @@ public:
 					listInputRedefineParam.push_back(strRedefine);
 				}
 				
-				BaseAssert(listInputRedefineParam.size() == 1);
+				CBaseAssert(listInputRedefineParam.size() == 1);
 
 				strTypeOut = listInputRedefineParam[0];
 
@@ -887,11 +887,11 @@ public:
 				//ret.strReturnType = strOutputRedefineParam;
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 
 		return strTypeOut;
@@ -914,7 +914,7 @@ public:
 				ifile.close();
 			}
 		}
-		//BaseAssert((listAnnotationSignature.size() % 3) == 0);
+		//CBaseAssert((listAnnotationSignature.size() % 3) == 0);
 
 		for (int i = 0; i < listAnnotationFieldSignature.size(); i += 3) {
 			if ((i + 2) < listAnnotationFieldSignature.size()) {
@@ -922,9 +922,9 @@ public:
 				std::string strField = listAnnotationFieldSignature[i + 1];
 				std::string strSignature = listAnnotationFieldSignature[i + 2];
 
-				BaseAssert(strClass.find("_class:") == 0);
-				BaseAssert(strField.find("_field:") == 0);
-				BaseAssert(strSignature.find("Signat:") == 0);
+				CBaseAssert(strClass.find("_class:") == 0);
+				CBaseAssert(strField.find("_field:") == 0);
+				CBaseAssert(strSignature.find("Signat:") == 0);
 
 				strClass = strClass.substr(7);
 				strField = strField.substr(7);
@@ -953,7 +953,7 @@ public:
 				ifile.close();
 			}
 		}
-		//BaseAssert((listAnnotationSignature.size() % 3) == 0);
+		//CBaseAssert((listAnnotationSignature.size() % 3) == 0);
 
 		for (int i = 0; i < listAnnotationSignature.size(); i+=3) {
 			if ((i + 2) < listAnnotationSignature.size()) {
@@ -961,9 +961,9 @@ public:
 				std::string strMethod = listAnnotationSignature[i + 1];
 				std::string strSignature = listAnnotationSignature[i + 2];
 
-				BaseAssert(strClass.find("_class:") == 0);
-				BaseAssert(strMethod.find("method:") == 0);
-				BaseAssert(strSignature.find("Signat:") == 0);
+				CBaseAssert(strClass.find("_class:") == 0);
+				CBaseAssert(strMethod.find("method:") == 0);
+				CBaseAssert(strSignature.find("Signat:") == 0);
 
 				strClass = strClass.substr(7);
 				strMethod = strMethod.substr(7);
@@ -1030,7 +1030,7 @@ public:
 						listType1.insert(listType1.end(), listImple.begin(), listImple.end());
 
 						// 数量验证是一致的
-						BaseAssert(classSign.listClassType.size() == listType1.size());
+						CBaseAssert(classSign.listClassType.size() == listType1.size());
 						for (int j = 0; j < listType1.size(); j++) {
 							verifyType(listType1[j], classSign.listClassType[j]);
 						}

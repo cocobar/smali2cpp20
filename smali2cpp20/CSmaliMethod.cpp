@@ -1,32 +1,167 @@
-#include "SmaliCodeCache.h"
-
-#include "SmaliMethod.h"
-//#include "SyntaxBlock.h"
-#include "stringhelper.h"
+#include "CSmaliMethod.h"
+#include "CSmaliType.h"
 #include "CVar.h"
-#include "CodeDumper.h"
-#include "stringhelper.h"
-#include "config.hpp"
-#include "SmaliType.h"
-#include "SmaliClass.h"
-#include <regex>
+#include "CSmaliClass.h"
+#include "CBaseAssert.h"
+#include "CRegexString.h"
 #include "TestAnnotationSignature.h"
 
-bool CSmaliCodeCache::insertCode(int nIndex, std::string& code) {
-	std::shared_ptr<CSmaliCodeline> cline = std::make_shared<CSmaliCodeline>(pMethod, this, nIndex, code);
-	mapCode.insert(std::make_pair(nIndex, cline));
+CSmaliMethod::CSmaliMethod() {
+	this->pClass = nullptr;
+	this->isNeedHide = false;
+	this->isAbstract = false;
+}
+
+CSmaliMethod::CSmaliMethod(std::shared_ptr<CSmaliType> ptrClassName, CSmaliClass* pHost) {
+	this->classType = ptrClassName;
+	this->pClass = pHost;
+	this->GroupSameVar = std::make_shared<CVarGroup>();
+	this->isNeedHide = false;
+	this->isAbstract = false;
+	this->setPublicType();
+}
+
+void CSmaliMethod::setHide() {
+	this->isNeedHide = true;
+}
+
+bool CSmaliMethod::getHide() {
+	return this->isNeedHide;
+}
+
+CSmaliMethod::~CSmaliMethod() {
+}
+
+void CSmaliMethod::dumpAllMethod(int outType, CodeDumper* d) {
+	if (!this->getHide()) {
+		CodeDumper d2 = dumpCode(outType);
+		d->add(d2);
+	}
+}
+
+void CSmaliMethod::dumpAllMethodForTemplate(CodeDumper* d) {
+	CodeDumper d2 = dumpCodeForTemplate();
+	d->add(d2);
+}
+
+bool CSmaliMethod::insertTemplateParam(std::string strType, std::string strClass) {
+	auto a = listTemplateParam.find(strType);
+	if (a != listTemplateParam.end()) {
+		CBaseAssert(a->second == strClass);
+		return false;
+	}
+	this->listTemplateParam.insert(std::make_pair(strType, strClass));
 	return true;
 }
 
-CSmaliCodeCache::CSmaliCodeCache(CSmaliMethod* pMethod) {
-	this->pMethod = pMethod;
-	clearAllData();
+
+std::shared_ptr<CSmaliType> CSmaliMethod::getClassType() {
+	return this->classType;
 }
 
-CSmaliCodeCache::~CSmaliCodeCache() {
+std::string CSmaliMethod::getMethodType() {
+	return strMethodType;
 }
 
-void CSmaliCodeCache::clearAllData() {
+std::string CSmaliMethod::getMethodName() {
+	return strFunctionName;
+}
+
+void CSmaliMethod::setMethodSignature(std::string strSign) {
+	strSignature = strSign;
+}
+
+std::string CSmaliMethod::getMethodSignature() {
+	return strSignature;
+}
+
+// strDefine = ".method static constructor <clinit>()V"
+// strDefine = ".method synthetic constructor <init>(Landroid/icu/impl/CacheValue$NullValue;)V"
+// strDefine = ".method public bridge synthetic run()Ljava/lang/Object;"
+// strDefine = ".method public static strictfp toDegrees(D)D"
+// strDefine = ".method public static synchronized native declared-synchronized emptyJniStaticSynchronizedMethod0()V"
+void CSmaliMethod::getMethodName(std::string strDefine) {
+	constexpr auto pMf = RegexStart
+		"[.]method" "\\s+"
+		"((?:" PatternMethodFlags "\\s+" ")*)"		// 所有的属性
+		"([-\\w$]*|<init>|<clinit>)"								// 函数名
+		"[(]("
+		"(?:" SmaliTypePrefix RegexOnlySmaliBaseType ")*"				// 输入参数
+		")[)]"
+		"(" SmaliTypePrefix RegexOnlySmaliBaseType ")"				// 返回参数
+		RegexEnd;
+	std::smatch m;
+	if (std::regex_search(strDefine, m, std::regex(pMf)) && (m.size() == 5)) {
+		// 函数内部参数获取完整了
+		std::string strFlags = m[1];		// 符号标志
+		std::string strName = m[2];			// 函数名字
+		strParamList = m[3];	// 参数列表字符串
+		std::string strReturn = m[4];		// 返回的类型
+
+		// 提取出所有参数清单
+		listParam = regexGetStringList(strParamList, "^(" SmaliTypePrefix RegexOnlySmaliBaseType ")", 2, 1);
+
+		// 检验参数是否提取正确
+		if (strParamList.size() == 0) {
+			CBaseAssert(listParam.size() == 0);
+		}
+
+		// 保存参数
+		for (auto a = listParam.begin(); a != listParam.end(); a++) {
+			useType(CSmaliType(*a, nullptr).getBaseType()->getFullTypeSmaliString(), "<init>()V", true);
+		}
+
+		this->setFlags(strFlags);
+
+		strMethodType = strReturn;
+		strFunctionName = strName;
+
+		strSignature = strName + "(" + strParamList + ")" + strReturn;
+
+		if ((flag & CSmaliClass::kAccBridge) && (flag & CSmaliClass::kAccSynthetic)) {
+			this->setHide();
+		}
+
+		if (flag & CSmaliClass::kAccAbstract) {
+			this->setAbstract();
+		}
+
+		// 保存签名
+		if (!this->getHide()) {
+			this->pClass->insertMethodSignatureType(strSignature);
+		}
+
+	}
+	else {
+		CBaseAssert(0);
+	}
+}
+
+void CSmaliMethod::makeSymbolList(void) {
+
+
+
+	// 分析所有语义数据
+	syntaxDiagram();
+}
+
+void CSmaliMethod::insertStringLine(std::string& str, int nLine) {
+	// 插入到新的结构
+	insertCode(nLine, str);
+}
+
+
+bool CSmaliMethod::insertCode(int nIndex, std::string& code) {
+	std::shared_ptr<CSmaliCodeline> cline = std::make_shared<CSmaliCodeline>(this, nIndex, code);
+
+	if (cline->isMethod) {
+		this->codeParam = cline;
+	}
+
+	mapCode.insert(std::make_pair(nIndex, cline));
+	return true;
+}
+void CSmaliMethod::clearAllData() {
 	mapCode.clear();
 	mapListAssignReg.clear();
 	mapListUseReg.clear();
@@ -34,7 +169,7 @@ void CSmaliCodeCache::clearAllData() {
 
 
 // 填充表达式
-void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> thread, int nThreadIndex, std::shared_ptr<CSmaliCodeline> code, std::vector<std::string>& listMode, std::string& outStr) {
+void CSmaliMethod::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> thread, int nThreadIndex, std::shared_ptr<CSmaliCodeline> code, std::vector<std::string>& listMode, std::string& outStr) {
 	for (auto a = listMode.begin(); a != listMode.end(); a++) {
 		std::string strString = stringhelper::trim((*a).substr(1, (*a).size() - 2));
 
@@ -46,10 +181,10 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 				bOutReg = true;
 			}
 			if (((int)strString.find(".in")) > 0) {
-				BaseAssert(bOutReg == false);
+				CBaseAssert(bOutReg == false);
 			}
 			else {
-				BaseAssert(bOutReg == true);
+				CBaseAssert(bOutReg == true);
 			}
 
 			// 索引
@@ -58,7 +193,7 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 			// 找一个寄存器的名字
 			auto itReg = code->listAllRegName.find(nRegIndex);
 			if (itReg == code->listAllRegName.end()) {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 
 			// 找到寄存器列表
@@ -105,18 +240,13 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 						}
 					}
 					else if (strAttr == "type") {
-						std::string strClass = SmaliType((*b)->getVar()->getVarType()).getCppType(this->pMethod->pClass);
+						std::string strClass = (*b)->getVar()->getVarType()->getCppType();
 						stringhelper::replace(outStr, *a, strClass);
 					}
 					else if (strAttr == "dtype") {
 						auto a1 = (*b)->getVar();
 						auto b1 = a1->getVarType();
-
-						if (b1 == "v13") {
-							b1 = a1->getVarType();
-						}
-
-						std::string strClass = SmaliType(b1).getCppDefineType(this->pMethod->pClass);
+						std::string strClass = b1->getCppDefineType();
 						stringhelper::replace(outStr, *a, strClass);
 					}
 					break;
@@ -133,14 +263,14 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 
 				struct CSmaliCodeline::invokeParam param = code->getInvokeParamList(code->strCode);
 				if (cType == 'S') {
-					std::string strClass = SmaliType(param.returnType).getCppType(this->pMethod->pClass);
+					std::string strClass = CSmaliType(param.returnType, this->pClass).getCppType();
 					stringhelper::replace(outStr, *a, strClass);
 				}
 				else if (cType == 'F') {
 					stringhelper::replace(outStr, *a, param.methodName);
 				}
 				else if (cType == 'C') {
-					std::string strClass = SmaliType(param.objectType).getCppType(this->pMethod->pClass);
+					std::string strClass = CSmaliType(param.objectType, this->pClass).getCppType();
 					stringhelper::replace(outStr, *a, strClass);
 				}
 				else if ((cType == 'T') || (cType == 'P')) {
@@ -168,7 +298,7 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 					}
 				}
 				else {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 			else if (strStringIndex == "invoke") {
@@ -204,14 +334,14 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 
 */
 					if (cType == 'S') {
-						std::string strClass = SmaliType(m[8]).getCppType(this->pMethod->pClass);
+						std::string strClass = CSmaliType(m[8], this->pClass).getCppType();
 						stringhelper::replace(outStr, *a, strClass);
 					}
 					else if (cType == 'F') {
 						stringhelper::replace(outStr, *a, m[4]);
 					}
 					else if (cType == 'C') {
-						std::string strClass = SmaliType(m[3]).getCppType(this->pMethod->pClass);
+						std::string strClass = CSmaliType(m[3], this->pClass).getCppType();
 						stringhelper::replace(outStr, *a, strClass);
 					}
 					else if ((cType == 'T') || (cType == 'P')) {
@@ -240,11 +370,11 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 			else {
@@ -272,14 +402,14 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 						strObjectType = m.str(1);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 
 
-					BaseAssert(SmaliType(strObjectType).isJavaType());
+					CBaseAssert(CSmaliType(strObjectType, nullptr).isJavaType());
 					std::string strData;
 					if (cType == 'C') {
-						strData = SmaliType(strObjectType).getCppType(this->pMethod->pClass);
+						strData = CSmaliType(strObjectType, this->pClass).getCppType();
 					}
 					else if (cType == 'V') {
 						strData = strName;
@@ -293,14 +423,14 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 						strData = strType;
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 					stringhelper::replace(outStr, *a, strData);
 
 				}
 				else if (((int)strString.find(".Class")) > 0) {
 					std::string strNumber = code->symbols[nStringIndex];
-					std::string strData = SmaliType(strNumber).getCppType(this->pMethod->pClass);
+					std::string strData = CSmaliType(strNumber, this->pClass).getCppType();
 					stringhelper::replace(outStr, *a, strData);
 				}
 				else if (((int)strString.find(".lable")) > 0) {
@@ -316,7 +446,7 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 
 					strData.append("std::make_shared<char[]>(");
 
-					this->pMethod->pClass->listImportSaver->checkJavaClass("Ljava/lang/String;");
+					//this->pMethod->pClass->listImportSaver->checkJavaClass("Ljava/lang/String;");
 					strData.append(strNumber).append(")").append(")");
 					stringhelper::replace(outStr, *a, strData);
 				}
@@ -327,14 +457,14 @@ void CSmaliCodeCache::fillOneCodeExp(std::vector<std::shared_ptr<CSyntaxNode>> t
 			}
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 }
 
 // 模仿所有过程,对汇编进行翻译
 // 生成 C++ 代碼， 有模板模式和非模板模式，模板模式是在 h 文件中 生成 C 代碼
-void CSmaliCodeCache::runToCppCode(bool inTemplate) {
+void CSmaliMethod::runToCppCode(bool inTemplate) {
 	// 再一次遍历所有线程,生成所有代码
 	for (auto a = listRunThreads.begin(); a != listRunThreads.end(); a++) {
 
@@ -448,7 +578,7 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 									it->second->strCCodeLine.push_back(nextLine);
 								}
 								else {
-									BaseAssert(0);
+									CBaseAssert(0);
 								}
 								strDefExp = "";
 							}
@@ -465,8 +595,8 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 									else {
 										// 带参数调用父类构造
 										auto regList = it->second->getInputRegs();
-										BaseAssert(regList.size() > 0);
-										std::string strCehckTypeName = SmaliType(regList[0]->getCheckedType()).getCppType(this->pMethod->pClass);
+										CBaseAssert(regList.size() > 0);
+										std::string strCehckTypeName = regList[0]->getCheckedType()->getCppType();
 										strCehckTypeName.append("::").append(strCall);
 										strCall = strCehckTypeName;
 									}
@@ -476,7 +606,7 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 								else {
 									// 增加 new 语句
 									auto regList = it->second->getInputRegs();
-									BaseAssert(regList.size() > 0);
+									CBaseAssert(regList.size() > 0);
 									auto regExp = regList[0]->getVar()->assign->getHostLine();
 									std::string strObjectNew = regExp->strDefVar;
 									strObjectNew.append(" = ").append(regExp->strDefExp);
@@ -503,7 +633,7 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 								strCodeLine.append(strVar).append(";");
 								it->second->strCCodeLine.push_back(strCodeLine);
 
-								BaseAssert(((*a)[b])->nextType == CSyntaxNode::eNextType::NEXT_BRANCH_SWITCH);
+								CBaseAssert(((*a)[b])->nextType == CSyntaxNode::eNextType::NEXT_BRANCH_SWITCH);
 								for (auto caseItem = ((*a)[b])->nextSwitchCase.listCase.begin(); caseItem != ((*a)[b])->nextSwitchCase.listCase.end(); caseItem++) {
 									strCodeLine = "if (item == ";
 									strCodeLine.append(caseItem->strCase).append(") goto label");
@@ -553,17 +683,17 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 
 						// 放入模板
 						if (inTemplate) {
-							std::string strTemplateParam = this->pMethod->pClass->getTemplateDefineString(this->pMethod);
+							std::string strTemplateParam = this->pClass->getTemplateDefineString(this);
 							it->second->strCCodeLine.push_back(strTemplateParam);
 						}
 						else {
-							if (this->pMethod->listTemplateParam.size() > 0) {
-								std::string strTemplateParam = this->pMethod->pClass->getTemplateDefineString(this->pMethod);
+							if (this->listTemplateParam.size() > 0) {
+								std::string strTemplateParam = this->pClass->getTemplateDefineString(this);
 								it->second->strCCodeLine.push_back(strTemplateParam);
 							}
 						}
 
-						it->second->strCCodeLine.push_back(it->second->getMethodString(inTemplate));
+						it->second->strCCodeLine.push_back(this->getMethodString(OUT_CPP, inTemplate));
 						it->second->strCCodeLine.push_back(std::string("{"));
 						it->second->incDeep();
 					}
@@ -607,7 +737,7 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 
 									if (a->strCatch == ".catch") {
 										std::string strCatch = "catch (";
-										strCatch.append(SmaliType(a->strCatchType).getCppType(this->pMethod->pClass));
+										strCatch.append(CSmaliType(a->strCatchType, this->pClass).getCppType());
 										strCatch.append(" e)").append("{");
 
 										it->second->strCCodeLine.push_back(strCatch);
@@ -646,7 +776,7 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 										it->second->strCCodeLine.push_back("}");
 									}
 									else {
-										BaseAssert(0);
+										CBaseAssert(0);
 									}
 
 								}
@@ -663,7 +793,7 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 				}
 				else {
 					if (it == mapCode.end()) {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 			}
@@ -682,24 +812,171 @@ void CSmaliCodeCache::runToCppCode(bool inTemplate) {
 			}
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 }
 
+std::string CSmaliMethod::getMethodString(int outType, bool inTemplate) {
+	std::string strMethod = "";
+
+	std::string strType = CSmaliType(strMethodType, nullptr).getBaseType()->getCppDefineType();
+
+	std::string strMethodNameTmp = strFunctionName;
+
+	// 函数要改一个名字, C++ 和 h 文件都需要修改
+
+	std::string strTmp = pClass->strMethodRenameTranslation(this->strSignature);
+	if (strTmp.size() > 0) {
+		strMethodNameTmp = strTmp;
+	}
+
+
+	if (strMethodNameTmp == "delete") {
+		strMethodNameTmp = "_delete_";
+	}
+
+#if 1
+	stringhelper::replace(strMethodNameTmp, "-", "_");
+	stringhelper::replace(strMethodNameTmp, "+", "_p_");
+	stringhelper::replace(strMethodNameTmp, "$", "_S_");
+#endif
+
+	if (strMethodNameTmp == "<init>") {
+		if (outType == CSmaliAbstract::OUT_CPP) {
+			strMethod.append(this->getClassType()->getBaseType()->getCppType())
+				.append("::")
+				.append(this->getClassType()->getBaseType()->getCppShortType())
+				.append("(");
+		}
+		else {
+			// 構建類模板
+			if (inTemplate) {
+				strMethod.append(this->getClassType()->getBaseType()->getCppType());
+#if 0
+				std::string strTemplateParam = this->pMethod->pClass->getTemplateUseString();
+				strMethod.append(strTemplateParam);
+#endif
+				strMethod.append("::");
+			}
+			strMethod.append(this->getClassType()->getBaseType()->getCppShortType()).append("(");
+
+			// 增加析构函数
+			std::string strDes = "virtual ~";
+			strDes.append(this->getClassType()->getBaseType()->getCppShortType()).append("()");
+			this->pClass->setDestructor(strDes);
+		}
+	}
+	else if (strMethodNameTmp == "<clinit>") {
+
+		// 静态初始化函数
+		if (isStatic && (outType == CSmaliAbstract::OUT_H)) {
+			strMethod.append("static ");
+		}
+		if (outType == CSmaliAbstract::OUT_CPP) {
+			strMethod.append(strType).append(" ")
+				.append(this->getClassType()->getBaseType()->getCppType())
+				.append("::")
+				.append("static_cinit").append("(");
+		}
+		else {
+			strMethod.append(strType).append(" ").append("static_cinit").append("(");
+			std::string strStaticInitCall = this->getClassType()->getBaseType()->getCppType().append("::");
+			strStaticInitCall.append("static_cinit()");
+			this->pClass->addStaticInited(strStaticInitCall);
+		}
+	}
+	else {
+
+		// 函数声明
+		if (outType == CSmaliAbstract::OUT_CPP) {
+			strMethod.append(strType).append(" ")
+				.append(this->getClassType()->getBaseType()->getCppType())
+				.append("::")
+				.append(strMethodNameTmp).append("(");
+		}
+		else {
+
+			if (isStatic && (outType == CSmaliAbstract::OUT_H)) {
+				if (!inTemplate) {
+					strMethod.append("static ");
+				}
+			}
+
+			strMethod.append(strType).append(" ");
+			if (isStatic && (outType == CSmaliAbstract::OUT_H)) {
+			}
+			else {
+				if (this->pClass->listTemplateParam.size() == 0) {
+					if (!this->getAbstract()) {
+						strMethod.append("virtual ");
+					}
+				}
+			}
+
+			// 構建類模板
+			if (inTemplate) {
+				strMethod.append(this->getClassType()->getBaseType()->getCppType());
+#if 0
+				std::string strTemplateParam = this->pMethod->pClass->getTemplateUseString();
+				strMethod.append(strTemplateParam);
+#endif
+				strMethod.append("::");
+			}
+
+			strMethod.append(strMethodNameTmp).append("(");
+		}
+	}
+
+	// 函数参数
+	for (int i = 0; i < codeParam->regsIn.size(); i++) {
+		if ((i == 0) && isStatic == 0) {
+			// this
+		}
+		else {
+			std::string strType2 = codeParam->regsIn[i]->getVar()->getVarType()->getCppDefineType();
+			std::string strName2 = codeParam->regsIn[i]->getVar()->getVarName();
+
+			strMethod.append(strType2).append(" ").append(strName2);
+			if (((size_t)i + 1) < codeParam->regsIn.size()) {
+				strMethod.append(",");
+			}
+		}
+	}
+	for (int i = 0; i < codeParam->regsOut.size(); i++) {
+		if ((i == 0) && isStatic == 0) {
+			// this
+		}
+		else {
+			std::string strType2 = codeParam->regsOut[i]->getVar()->getVarType()->getCppDefineType();
+			std::string strName2 = codeParam->regsOut[i]->getVar()->getVarName();
+
+			strMethod.append(strType2).append(" ").append(strName2);
+			if (((size_t)i + 1) < codeParam->regsOut.size()) {
+				strMethod.append(",");
+			}
+		}
+	}
+
+	// 函数结尾
+	strMethod.append(")");
+
+	return strMethod;
+}
+
 // rename Var
 // 对变量进行命名
-bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNode) {
+bool CSmaliMethod::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNode) {
 
 	// 修复函数的声明模板
 	// 函数内的注解
 	if (!this->strAnnotationSignature.empty()) {
 		auto mStart = mapCode.begin();
-		BaseAssert(mStart->second->symbols[0] == ".method");
+		CBaseAssert(mStart->second->symbols[0] == ".method");
 
 		// 记录签名内容
 		{
-			std::string strFileName = this->pMethod->pClass->getFilePath();
+			std::string strFileName = this->pClass->getFilePath();
 			std::string strMethodRc = mStart->second->strCode;
 			stringhelper::trim(strMethodRc);
 			TestAnnotationSignature::insertMethodRecord(strFileName, strMethodRc, strAnnotationSignature);
@@ -707,29 +984,12 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 
 		// 重新处理签名
 		{
-			AnnotationMethodSignature ann = TestAnnotationSignature::methodResolver(mStart->second->strCode, this->strAnnotationSignature, this->pMethod);
-			mStart->second->strMethodType = ann.strReturnType;
-
-			//  mStart->second->regsOut.size()
+			AnnotationMethodSignature ann = TestAnnotationSignature::methodResolver(mStart->second->strCode, this->strAnnotationSignature, this);
+			mStart->second->pMethod->strMethodType = ann.strReturnType;
 			int nParamStart = (int)(mStart->second->regsOut.size() - ann.listParamType.size());
-			for (int i = nParamStart,r = nParamStart, m = 0; i < mStart->second->regsOut.size(); i++, m++, r++) {
+			for (int i = nParamStart, r = nParamStart, m = 0; i < mStart->second->regsOut.size(); i++, m++, r++) {
 				mStart->second->regsOut[i]->setCheckedType(ann.listParamType[m]);
-
-#if 0
-				// 验证代码
-				// 应为 D J 的存在,下面的验证不成立
-				if (mStart->second->isStatic) {
-					std::string regName = stringhelper::formatString("p%d", i);
-					BaseAssert(mStart->second->regsOut[i]->regName() == regName);
-				}
-				else {
-					std::string regName = stringhelper::formatString("p%d", i);
-					BaseAssert(mStart->second->regsOut[i]->regName() == regName);
-				}
-#endif
 			}
-
-			//mStart->second->isStatic
 		}
 	}
 
@@ -743,8 +1003,7 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 	}
 
 	// 遍历所有的线程, 搞清楚代码的引用关系
-	//CVar::clearSameVarRecorder();
-	((CSmaliMethod*)this->pMethod)->GroupSameVar->clearSameVarRecorder();
+	this->GroupSameVar->clearSameVarRecorder();
 
 	for (auto aThread = listRunThreads.begin(); aThread != listRunThreads.end(); aThread++) {
 		std::vector<int> listRunInst;
@@ -786,13 +1045,13 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 									bFindOutReg = true;
 								}
 								else {
-									BaseAssert(0);
+									CBaseAssert(0);
 								}
 							}
-							BaseAssert(bFindOutReg);
+							CBaseAssert(bFindOutReg);
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 					//    .local v0, "c":I
@@ -808,7 +1067,7 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 #endif
 							auto it_var = mapLocalVarName.find(strRegName);
 							if (it_var != mapLocalVarName.end()) {
-								//BaseAssert(0);
+								//CBaseAssert(0);
 								it_var->second = strVarName;
 							}
 							else {
@@ -825,16 +1084,16 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 									bFindOutReg = true;
 								}
 								else {
-									BaseAssert(0);
+									CBaseAssert(0);
 								}
 							}
 							else {
 								// 罕见的寄存器没有被使用
 							}
-							//BaseAssert(bFindOutReg);
+							//CBaseAssert(bFindOutReg);
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 					//     .end local v0    # "c":I
@@ -844,14 +1103,14 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 							std::string strRegName = m[1];
 							auto it_var = mapLocalVarName.find(strRegName);
 							if (it_var == mapLocalVarName.end()) {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 							else {
 								mapLocalVarName.erase(it_var);
 							}
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 					// .restart local v0    # "limit":I
@@ -867,7 +1126,7 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 #endif
 							auto it_var = mapLocalVarName.find(strRegName);
 							if (it_var == mapLocalVarName.end()) {
-								//BaseAssert(0);
+								//CBaseAssert(0);
 								mapLocalVarName.insert(std::make_pair(strRegName, strVarName));
 							}
 							else {
@@ -884,16 +1143,16 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 									bFindOutReg = true;
 								}
 								else {
-									BaseAssert(0);
+									CBaseAssert(0);
 								}
 							}
 							else {
 								// 罕见的寄存器没有被使用
 							}
-							//BaseAssert(bFindOutReg);
+							//CBaseAssert(bFindOutReg);
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 
@@ -925,7 +1184,7 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 #endif
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 						}
 
@@ -955,7 +1214,7 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 							}
 							printf(((*d)->getSignature()).c_str());
 						}
-						BaseAssert(bFindOutReg == true);
+						CBaseAssert(bFindOutReg == true);
 					}
 
 					std::vector<std::shared_ptr<CSmaliRegister>> listOutReg = it->second->getOutputRegs();
@@ -968,12 +1227,12 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 							mapRegList.insert(std::make_pair((*ss)->regName(), std::make_shared<std::vector<std::shared_ptr<CSmaliRegister>>>()));
 							itmap = mapRegList.find((*ss)->regName());
 						}
-						BaseAssert(itmap != mapRegList.end());
+						CBaseAssert(itmap != mapRegList.end());
 						itmap->second->push_back(*ss);	// 添加到后面
 					}
 				}
 				else {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 		}
@@ -989,7 +1248,7 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 				// 检查一下类型
 				i->second->getVar()->resolveType();
 			}
-			
+
 		}
 	}
 
@@ -997,7 +1256,7 @@ bool CSmaliCodeCache::renameVar(std::vector<std::shared_ptr<CSyntaxNode>> listNo
 }
 
 // 获得字符串的模板
-std::vector<std::string> CSmaliCodeCache::getExpModeStringList(std::string& str) {
+std::vector<std::string> CSmaliMethod::getExpModeStringList(std::string& str) {
 	std::vector<std::string> listString;
 	int nStart = (int)str.find_first_of("{");
 	while (nStart >= 0) {
@@ -1012,12 +1271,12 @@ std::vector<std::string> CSmaliCodeCache::getExpModeStringList(std::string& str)
 }
 
 // 登记寄存器
-bool CSmaliCodeCache::regCheckIn(std::shared_ptr<CSmaliRegister> reg) {
+bool CSmaliMethod::regCheckIn(std::shared_ptr<CSmaliRegister> reg) {
 	if (reg->isInput()) {
 		std::string strRegSign = reg->getSignature();
 		auto a = this->mapListUseReg.find(strRegSign);
 		if (a != this->mapListUseReg.end()) {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 		this->mapListUseReg.insert(std::make_pair(reg->getSignature(), reg));
 	}
@@ -1025,7 +1284,7 @@ bool CSmaliCodeCache::regCheckIn(std::shared_ptr<CSmaliRegister> reg) {
 		std::string strRegSign = reg->getSignature();
 		auto a = this->mapListAssignReg.find(strRegSign);
 		if (a != this->mapListAssignReg.end()) {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 		this->mapListAssignReg.insert(std::make_pair(reg->getSignature(), reg));
 	}
@@ -1033,7 +1292,7 @@ bool CSmaliCodeCache::regCheckIn(std::shared_ptr<CSmaliRegister> reg) {
 	return true;
 }
 
-void CSmaliCodeCache::syntaxDiagram() {
+void CSmaliMethod::syntaxDiagram() {
 
 	std::shared_ptr<CSyntaxNode> nodeTools = std::make_shared<CSyntaxNode>(&this->mapCode);
 
@@ -1056,7 +1315,7 @@ void CSmaliCodeCache::syntaxDiagram() {
 	renameVar(this->syntaxRoot);
 }
 
-CodeDumper CSmaliCodeCache::dumpCodeForTemplate() {
+CodeDumper CSmaliMethod::dumpCodeForTemplate() {
 	CodeDumper d;
 
 	if (this->mapCode.size() > 2) {	// == 2 的是纯虚函数
@@ -1070,7 +1329,7 @@ CodeDumper CSmaliCodeCache::dumpCodeForTemplate() {
 
 		for (auto a = mapCode.begin(); a != mapCode.end(); a++, nInstIndex++) {
 			if (a->second->nDeep < 0) {
-				d.subNestDepth();
+				d.subIndent();
 				d.newline();
 			}
 			if (a->second->strCCodeLine.size() > 0) {
@@ -1087,7 +1346,7 @@ CodeDumper CSmaliCodeCache::dumpCodeForTemplate() {
 			}
 
 			if (a->second->nDeep > 0) {
-				d.addNestDepth();
+				d.addIndent();
 				d.newline();
 			}
 
@@ -1105,10 +1364,10 @@ CodeDumper CSmaliCodeCache::dumpCodeForTemplate() {
 	return d;
 }
 
-CodeDumper CSmaliCodeCache::dumpCode() {
+CodeDumper CSmaliMethod::dumpCode(int outType) {
 	CodeDumper d;
 
-	if (this->pMethod->pClass->eOutType == config::OUT_CPP) {
+	if (outType == OUT_CPP) {
 
 		if (this->mapCode.size() > 2) {	// == 2 的是纯虚函数
 			int nInstIndex = 0;
@@ -1121,7 +1380,7 @@ CodeDumper CSmaliCodeCache::dumpCode() {
 
 			for (auto a = mapCode.begin(); a != mapCode.end(); a++, nInstIndex++) {
 				if (a->second->nDeep < 0) {
-					d.subNestDepth();
+					d.subIndent();
 					d.newline();
 				}
 				if (a->second->strCCodeLine.size() > 0) {
@@ -1138,7 +1397,7 @@ CodeDumper CSmaliCodeCache::dumpCode() {
 				}
 
 				if (a->second->nDeep > 0) {
-					d.addNestDepth();
+					d.addIndent();
 					d.newline();
 				}
 
@@ -1154,17 +1413,16 @@ CodeDumper CSmaliCodeCache::dumpCode() {
 			}
 		}
 	}
-	else if (this->pMethod->pClass->eOutType == config::OUT_H) {
+	else if (outType == OUT_H) {
 		for (auto a = mapCode.begin(); a != mapCode.end(); a++) {
 			if (((int)a->second->strCode.find(".method")) >= 0) {
-				//d.add(a->second->getMethodPermissionString()).newline();
-				d.add(a->second->getMethodString());
+				d.add(this->getMethodString(OUT_H, false));
 				// 纯虚函数
 				if (this->mapCode.size() == 2) {
 					d.add(" = 0");
 				}
 				else if (this->mapCode.size() < 2) {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 				d.endl().newline();
 				break;
@@ -1172,8 +1430,16 @@ CodeDumper CSmaliCodeCache::dumpCode() {
 		}
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 
 	return d;
+}
+
+void CSmaliMethod::collectAllCode(std::map<std::string, std::shared_ptr<CTypeDefine>>& usedTypeMap) {
+	this->collect(usedTypeMap);
+
+	for (auto a = this->mapCode.begin(); a != this->mapCode.end(); a++) {
+		a->second->collect(usedTypeMap);
+	}
 }

@@ -2,7 +2,7 @@
 #ifndef __codeDumper_H__
 #define __codeDumper_H__
 
-#include "BaseObject.h"
+#include "CBaseAssert.h"
 #include <map>
 #include <any>
 #include <variant>
@@ -10,12 +10,7 @@
 #include "stringhelper.h"
 #include "instructionhelper.h"
 
-class codeNestDepthHolder;
 class CodeDumper : public CBaseObject {
-public:
-	CodeDumper();
-	void addNestDepth();
-	void subNestDepth();
 
 private:
 	int nNestDepth;
@@ -23,6 +18,10 @@ private:
 	std::vector<std::string> listString;
 
 public:
+	CodeDumper();
+	void addIndent();
+	void subIndent();
+
 	template<typename ... Args>
 	class CodeDumper& printf(const char* format, Args ... args) {
 		auto size = std::snprintf(nullptr, 0, format, args ...) + 1;
@@ -48,12 +47,11 @@ public:
 	class CodeDumper& add(const char* p);
 	class CodeDumper& add(std::vector<std::string>& list);
 
-	void clear(void);
-	std::string dump();
-	void dumpAll();
-	bool dumpToFile(std::string strFilePath);
+	class CodeDumper& add2Head(const CodeDumper& p);
 
-	void reFormat();
+	void clear(void);
+	bool dumpToFile(std::string strFilePath);
+	void format();
 };
 
 #endif

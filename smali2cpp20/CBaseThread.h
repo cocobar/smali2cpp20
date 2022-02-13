@@ -5,7 +5,9 @@
 #include <map>
 #include <mutex>
 #include <memory>
+#include "CBaseObject.h"
 
+#include <cassert>
 
 class CBaseObject;
 class CBaseThread : public CBaseObject {

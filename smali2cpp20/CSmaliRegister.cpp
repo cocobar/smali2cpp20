@@ -1,7 +1,8 @@
-#include "SmaliRegister.h"
+#include "CSmaliRegister.h"
 #include "stringhelper.h"
 #include "CVar.h"
-#include "SmaliMethod.h"
+#include "CSmaliMethod.h"
+#include "CBaseAssert.h"
 
 
 
@@ -9,20 +10,26 @@ CSmaliRegister::CSmaliRegister(int nIndex, RegisterFlags f, std::string strReg, 
 	this->nRegIndexInCurrentInstruction = nIndex;
 	this->flag = f;
 	this->strRegName = strReg;
-	this->strRegType = strRegType;
-	this->checkedType.clear();
+	//this->strRegType = strRegType;
+	//this->checkedType.clear();
+	this->ptrRegType = std::make_shared<CSmaliType>(strRegType, pHost->pMethod->pClass);
+	this->ptrCheckedType = nullptr;
+
 	this->varName.clear();
 	this->cited.clear();
 	this->refer.clear();
 	this->pHostCode = pHost;
 	this->nCodeLine = nCCodeLine;
 
-	//if (strRegType.size() > 0) {
-	//	BaseAssert(SmaliType(strRegType).isReDefineType());
-	//}
-
 	// 在指令行保存所有寄存器
 	pHost->listAllRegName.insert(std::make_pair(nIndex, strReg));
+
+	// 这几个类型强制设置了
+	if ((strRegType == "I") || (strRegType == "J") || (strRegType == "F") || (strRegType == "D") 
+		|| (strRegType == "S") || (strRegType == "C") || (strRegType == "B") || (strRegType == "Z") ) {
+		this->setCheckedType(strRegType);
+	}
+
 }
 
 bool CSmaliRegister::isInput() {
@@ -49,17 +56,17 @@ bool CSmaliRegister::changeRegName(std::string strNewName) {
 	return true;
 }
 
-const std::string& CSmaliRegister::regType() {
-	return strRegType;
+const std::shared_ptr<CSmaliType> CSmaliRegister::regType() {
+	return this->ptrRegType;
 }
 
 bool CSmaliRegister::hasRegType() {
-	return  (strRegType.size() > 0);
+	return  (ptrRegType->getFullTypeSmaliString().size() > 0);
 }
 
 void CSmaliRegister::setCheckedType(std::string strCheck) {
-	//BaseAssert(SmaliType(strCheck).isJavaType());
-	this->checkedType = strCheck;
+	//CBaseAssert(CSmaliType(strCheck).isJavaType());
+	this->ptrCheckedType = std::make_shared<CSmaliType>(strCheck, this->pHostCode->pMethod->pClass);
 }
 
 CSmaliCodeline* CSmaliRegister::getHostLine() {
@@ -67,10 +74,10 @@ CSmaliCodeline* CSmaliRegister::getHostLine() {
 }
 
 bool CSmaliRegister::hasCheckedType() {
-	if (this->checkedType.empty()) {
+	if (!this->ptrCheckedType) {
 		return false;
 	}
-	if (this->checkedType.size() > 0) {
+	if (this->ptrCheckedType->getFullTypeSmaliString().size() > 0) {
 		return true;
 	}
 	return false;
@@ -80,8 +87,8 @@ std::shared_ptr<CVar> CSmaliRegister::getVar() {
 	return ptrVar;
 }
 
-std::string CSmaliRegister::getCheckedType() {
-	return this->checkedType;
+std::shared_ptr<CSmaliType> CSmaliRegister::getCheckedType() {
+	return this->ptrCheckedType;
 }
 
 bool CSmaliRegister::setVar(std::shared_ptr<CVar> var) {
@@ -120,7 +127,7 @@ bool CSmaliRegister::setRegVarName(std::string strVar) {
 			}
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 
@@ -151,7 +158,7 @@ std::string& CSmaliRegister::getSignature() {
 		}
 		break;
 		default:
-			BaseAssert(0);
+			CBaseAssert(0);
 			break;
 		}
 		char buf[128];
@@ -159,7 +166,7 @@ std::string& CSmaliRegister::getSignature() {
 		strSignature = std::string(buf);
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 	return strSignature;
 }

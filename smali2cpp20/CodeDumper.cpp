@@ -3,15 +3,15 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
-#include "BaseAssert.h"
-#include "regexString.h"
+#include "CBaseAssert.h"
+#include "CRegexString.h"
 
 CodeDumper::CodeDumper() {
 	strCppCode = "";
 	nNestDepth = 0;
 };
 
-void CodeDumper::addNestDepth() {
+void CodeDumper::addIndent() {
 	nNestDepth++;
 	strCppCode = "";
 	if (nNestDepth > 0) {
@@ -21,8 +21,8 @@ void CodeDumper::addNestDepth() {
 	}
 }
 
-void CodeDumper::subNestDepth() {
-	BaseAssert(nNestDepth > 0);
+void CodeDumper::subIndent() {
+	CBaseAssert(nNestDepth > 0);
 	nNestDepth--;
 	strCppCode = "";
 	if (nNestDepth > 0) {
@@ -72,6 +72,29 @@ class CodeDumper& CodeDumper::add(const CodeDumper& p) {
 	return (*this);
 }
 
+class CodeDumper& CodeDumper::add2Head(const CodeDumper& p) {
+
+	CodeDumper tmp;
+	tmp.nNestDepth = this->nNestDepth;
+
+	for (auto a = p.listString.begin(); a != p.listString.end(); a++) {
+		tmp.add(*a).newline();
+	}
+
+	std::smatch m;
+	if (std::regex_search(p.strCppCode, m, std::regex("^[\t]*$")) && (m.size() == 1)) {
+	}
+	else {
+		tmp.add(p.strCppCode).newline();
+	}
+
+	for (auto a = tmp.listString.begin(); a != tmp.listString.end(); a++) {
+		this->listString.insert(this->listString.end(), *a);
+	}
+
+	return (*this);
+}
+
 class CodeDumper& CodeDumper::add(const char* p) {
 	return add(std::string(p));
 }
@@ -104,25 +127,6 @@ void CodeDumper::clear(void) {
 	listString.clear();
 }
 
-void CodeDumper::dumpAll() {
-	std::cout << "===============================>\n";
-	for (auto a = listString.begin(); a != listString.end(); a++) {
-		std::cout << (*a) << "\n";
-	}
-	std::cout << strCppCode << "\n";
-	std::cout << "-------------------------------<\n";
-}
-
-std::string CodeDumper::dump() {
-	std::string strCode;
-	for (auto a = listString.begin(); a != listString.end(); a++) {
-		std::cout << (*a) << "\n";
-		strCode.append((*a)).append("\n");
-	}
-	strCode.append(strCppCode).append("\n");
-	return strCode;
-}
-
 bool CodeDumper::dumpToFile(std::string strFilePath) {
 	//std::filesystem::path fsPath(strFilePath);
 	//if (std::filesystem::exists(fsPath)) 
@@ -139,7 +143,7 @@ bool CodeDumper::dumpToFile(std::string strFilePath) {
 	}
 	return false;
 }
-void CodeDumper::reFormat() {
+void CodeDumper::format() {
 	for (auto a = this->listString.begin(); a != this->listString.end(); a++) {
 		std::smatch m;
 		if (std::regex_search((*a), m, CRegexString::reformatLabel) && (m.size() == 2)) {

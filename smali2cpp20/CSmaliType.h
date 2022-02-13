@@ -1,49 +1,51 @@
 #ifndef __SmaliType_H__
 #define __SmaliType_H__
-#include "BaseObject.h"
+#include "CBaseAssert.h"
 
 
 #include <string>
 #include <memory>
 #include "stringhelper.h"
-#include "SmaliImportSaver.h"
 #include <regex>
 class CSmaliMethod;
 class CSmaliClass;
-class SmaliType : public CBaseObject
+class CSmaliType : public CBaseObject
 {
 private:
 	std::string strSmaliType;
 	std::string strBaseType;
 
+	CSmaliClass* pClass;
+
 	static bool isJavaClassName(std::string str);
 public:
-	SmaliType(std::string str);
+	CSmaliType(std::string str, CSmaliClass* pClass);
 
+	// 是 java 类型, 或者是自己设计的类型
 	bool isReDefineType();
 
 	// 判断是不是 java 类
-	bool isJavaType(CSmaliMethod* pHost = nullptr);
-	bool isJavaTypeForSmaliBase(CSmaliMethod* pHost = nullptr);
+	bool isJavaType();
 	// 获得 java 基础类
-	std::shared_ptr<SmaliType> getBaseType();
+	std::shared_ptr<CSmaliType> getBaseType();
 
+	std::string getFullTypeSmaliString();
 	std::string getBaseTypeSmaliString();
 
 	// 主要类型
 	bool isPrimitiveType();
 
 	// 返回C++类型
-	std::string getCppType(CSmaliClass* pClass, bool noTemplateTranslate = false);
+	std::string getCppType(bool noTemplateTranslate = false);
 
-	std::string getCppShortType(CSmaliClass* pClass = nullptr);
+	std::string getCppShortType();
 
 	// 获得 cpp 类型的文件名
 	std::string getCppFileName();
 	std::string getCppFileMacroDefine();
 
 	// 获得定义的类型
-	std::string getCppDefineType(CSmaliClass* pClass);
+	std::string getCppDefineType();
 };
 
 #endif

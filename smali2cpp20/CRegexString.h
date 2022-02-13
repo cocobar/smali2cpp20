@@ -5,9 +5,9 @@
 #include <regex>
 #include <cassert>
 #include <vector>
-#include "BaseObject.h"
+#include "CBaseAssert.h"
 
-#include "BaseAssert.h"
+#include "CBaseAssert.h"
 
 // 正则表达式嵌套
 // <A+;B-;C*;>
@@ -22,11 +22,13 @@
 
 #define RegexStart "^\\s*"
 #define RegexEnd "\\s*$"
-
-
+//interface abstract annotation
+#define PatternClassFlags "(?:final|public|private|protected|interface|abstract|enum|annotation|synthetic)"
 #define PatternFieldFlags "(?:static|final|public|private|protected|synchronized|bridge|varargs|abstract|strict|synthetic|transient|volatile|enum)"
+// public static synchronized native declared-synchronized
+#define PatternMethodFlags "(?:strictfp|static|constructor|declared-synchronized|synchronized|public|bridge|private|protected|abstract|final|synthetic|varargs|native)"
+#define PatternAllFlags "(?:strictfp|static|final|public|private|protected|constructor|declared-synchronized|synchronized|bridge|varargs|native|abstract|strict|synthetic|transient|volatile|enum|annotation)"
 
-#define PatternMethodFlags "(?:static|constructor|declared-synchronized|public|private|protected|abstract|final|varargs|native)"
 
 
 // '\\ufffd'
@@ -143,7 +145,7 @@ static inline std::string regexGetStringIndex(std::string str, const char* pMode
 	std::regex regType(pMode);
 	std::smatch m;
 	bool found = std::regex_search(str, m, regType);
-	BaseAssert(found && (m.size() == nMax));
+	CBaseAssert(found && (m.size() == nMax));
 	if (found) {
 		return m[nIndex];
 	}
@@ -158,7 +160,7 @@ static inline std::vector<std::string> regexGetStringList(std::string str, const
 		std::regex regType(pMode);
 		std::smatch m;
 		bool found = std::regex_search(strp, m, regType);
-		BaseAssert(found && (m.size() == 2));
+		CBaseAssert(found && (m.size() == 2));
 		if (found) {
 			strRegTypeList.push_back(m[1]);
 			strp = strp.substr(m[0].length());

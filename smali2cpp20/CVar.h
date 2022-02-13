@@ -1,13 +1,13 @@
 
 #ifndef __CVar_H__
 #define __CVar_H__
-#include "BaseObject.h"
+#include "CBaseAssert.h"
 
-#include "SmaliRegister.h"
+#include "CSmaliRegister.h"
 #include <vector>
 #include <map>
 #include <memory>
-#include "SmaliType.h"
+#include "CSmaliType.h"
 
 class CVarGroup;
 class CSmaliMethod;
@@ -23,13 +23,10 @@ public:
 
 	std::string varName;		 // 变量名称
 
-	// CSmaliRegister
-	// assign
 	std::shared_ptr<CSmaliRegister> assign;
 
-	CSmaliMethod* pHostM;
+	CSmaliMethod* pMethod;
 
-	// use
 	// 寄存器名				寄存器指针
 	std::map<std::string, std::shared_ptr<CSmaliRegister>> listUse;
 
@@ -46,19 +43,16 @@ public:
 	// 解决所有的类型
 	bool resolveType();
 
-	std::string getVarType();
+	std::shared_ptr<CSmaliType> getVarType();
 
 	int getUsedCount();
 
-
-
 private:
 	std::shared_ptr<CVarGroup> group;
-	CVar() {
-	}
-
+	CVar();
 };
 
+// 变量分组, 挂在  Method
 class CVarGroup :CBaseObject {
 	friend class CVar;
 public:
@@ -67,38 +61,7 @@ public:
 	void clearSameVarRecorder() {
 		listSameVar.clear();
 	}
-	void recordSameVar(std::shared_ptr<CVar> a, std::shared_ptr<CVar> b) {
-		if (a.get() == b.get()) {
-			BaseAssert(0);
-			return;
-		}
-
-		auto a_it = getRecordGroup(a);
-		auto b_it = getRecordGroup(b);
-
-		if ((a_it != listSameVar.end()) && (b_it != listSameVar.end())) {
-			return;
-		}
-		else if ((a_it != listSameVar.end())) {
-			insertRecordGroup(a_it, b);
-		}
-		else if ((b_it != listSameVar.end())) {
-			insertRecordGroup(b_it, a);
-		}
-		else {
-			std::vector<std::shared_ptr<CVar>> newGroup;
-			newGroup.push_back(a);
-			newGroup.push_back(b);
-			listSameVar.push_back(newGroup);
-		}
-	}
-
-	//std::vector<std::vector<std::shared_ptr<CVar>>> getSameVarListData() {
-	//	return listSameVar;
-	//}
-	//void setSameVarListData(std::vector<std::vector<std::shared_ptr<CVar>>>& a) {
-	//	listSameVar = a;
-	//}
+	void recordSameVar(std::shared_ptr<CVar> a, std::shared_ptr<CVar> b);
 
 private:
 	std::vector<std::vector<std::shared_ptr<CVar>>>::iterator getRecordGroup(std::string varName) {
@@ -133,7 +96,6 @@ private:
 		a->push_back(v);
 		return true;
 	}
-
 };
 
 #endif

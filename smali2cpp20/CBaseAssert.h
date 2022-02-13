@@ -1,10 +1,10 @@
 #ifndef __BASE_ASSERT_H__
 #define __BASE_ASSERT_H__
 
-#include "BaseThread.h"
+#include "CBaseThread.h"
 
 
-#define BaseAssert(x) \
+#define CBaseAssert(x) \
 { \
 	assert(x); \
 	if (!(x)) { \

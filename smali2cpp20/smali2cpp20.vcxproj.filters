@@ -30,42 +30,45 @@
     <ClCompile Include="CVar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RegexString.cpp">
+    <ClCompile Include="CRegexString.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SmaliCodeCache.cpp">
+    <ClCompile Include="CSmaliCodeline.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SmaliCodeline.cpp">
+    <ClCompile Include="CSmaliField.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SmaliField.cpp">
+    <ClCompile Include="CSmaliMethod.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SmaliMethod.cpp">
+    <ClCompile Include="CSmaliRegister.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SmaliRegister.cpp">
+    <ClCompile Include="CSmaliType.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SmaliType.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SyntaxNode.cpp">
+    <ClCompile Include="CSyntaxNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CTypeDefine.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CSmaliAbstract.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CTypeContainer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BaseAssert.h">
+    <ClInclude Include="CBaseAssert.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="BaseObject.h">
+    <ClInclude Include="CBaseObject.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="BaseThread.h">
+    <ClInclude Include="CBaseThread.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CMultiWorkThread.h">
@@ -74,55 +77,49 @@
     <ClInclude Include="CodeDumper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="config.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CVar.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawGraph.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="instructionhelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="regexString.h">
+    <ClInclude Include="CRegexString.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SmaliClass.h">
+    <ClInclude Include="CSmaliClass.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SmaliCodeCache.h">
+    <ClInclude Include="CSmaliCodeline.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SmaliCodeline.h">
+    <ClInclude Include="CSmaliField.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SmaliField.h">
+    <ClInclude Include="CSmaliMethod.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SmaliImportSaver.h">
+    <ClInclude Include="CSmaliRegister.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SmaliMethod.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SmaliRegister.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SmaliType.h">
+    <ClInclude Include="CSmaliType.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stringhelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SyntaxNode.h">
+    <ClInclude Include="CSyntaxNode.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="TestAnnotationSignature.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CTypeDefine.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CSmaliAbstract.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CTypeContainer.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

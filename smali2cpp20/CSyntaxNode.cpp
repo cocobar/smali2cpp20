@@ -1,10 +1,11 @@
-#include "SyntaxNode.h"
+#include "CSyntaxNode.h"
 
-#include "SmaliCodeline.h"
+#include "CSmaliCodeline.h"
 #include <vector>
 #include <map>
 #include "instructionhelper.h"
-#include "DrawGraph.h"
+//#include "DrawGraph.h"
+#include "CBaseAssert.h"
 
 
 std::shared_ptr<CSyntaxNode> CSyntaxNode::findSyntaxNode_inner2(std::map<CSyntaxNode*, std::shared_ptr<CSyntaxNode>>& listSearched,
@@ -100,7 +101,7 @@ std::string CSyntaxNode::getNodeName() {
 			return strName;
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 	return strName;
@@ -134,7 +135,7 @@ std::string CSyntaxNode::getNodeNameContext() {
 			strName.append("\\l");
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 	return strName;
@@ -158,12 +159,12 @@ std::vector<std::string> CSyntaxNode::getListCatchTag(void) {
 			}
 			else {
 				if (strName != strCatch) {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 
@@ -203,7 +204,7 @@ std::vector<std::shared_ptr<CSyntaxNode>> CSyntaxNode::createSyntaxNodeRoot(std:
 				tryItem.strEndTag = line->second->symbols[3].substr(0, line->second->symbols[3].size() - 1);
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 			listTryCatchRecord.push_back(tryItem);
 		}
@@ -274,7 +275,7 @@ std::vector<std::shared_ptr<CSyntaxNode>> CSyntaxNode::createSyntaxNodeRoot(std:
 							break;
 						}
 					}
-					BaseAssert(nbErase == 1);
+					CBaseAssert(nbErase == 1);
 				}
 			}
 
@@ -291,7 +292,7 @@ std::vector<std::shared_ptr<CSyntaxNode>> CSyntaxNode::createSyntaxNodeRoot(std:
 	pListCatchRoot.clear();
 
 	// 这里开始处理主逻辑
-	BaseAssert(mapCode.begin()->second->symbols[0] == ".method");
+	CBaseAssert(mapCode.begin()->second->symbols[0] == ".method");
 	root->listInstIndex.push_back(mapCode.begin()->first);
 	root->nextType = eNextType::NEXT_LINEAR;
 	listAllSyntaxNode.push_back(root);
@@ -340,7 +341,7 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 	for (auto line = itStart; line != mapCode.end(); line++) {
 		if (line->second->symbols.size() > 0) {
 			if (line->second->symbols[0] == ".method") {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 			else if ((line->second->symbols[0] == ".end") && (line->second->symbols[1] == "method")) {
 				root->listInstIndex.push_back(line->first);
@@ -428,16 +429,16 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 							strAnnotationSignature = m[1];
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 
 					}
 					else {
-						//BaseAssert(0);
+						//CBaseAssert(0);
 					}
 				}
 				else {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 
 			}
@@ -569,10 +570,10 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 								}
 							}
 
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 					else if (line->second->info->instFlags == kReturn) {					// 程序中断 return
@@ -660,7 +661,7 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 								ifGotoLabel = line->second->symbols[3];
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 							root->listInstIndex.push_back(line->first);
 							root->nextType = eNextType::NEXT_BRANCH_IFELSE;
@@ -703,7 +704,7 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 							return true;
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 					else if (line->second->info->instFlags == (kContinue | kSwitch)) {
@@ -729,7 +730,7 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 								ifSwitchLabel = line->second->symbols[2];
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 
 							root->listInstIndex.push_back(line->first);
@@ -791,14 +792,14 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 												root->nextSwitchCase.listCase.push_back(casei);
 											}
 											else {
-												BaseAssert(0);
+												CBaseAssert(0);
 											}
 										}
 										else if (((int)it_switch->second->strCode.find("->")) > 0) {
 											if (bPackedOrSparse == 1) {
 												struct caseItem casei;
 
-												BaseAssert(it_switch->second->symbols.size() == 3);
+												CBaseAssert(it_switch->second->symbols.size() == 3);
 
 												casei.strCase = it_switch->second->symbols[0];
 												casei.strTag = it_switch->second->symbols[2];
@@ -806,11 +807,11 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 												root->nextSwitchCase.listCase.push_back(casei);
 											}
 											else {
-												BaseAssert(0);
+												CBaseAssert(0);
 											}
 										}
 										else {
-											BaseAssert(0);
+											CBaseAssert(0);
 										}
 									}
 									break;
@@ -858,18 +859,18 @@ bool CSyntaxNode::nextSyntaxNode(std::shared_ptr<CSyntaxNode>& super, std::map<i
 
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 					else if ((line->second->info->instFlags & kContinue)) {					// 继续往下执行
 						root->listInstIndex.push_back(line->first);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 		}
@@ -927,7 +928,7 @@ int CSyntaxNode::getInDegree() {
 		}
 		break;
 		default:
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 
@@ -985,7 +986,7 @@ int CSyntaxNode::getOutDegree() {
 	}
 	break;
 	default:
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 	return 0;
 }
@@ -1038,7 +1039,7 @@ bool CSyntaxNode::runOneThread(
 						bFindTry = true;
 					}
 				}
-				BaseAssert(bFindTry);
+				CBaseAssert(bFindTry);
 			}
 		}
 	}
@@ -1071,7 +1072,7 @@ bool CSyntaxNode::runOneThread(
 				}
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 	}
@@ -1098,7 +1099,7 @@ bool CSyntaxNode::runOneThread(
 	}
 	break;
 	default:
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 
 	return false;
@@ -1117,4 +1118,28 @@ std::vector<std::vector<std::shared_ptr<CSyntaxNode>>> CSyntaxNode::runAllThread
 	std::vector<std::shared_ptr<CSyntaxNode>> listItem;
 	runOneThread(runCodeList, listCover, listSearched, mapCode, listNode[0], listAll, listItem);
 	return listAll;
+}
+
+int CSyntaxNode::hex_to_int(const std::string& input) {
+	std::regex r("^\\s*([-+])?(0[xX])([0-9A-Fa-f]+)\\s*$");
+	std::smatch m;
+	bool bNeg = false;
+	bool found = std::regex_search(input, m, r);
+
+	if (found && m.size() == 4) {
+		if (m[1] == "-") {
+			bNeg = true;
+		}
+		std::string strHex = m[2];
+		strHex.append(m[3]);
+		int decimal = (int)std::strtoll(strHex.c_str(), nullptr, 16);
+
+		std::string strDec;
+		if (bNeg) {
+			return (0 - decimal);
+		}
+		return decimal;
+	}
+	CBaseAssert(0);
+	return 0;
 }

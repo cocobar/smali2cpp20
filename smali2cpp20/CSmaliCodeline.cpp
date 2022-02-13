@@ -1,13 +1,12 @@
 
-#include "SmaliCodeline.h"
-#include "SmaliMethod.h"
-#include "SmaliClass.h"
-#include "SmaliCodeCache.h"
+#include "CSmaliCodeline.h"
+#include "CSmaliMethod.h"
+#include "CSmaliClass.h"
 #include "CVar.h"
-#include "config.hpp"
-#include "SmaliType.h"
+#include "CSmaliType.h"
 #include <regex>
-#include "BaseAssert.h"
+#include "CBaseAssert.h"
+#include "CRegexString.h"
 
 CSmaliCodeline::CSmaliCodeline() {
 	nCodeLine = 0;
@@ -39,10 +38,9 @@ unsigned long CSmaliCodeline::isJavaMathodTypeFlags(std::string str) {
 	return 0;
 }
 
-CSmaliCodeline::CSmaliCodeline(CSmaliMethod* pMethod, CSmaliCodeCache* pHostCache, int nLine, std::string& strCodeLine) {
+CSmaliCodeline::CSmaliCodeline(CSmaliMethod* pMethod, int nLine, std::string& strCodeLine) {
 	this->assign.reset();
 	this->pMethod = pMethod;
-	this->pCache = pHostCache;
 	nCodeLine = nLine;
 	strCode = strCodeLine;
 	listCatchTag.clear();
@@ -53,9 +51,6 @@ CSmaliCodeline::CSmaliCodeline(CSmaliMethod* pMethod, CSmaliCodeCache* pHostCach
 
 	symbols = stringhelper::splitToSymbol(strCodeLine);
 	info = nullptr;
-	nUsedInConstructor = 0;
-	nForceDontShow = 0;
-	bitState = 1 << ASM_CODE_INIT;
 
 	// 初始化寄存器信息
 	listCodeLineReg();
@@ -82,7 +77,7 @@ bool CSmaliCodeline::regCheckIn(std::shared_ptr<CSmaliRegister> reg) {
 			reg->setVar(this->assign);
 		}
 	}
-	return pCache->regCheckIn(reg);
+	return pMethod->regCheckIn(reg);
 }
 
 std::string CSmaliCodeline::dumpAllRegs() {
@@ -96,160 +91,6 @@ std::string CSmaliCodeline::dumpAllRegs() {
 	return strRet;
 }
 
-
-std::string CSmaliCodeline::getMethodPermissionString() {
-	return getCppMethodPermissionString(this->methodFlag).append(" : ");
-}
-
-
-std::string CSmaliCodeline::getMethodString(bool inTemplate) {
-	std::string strMethod = "";
-
-	std::string strType = SmaliType(strMethodType).getBaseType()->getCppDefineType(this->pMethod->pClass);
-
-	std::string strMethodNameTmp = strMethodName;
-
-	// 函数要改一个名字, C++ 和 h 文件都需要修改
-
-	std::string strTmp = pMethod->pClass->strMethodRenameTranslation(this->strMethodSignature);
-	if (strTmp.size() > 0) {
-		strMethodNameTmp = strTmp;
-	}
-
-
-	if (strMethodNameTmp == "delete") {
-		strMethodNameTmp = "_delete_";
-	}
-
-#if 1
-	stringhelper::replace(strMethodNameTmp, "-", "_");
-	stringhelper::replace(strMethodNameTmp, "+", "_p_");
-	stringhelper::replace(strMethodNameTmp, "$", "_S_");
-#endif
-
-	if (strMethodNameTmp == "<init>") {
-		if (this->pMethod->pClass->eOutType == config::OUT_CPP) {
-			strMethod.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppType(this->pMethod->pClass))
-				.append("::")
-				.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppShortType())
-				.append("(");
-		}
-		else {
-			// 構建類模板
-			if (inTemplate) {
-				strMethod.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppType(this->pMethod->pClass));
-#if 0
-				std::string strTemplateParam = this->pMethod->pClass->getTemplateUseString();
-				strMethod.append(strTemplateParam);
-#endif
-				strMethod.append("::");
-			}
-			strMethod.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppShortType()).append("(");
-
-			// 增加析构函数
-			std::string strDes = "virtual ~";
-			strDes.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppShortType()).append("()");
-			//SmaliImportSaver::setDestructor(strDes);
-			pMethod->pClass->listImportSaver->setDestructor(strDes);
-		}
-	}
-	else if (strMethodNameTmp == "<clinit>") {
-
-		// 静态初始化函数
-		if (isStatic && (this->pMethod->pClass->eOutType == config::OUT_H)) {
-			strMethod.append("static ");
-		}
-		if (this->pMethod->pClass->eOutType == config::OUT_CPP) {
-			strMethod.append(strType).append(" ")
-				.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppType(this->pMethod->pClass))
-				.append("::")
-				.append("static_cinit").append("(");
-		}
-		else {
-			strMethod.append(strType).append(" ").append("static_cinit").append("(");
-			std::string strStaticInitCall = SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppType(this->pMethod->pClass).append("::");
-			strStaticInitCall.append("static_cinit()");
-			//SmaliImportSaver::addStaticInited(strStaticInitCall);
-			pMethod->pClass->listImportSaver->addStaticInited(strStaticInitCall);
-		}
-	}
-	else {
-
-		// 函数声明
-		if (this->pMethod->pClass->eOutType == config::OUT_CPP) {
-			strMethod.append(strType).append(" ")
-				.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppType(this->pMethod->pClass))
-				.append("::")
-				.append(strMethodNameTmp).append("(");
-		}
-		else {
-
-			if (isStatic && (this->pMethod->pClass->eOutType == config::OUT_H)) {
-				if (!inTemplate) {
-					strMethod.append("static ");
-				}
-			}
-
-			strMethod.append(strType).append(" ");
-			if (isStatic && (this->pMethod->pClass->eOutType == config::OUT_H)) {
-			}
-			else {
-				if (this->pMethod->pClass->listTemplateParam.size() == 0) {
-					if (!this->pMethod->getAbstract()) {
-						strMethod.append("virtual ");
-					}
-				}
-			}
-
-			// 構建類模板
-			if (inTemplate) {
-				strMethod.append(SmaliType(((CSmaliMethod*)pMethod)->getClassName()).getBaseType()->getCppType(this->pMethod->pClass));
-#if 0
-				std::string strTemplateParam = this->pMethod->pClass->getTemplateUseString();
-				strMethod.append(strTemplateParam);
-#endif
-				strMethod.append("::");
-			}
-
-			strMethod.append(strMethodNameTmp).append("(");
-		}
-	}
-
-	// 函数参数
-	for (int i = 0; i < regsIn.size(); i++) {
-		if ((i == 0) && isStatic == 0) {
-			// this
-		}
-		else {
-			std::string strType2 = SmaliType(regsIn[i]->getVar()->getVarType()).getCppDefineType(this->pMethod->pClass);
-			std::string strName2 = regsIn[i]->getVar()->getVarName();
-
-			strMethod.append(strType2).append(" ").append(strName2);
-			if (((size_t)i + 1) < regsIn.size()) {
-				strMethod.append(",");
-			}
-		}
-	}
-	for (int i = 0; i < regsOut.size(); i++) {
-		if ((i == 0) && isStatic == 0) {
-			// this
-		}
-		else {
-			std::string strType2 = SmaliType(regsOut[i]->getVar()->getVarType()).getCppDefineType(this->pMethod->pClass);
-			std::string strName2 = regsOut[i]->getVar()->getVarName();
-
-			strMethod.append(strType2).append(" ").append(strName2);
-			if (((size_t)i + 1) < regsOut.size()) {
-				strMethod.append(",");
-			}
-		}
-	}
-
-	// 函数结尾
-	strMethod.append(")");
-
-	return strMethod;
-}
 
 void CSmaliCodeline::insertRegToList(std::shared_ptr<CSmaliRegister> reg) {
 	if (reg->isInput()) {
@@ -296,16 +137,16 @@ std::vector<std::string> CSmaliCodeline::getJavaTypeList(std::string str) {
 							nSymbolStart = -1;
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 				}
 				else {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 		else {
@@ -323,11 +164,11 @@ std::vector<std::string> CSmaliCodeline::getJavaTypeList(std::string str) {
 			}
 			else if (strSymbol[i] == ' ') {
 				if (i != (sLen - 1)) {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 	}
@@ -337,84 +178,6 @@ std::vector<std::string> CSmaliCodeline::getJavaTypeList(std::string str) {
 bool CSmaliCodeline::isJavaClassName(std::string str) {
 	if ((str[0] == 'L') && (str[str.size() - 1]) == ';') return true;
 	return false;
-}
-
-bool CSmaliCodeline::isJavaType(std::string str, CSmaliMethod* pMethod) {
-
-	if (str.size() > 0) {
-		std::string strSymbol = stringhelper::trim(str);
-		size_t nStart = strSymbol.find_first_not_of("[");
-		strSymbol = strSymbol.substr(nStart, strSymbol.size() - nStart);
-
-		if (strSymbol == "B") return true;
-		if (strSymbol == "C") return true;
-		if (strSymbol == "D") return true;
-		if (strSymbol == "F") return true;
-		if (strSymbol == "I") return true;
-		if (strSymbol == "J") return true;
-		if (strSymbol == "S") return true;
-		if (strSymbol == "Z") return true;
-		if (strSymbol == "V") return true;
-
-		// 处理一下
-		//SmaliImportSaver::checkJavaClass(strSymbol);
-
-		if (pMethod) {
-			pMethod->pClass->listImportSaver->checkJavaClass(strSymbol);
-		}
-
-		return isJavaClassName(strSymbol);
-
-	}
-	return false;
-}
-
-bool CSmaliCodeline::isJavaFunction(std::string str, CSmaliMethod* pMethod) {
-	std::string strSymbol = stringhelper::trim(str);
-	size_t nStart = strSymbol.find_first_of("(");
-	size_t nEnd = strSymbol.find_last_of(")");
-	if ((nStart > 0) && (nEnd > 0) && (nEnd > nStart)) {
-		std::string strParam = strSymbol.substr(nStart + 1, nEnd - nStart - 1);
-		std::string strType = strSymbol.substr(nEnd + 1, strSymbol.size() - nEnd - 1);
-		std::vector<std::string> listParam = getJavaTypeList(strParam);
-
-		for (auto a = listParam.begin(); a != listParam.end(); a++) {
-			if (!isJavaType(*a, pMethod)) {
-				return false;
-			}
-		}
-		return isJavaType(strType, pMethod);
-	}
-	return false;
-}
-
-std::string CSmaliCodeline::getMethodSignature() {
-	for (auto k = this->symbols.begin() + 1; k != this->symbols.end(); k++) {
-
-		if (isJavaMathodTypeFlags(*k) > 0) {		// 获得访问权限
-		}
-		else if (isJavaMathodConstructorFlags(*k) > 0) {
-		}
-		else if (isJavaFunction(*k, this->pMethod)) {
-			std::string strSymbol = stringhelper::trim(*k);
-			size_t nStart = strSymbol.find_first_of("(");
-			size_t nEnd = strSymbol.find_last_of(")");
-			if ((nStart > 0) && (nEnd > 0) && (nEnd > nStart)) {
-				std::string strParam = strSymbol.substr(nStart + 1, nEnd - nStart - 1);
-				std::string strType = strSymbol.substr(nEnd + 1, strSymbol.size() - nEnd - 1);
-				std::string strName = strSymbol.substr(0, nStart);
-				std::vector<std::string> listParam = getJavaTypeList(strParam);
-			}
-			return *k;
-		}
-		else if ((*k) == "declared-synchronized") {
-
-		}
-		else {
-			BaseAssert(0);
-		}
-	}
-	return std::string("");
 }
 
 struct CSmaliCodeline::invokeParam CSmaliCodeline::getInvokeParamList(std::string str) {
@@ -433,11 +196,13 @@ struct CSmaliCodeline::invokeParam CSmaliCodeline::getInvokeParamList(std::strin
 	size_t nStartMathodName = strNext.find("->");
 	std::string strObjectType = strNext.substr(0, nStartMathodName);
 
-	// BaseAssert(SmaliType(strObjectType).isJavaType());
+	// CBaseAssert(CSmaliType(strObjectType).isJavaType());
 
 	// 处理调用参数类型
 	// <init>(Lcom/google/gson/internal/Excluder;Lcom/google/gson/FieldNamingStrategy;Ljava/util/Map;ZZZZZZLcom/google/gson/LongSerializationPolicy;Ljava/util/List;)V
 	std::string strNext2 = stringhelper::trim(strNext.substr(nStartMathodName + 2, strNext.size() - nStartMathodName - 2));
+
+	param.strSignature = strNext2;
 
 	size_t nStart = strNext2.find_first_of("(");
 	size_t nEnd = strNext2.find_last_of(")");
@@ -484,142 +249,45 @@ unsigned long CSmaliCodeline::isJavaMathodConstructorFlags(std::string str) {
 	return 0;
 }
 
-std::string CSmaliCodeline::getCppMethodPermissionString(unsigned long val) {
-	if (val & CSmaliClass::kAccPublic) {
-		return "public";
-	}
-	if (val & CSmaliClass::kAccPrivate) {
-		return "private";
-	}
-	if (val & CSmaliClass::kAccProtected) {
-		return "protected";
-	}
-	return "public";
-}
-
 // 列出所有的寄存器
 void CSmaliCodeline::listCodeLineReg() {
-
-	// 已经列过了就不再列了
-	if (this->bitState & (1 << ASM_CODE_LIST_REG)) {
-		return;
-	}
 
 	if (this->symbols[0][0] == ':') {		// 行号标签
 
 	}
 	if (this->symbols[0] == ".method") {
-		std::string strMethodS;
-		isMethod = true;
-		for (auto k = this->symbols.begin() + 1; k != this->symbols.end(); k++) {
-			if ((*k) == "static") {
-				isStatic = 1;
-			}
-			if (isJavaMathodTypeFlags(*k) > 0) {		// 获得访问权限
-				methodFlag |= isJavaMathodTypeFlags(*k);
-			}
-			else if (isJavaMathodConstructorFlags(*k) > 0) {
-				methodFlag |= isJavaMathodConstructorFlags(*k);
-			}
-			else if (isJavaFunction(*k, this->pMethod)) {
-
-				if (methodFlag & CSmaliClass::kAccConstructor) {
-					isConstructor = 1;
-				}
-
-				std::string strSymbol = stringhelper::trim(*k);
-
-				strMethodS = strSymbol;
-				strMethodSignature = strSymbol;
-
-				size_t nStart = strSymbol.find_first_of("(");
-				size_t nEnd = strSymbol.find_last_of(")");
-				if ((nStart > 0) && (nEnd > 0) && (nEnd > nStart)) {
-					std::string strParam = strSymbol.substr(nStart + 1, nEnd - nStart - 1);
-					std::string strType = strSymbol.substr(nEnd + 1, strSymbol.size() - nEnd - 1);
-					std::string strName = strSymbol.substr(0, nStart);
-					std::vector<std::string> listParam = getJavaTypeList(strParam);
-
-					pMethod->setMethodType(strType);
-					pMethod->setMethodName(strName);
-
-					strMethodType = strType;
-					strMethodName = strName;
-					if (strType == "V") {
-						isVold = 1;
-					}
-
-					int nParamIndex = 0;
-					int nRegIndex = 0;
-					if (isStatic == 0) {
-						nParamIndex = 1;
-						nRegIndex = 1;
-
-						std::string strClassName = ((CSmaliMethod*)pMethod)->getClassName();
-						std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>(0, CSmaliRegister::REG_OUTPUT, std::string("p0"), strClassName, this, __LINE__);
-						this->regCheckIn(reg);
-						reg->setCheckedType(strClassName);
-						reg->setRegVarName("this");
-						this->insertRegToList(reg);
-					}
-
-					std::string ssstrType;
-					std::string ssstrName;
-					for (auto a = listParam.begin(); a != listParam.end(); a++) {
-						ssstrType = (*a);
-						ssstrName = stringhelper::formatString("p%d", nParamIndex);
-						if ((ssstrType == "D") || (ssstrType == "J") || (ssstrType == "W")) {
-							nParamIndex++;
-						}
-
-						// 插入数组
-						std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>(nRegIndex, CSmaliRegister::REG_OUTPUT, ssstrName, ssstrType, this, __LINE__);
-						this->regCheckIn(reg);
-						reg->setCheckedType(ssstrType);
-						this->insertRegToList(reg);
-
-						nParamIndex++;
-						nRegIndex++;
-					}
-				}
-			}
-			else if ((*k) == "declared-synchronized") {
-
-			}
-			else if ((*k) == "native") {
-
-			}
-			else if ((*k) == "strictfp") {
-
-			}
-			else {
-				BaseAssert(0);
-			}
+		std::vector<std::string> listParam = getJavaTypeList(pMethod->strParamList);
+		int nParamIndex = 0;
+		int nRegIndex = 0;
+		if (pMethod->isStatic == 0) {
+			nParamIndex = 1;
+			nRegIndex = 1;
+			std::string strClassName = pMethod->getClassType()->getFullTypeSmaliString();
+			std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>(0, CSmaliRegister::REG_OUTPUT, std::string("p0"), strClassName, this, __LINE__);
+			this->regCheckIn(reg);
+			reg->setCheckedType(strClassName);
+			reg->setRegVarName("this");
+			this->insertRegToList(reg);
 		}
+		std::string ssstrType;
+		std::string ssstrName;
+		for (auto a = listParam.begin(); a != listParam.end(); a++) {
+			ssstrType = (*a);
+			ssstrName = stringhelper::formatString("p%d", nParamIndex);
+			if ((ssstrType == "D") || (ssstrType == "J") || (ssstrType == "W")) {
+				nParamIndex++;
+			}
 
-		// 将类型保存上去
-		if (methodFlag & CSmaliClass::kAccPublic) {
-			this->pMethod->setPublicType();
-		}
-		else if (methodFlag & CSmaliClass::kAccPrivate) {
-			this->pMethod->setPrivateType();
-		}
-		else if (methodFlag & CSmaliClass::kAccProtected) {
-			this->pMethod->setProtctedType();
-		}
+			// 插入数组
+			std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>(nRegIndex, CSmaliRegister::REG_OUTPUT, ssstrName, ssstrType, this, __LINE__);
+			this->regCheckIn(reg);
+			reg->setCheckedType(ssstrType);
+			this->insertRegToList(reg);
 
-		if ((methodFlag & CSmaliClass::kAccBridge) && (methodFlag & CSmaliClass::kAccSynthetic)) {
-			this->pMethod->setHide();
+			nParamIndex++;
+			nRegIndex++;
 		}
-
-		if (methodFlag & CSmaliClass::kAccAbstract) {
-			this->pMethod->setAbstract();
-		}
-
-		// 保存签名
-		if (!this->pMethod->getHide()) {
-			this->pMethod->pClass->insertMethodSignatureType(strMethodS);
-		}
+		this->isMethod = true;
 	}
 	else {
 		this->info = instructionhelper::getInstructInfo(this->symbols[0]);
@@ -629,7 +297,7 @@ void CSmaliCodeline::listCodeLineReg() {
 
 			if (strlen(strRegTypeList) > 0) {
 				int strLen = (int)strlen(strRegTypeList);
-				BaseAssert((strLen % 2) == 0);
+				CBaseAssert((strLen % 2) == 0);
 
 				for (int i = 0; i < strLen; i += 2) {
 
@@ -646,13 +314,19 @@ void CSmaliCodeline::listCodeLineReg() {
 						continue;		// 不能确定的下次再来
 					}
 
-					if (strRegTypeList[i] == '*') {
-						std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>((int)(i / 2), CSmaliRegister::REG_OUTPUT,
-							getStringNoComma(this->symbols[((int)(i >> 1) + 1)]), strRegType, this, __LINE__);
-						this->regCheckIn(reg);
+					if (strRegTypeList[i] == '*') {		// 同时具备输出输出
 						std::shared_ptr<CSmaliRegister> reg2 = std::make_shared<CSmaliRegister>((int)(i / 2), CSmaliRegister::REG_INPUT,
 							getStringNoComma(this->symbols[((int)(i >> 1) + 1)]), strRegType, this, __LINE__);
 						this->regCheckIn(reg2);
+
+						// 输出寄存器
+						std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>((int)(i / 2), CSmaliRegister::REG_OUTPUT,
+							getStringNoComma(this->symbols[((int)(i >> 1) + 1)]), strRegType, this, __LINE__);
+						this->regCheckIn(reg);
+
+						// 这个输出寄存器和输入的是一样的
+						reg->sameReg = reg2;
+
 						this->insertRegToList(reg);
 						this->insertRegToList(reg2);
 					}
@@ -670,7 +344,7 @@ void CSmaliCodeline::listCodeLineReg() {
 						this->insertRegToList(reg);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 			}
@@ -769,11 +443,9 @@ void CSmaliCodeline::listCodeLineReg() {
 				// throw v0			抛出异常对象，异常对象的引用在v0寄存器。	引用
 
 				if (((int)this->symbols[0].find("move-result") >= 0)) {
-
-					std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>((-1), CSmaliRegister::REG_INPUT, std::string("rr"), "", this, __LINE__);
+					std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>((-1), CSmaliRegister::REG_INPUT, std::string("rr"), "N", this, __LINE__);
 					this->regCheckIn(reg);
 					this->insertRegToList(reg);
-
 				}
 				else if (((int)this->symbols[0].find("return") >= 0)) {
 					std::string newObjectOutReg = getStringNoComma(this->symbols[1]);
@@ -781,12 +453,11 @@ void CSmaliCodeline::listCodeLineReg() {
 					if (this->getInputRegs().size() == 1) {
 						auto inputRegs = this->getInputRegs();
 						if ((inputRegs[0]->regName() == newObjectOutReg) && inputRegs[0]->hasRegType()) {
-							//BaseAssert(SmaliType(((CSmaliMethod*)pHostMethod)->getMethodType()).isJavaType());
 							inputRegs[0]->setCheckedType(((CSmaliMethod*)pMethod)->getMethodType());
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 			}
@@ -856,12 +527,12 @@ void CSmaliCodeline::listCodeLineReg() {
 					if (this->getOutputRegs().size() == 1) {
 						auto sRegs = this->getOutputRegs();
 						if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-							BaseAssert(sRegs[0]->regType() == "O");
+							CBaseAssert(sRegs[0]->regType()->getFullTypeSmaliString() == "O");
 							sRegs[0]->setCheckedType(std::string("Ljava/lang/String;"));
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else if (("const-class" == this->symbols[0])) {
@@ -871,13 +542,15 @@ void CSmaliCodeline::listCodeLineReg() {
 					if (this->getOutputRegs().size() == 1) {
 						auto sRegs = this->getOutputRegs();
 						if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-							BaseAssert(sRegs[0]->regType() == "O");
-							BaseAssert(SmaliType(this->symbols[2]).isJavaType());
+							CBaseAssert(sRegs[0]->regType()->getFullTypeSmaliString() == "O");
+							CBaseAssert(CSmaliType(this->symbols[2], nullptr).isJavaType());
 							sRegs[0]->setCheckedType(this->symbols[2]);
 						}
+
+						useType(this->symbols[2], "<init>()V", true);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else if ("check-cast" == this->symbols[0]) {
@@ -888,13 +561,15 @@ void CSmaliCodeline::listCodeLineReg() {
 					if (this->getInputRegs().size() == 1) {
 						auto sRegs = this->getInputRegs();
 						if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-							BaseAssert(sRegs[0]->regType() == "O");
-							BaseAssert(SmaliType(this->symbols[2]).isJavaType());
+							CBaseAssert(sRegs[0]->regType()->getFullTypeSmaliString() == "O");
+							CBaseAssert(CSmaliType(this->symbols[2], nullptr).isJavaType());
 							sRegs[0]->setCheckedType(this->symbols[2]);
 						}
+
+						useType(this->symbols[2], "<init>()V", true);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 
 				}
@@ -904,68 +579,81 @@ void CSmaliCodeline::listCodeLineReg() {
 					if (this->getOutputRegs().size() == 1) {
 						auto sRegs = this->getOutputRegs();
 						if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-							BaseAssert(sRegs[0]->regType() == "O");
-							BaseAssert(SmaliType(this->symbols[2]).isJavaType());
+							CBaseAssert(sRegs[0]->regType()->getFullTypeSmaliString() == "O");
+							CBaseAssert(CSmaliType(this->symbols[2], nullptr).isJavaType());
 							sRegs[0]->setCheckedType(this->symbols[2]);
 						}
+
+						useType(this->symbols[2], "<init>()V", true);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else if (((int)this->symbols[0].find("sget") >= 0) || ((int)this->symbols[0].find("sput") >= 0)) {
 					std::string strObjectType;
 					// sget-object v1, Ljava/lang/Float;->TYPE:Ljava/lang/Class;
-					size_t nFindDot = this->symbols[2].find_first_of(":");
-					if (nFindDot > 0) {
-						std::string strName = this->symbols[2].substr(0, nFindDot);	// Lcom/google/gson/stream/JsonToken;->END_DOCUMENT
-						std::string strType = stringhelper::trim(this->symbols[2].substr(nFindDot + 1, this->symbols[2].length() - 1));	// Lcom/google/gson/stream/JsonToken;  第一个参数类型
-						BaseAssert(SmaliType(strType).isJavaType());
-						strObjectType = stringhelper::trim(strName.substr(0, strName.find("->")));  // 第二个参数类型
-						BaseAssert(SmaliType(strObjectType).isJavaType());
+					// sput-object v0, Landroid/icu/impl/CalendarAstronomer;->NEW_MOON:Landroid/icu/impl/CalendarAstronomer$MoonAge;
+					// sput-boolean v0, Landroid/icu/impl/BMPSet;->-assertionsDisabled:Z
+					// sput v0, Landroid/icu/impl/BMPSet;->U16_SURROGATE_OFFSET:I"
+					std::regex sgetRegex(
+						RegexStart
+						"((?:sget|sput))(?:-wide|-object|-boolean|-byte|-char|-short)?\\s*"	// 指令名称
+						"([vp][0-9]{1,2})\\s*[,]\\s*"	// 寄存器名称
+						"(" RegexOnlySmaliBaseType ")"	// 所属的 Class
+						"->"
+						"([^>:]+)"						// 变量名称
+						":"
+						"(" SmaliTypePrefix RegexOnlySmaliBaseType ")"  // 成员类型
+						RegexEnd
+					);
+					std::smatch m;
+					bool found = std::regex_search(this->strCode, m, sgetRegex);
+					if (found && (m.size() == 6)) {
+						std::string strName = m[4];
+						std::string strType = m[5];
+						std::string strObjectType = m[3];
 
+						useType(strObjectType, "<init>()V", true);
+						useType(strObjectType, strName, false);
 
-						if (((int)this->symbols[0].find("sget") >= 0)) {
-
-							std::string newObjectOutReg = getStringNoComma(this->symbols[1]);
-
+						if (m[1] == "sget") {
+							std::string newObjectOutReg = m[2];
 							if (this->getOutputRegs().size() == 1) {
 								auto sRegs = this->getOutputRegs();
 								if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-									//BaseAssert(sRegs[0]->regType() == "O");
-									BaseAssert(SmaliType(strType).isJavaType());
+									CBaseAssert(CSmaliType(strType, nullptr).isJavaType());
 									sRegs[0]->setCheckedType(strType);
 								}
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 						}
-						else {
-							// 两个都是输入
-
-							std::string newObjectOutReg = getStringNoComma(this->symbols[1]);
-
+						else if (m[1] == "sput") {
+							std::string newObjectOutReg = m[2];
 							if (this->getInputRegs().size() == 1) {
 								auto sRegs = this->getInputRegs();
 								if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-									// BaseAssert(sRegs[0]->regType() == "O");
-									BaseAssert(SmaliType(strType).isJavaType());
+									CBaseAssert(CSmaliType(strType, nullptr).isJavaType());
 									sRegs[0]->setCheckedType(strType);
 								}
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
+						}
+						else {
+							CBaseAssert(0);
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 
 				if ((this->symbols[0] == "const-method-handle") || (this->symbols[0] == "const-method-type")) {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 
 			}
@@ -1004,7 +692,7 @@ void CSmaliCodeline::listCodeLineReg() {
 				// iget-char-quick
 				// iget-short-quick
 				if (((int)this->symbols[0].find("-quick") > 0)) {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 
 
@@ -1015,13 +703,15 @@ void CSmaliCodeline::listCodeLineReg() {
 					if (this->getInputRegs().size() == 1) {
 						auto sRegs = this->getInputRegs();
 						if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-							BaseAssert(sRegs[0]->regType() == "O");
-							BaseAssert(SmaliType(this->symbols[3]).isJavaType());
+							CBaseAssert(sRegs[0]->regType()->getFullTypeSmaliString() == "O");
+							CBaseAssert(CSmaliType(this->symbols[3], nullptr).isJavaType());
 							sRegs[0]->setCheckedType(this->symbols[3]);
 						}
+
+						useType(this->symbols[3], "<init>()V", true);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else if ("new-array" == this->symbols[0]) {
@@ -1031,94 +721,96 @@ void CSmaliCodeline::listCodeLineReg() {
 					if (this->getOutputRegs().size() == 1) {
 						auto sRegs = this->getOutputRegs();
 						if ((sRegs[0]->regName() == newObjectOutReg) && sRegs[0]->hasRegType()) {
-							BaseAssert(sRegs[0]->regType() == "A");
-							BaseAssert(this->symbols[3][0] == '[');
-							BaseAssert(SmaliType(this->symbols[3]).isJavaType());
+							CBaseAssert(sRegs[0]->regType()->getFullTypeSmaliString() == "A");
+							CBaseAssert(this->symbols[3][0] == '[');
+							CBaseAssert(CSmaliType(this->symbols[3], nullptr).isJavaType());
 							sRegs[0]->setCheckedType(this->symbols[3]);
 						}
+
+						useType(CSmaliType(this->symbols[3], nullptr).getBaseType()->getFullTypeSmaliString(), "<init>()V", true);
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else if (((int)this->symbols[0].find("iget") >= 0) || ((int)this->symbols[0].find("iput") >= 0)) {
-					std::string strObjectType;
+
 					// strCode = "    iget-object v0, p0, Ljava/lang/-$Lambda$S9HjrJh0nDg7IyU6wZdPArnZWRQ;->-$f0:Ljava/lang/Object;"
 					// iget-object v0, p0, Lcom/google/gson/Gson$FutureTypeAdapter;->delegate:Lcom/google/gson/TypeAdapter;
-					size_t nFindDot = this->symbols[3].find_first_of(":");
-					if (nFindDot > 0) {
-						std::string strName = this->symbols[3].substr(0, nFindDot);	// Lcom/google/gson/stream/JsonToken;->END_DOCUMENT
-						std::string strType = stringhelper::trim(this->symbols[3].substr(nFindDot + 1, this->symbols[3].length() - 1));	// Lcom/google/gson/stream/JsonToken;  第一个参数类型
-						BaseAssert(SmaliType(strType).isJavaType());
-						strObjectType = stringhelper::trim(strName.substr(0, strName.find_last_of("->") - 1));  // 第二个参数类型
+					std::regex sgetRegex(
+						RegexStart
+						"((?:iget|iput))(?:-wide|-object|-boolean|-byte|-char|-short)?\\s*"			// 指令名称
+						"((?:[vp][0-9]{1,2}\\s*[,]\\s*){2})"	// 寄存器名称
+						"(" RegexOnlySmaliBaseType ")"			// 所属的 Class
+						"->"
+						"([^>:]+)"								// 变量名称
+						":"
+						"(" SmaliTypePrefix RegexOnlySmaliBaseType ")"  // 成员类型
+						RegexEnd
+					);
+					std::smatch m;
+					bool found = std::regex_search(this->strCode, m, sgetRegex);
+					if (found && (m.size() == 6)) {
+						std::string strName = m[4];
+						std::string strType = m[5];
+						std::string strObjectType = m[3];
 
+						useType(strObjectType, "<init>()V", true);
+						useType(strObjectType, strName, false);
 
-						std::regex igetRegex("^(L[0-9a-zA-Z_/$-]+;)->([^>:]+):(\\[*L[0-9a-zA-Z_/$-]+;|\\[*[BCDFIJSZV])$");
-						std::smatch m;
-						bool found = std::regex_search(this->symbols[3], m, igetRegex);
-						if (found && (m.size() == 4)) {
-							strName = m[2];
-							strType = m[3];
-							strObjectType = m[1];
-						}
-						else {
-							BaseAssert(0);
-						}
-						BaseAssert(SmaliType(strObjectType).isJavaType());
+						CBaseAssert(CSmaliType(strObjectType, nullptr).isJavaType());
 
-						if (((int)this->symbols[0].find("iget") >= 0)) {
+						if (m[1] == "iget") {
 							// 第一个输出，第二个输入
 							std::string newObjectReg1 = getStringNoComma(this->symbols[1]);
 							std::string newObjectReg2 = getStringNoComma(this->symbols[2]);
-
-
 							if (this->getOutputRegs().size() == 1) {
 								auto sRegs = this->getOutputRegs();
 								if ((sRegs[0]->regName() == newObjectReg1) && sRegs[0]->hasRegType()) {
-									BaseAssert(SmaliType(strType).isJavaType());
+									CBaseAssert(CSmaliType(strType, nullptr).isJavaType());
 									sRegs[0]->setCheckedType(strType);
 								}
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
-
 							if (this->getInputRegs().size() == 1) {
 								auto sRegs = this->getInputRegs();
 								if ((sRegs[0]->regName() == newObjectReg2) && sRegs[0]->hasRegType()) {
-									BaseAssert(sRegs[0]->regType() == "O");
-									BaseAssert(SmaliType(strType).isJavaType());
+									CBaseAssert(sRegs[0]->regType()->getFullTypeSmaliString() == "O");
+									CBaseAssert(CSmaliType(strType, nullptr).isJavaType());
 									sRegs[0]->setCheckedType(strType);
 								}
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 						}
-						else {
-							// 两个都是输入
-
+						else if (m[1] == "iput") {
 							std::string newObjectReg1 = getStringNoComma(this->symbols[1]);
 							std::string newObjectReg2 = getStringNoComma(this->symbols[2]);
-
 							if (this->getInputRegs().size() == 2) {
 								auto sRegs = this->getInputRegs();
 								if (((sRegs[0]->regName() == newObjectReg1) && sRegs[0]->hasRegType()) &&
 									((sRegs[1]->regName() == newObjectReg2) && sRegs[1]->hasRegType())) {
-									BaseAssert(SmaliType(strType).isJavaType());
+									CBaseAssert(CSmaliType(strType, nullptr).isJavaType());
 									sRegs[0]->setCheckedType(strType);
 
-									BaseAssert(SmaliType(strObjectType).isJavaType());
+									CBaseAssert(CSmaliType(strObjectType, nullptr).isJavaType());
 									sRegs[1]->setCheckedType(strObjectType);
 								}
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 						}
+						else {
+							CBaseAssert(0);
+						}
+
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 			}
@@ -1246,10 +938,10 @@ void CSmaliCodeline::listCodeLineReg() {
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 
-					BaseAssert(strType[0] == '[');
+					CBaseAssert(strType[0] == '[');
 
 					std::string strBaseType = strType.substr(1);
 
@@ -1267,7 +959,7 @@ void CSmaliCodeline::listCodeLineReg() {
 					this->insertRegToList(reg);
 
 					break;
-					//BaseAssert(0);
+					//CBaseAssert(0);
 				}
 				if ("filled-new-array/range" == this->symbols[0]) {
 					// filled-new-array/range {v23 .. v24}, [I
@@ -1279,7 +971,7 @@ void CSmaliCodeline::listCodeLineReg() {
 					bool found = std::regex_search(this->strCode, m, filled_new);
 					if (found && (m.size() == 6)) {
 						strType = m[5];
-						BaseAssert(std::string(m[1]) == std::string(m[3]));
+						CBaseAssert(std::string(m[1]) == std::string(m[3]));
 						std::string strVP = std::string(m[1]);
 						int nStart = std::atoi(std::string(m[2]).c_str());
 						int nEnd = std::atoi(std::string(m[4]).c_str());
@@ -1290,10 +982,10 @@ void CSmaliCodeline::listCodeLineReg() {
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 
-					BaseAssert(strType[0] == '[');
+					CBaseAssert(strType[0] == '[');
 
 					std::string strBaseType = strType.substr(1);
 
@@ -1311,10 +1003,13 @@ void CSmaliCodeline::listCodeLineReg() {
 					this->insertRegToList(reg);
 
 					break;
-					//BaseAssert(0);
+					//CBaseAssert(0);
 				}
 
 				invokeParam invokeParam = getInvokeParamList(this->strCode);
+
+
+				useType(invokeParam.objectType, invokeParam.strSignature, true);
 
 				int nRegIndex = 0;
 				if (((int)this->symbols[0].find("-static") > 0)) {
@@ -1322,7 +1017,7 @@ void CSmaliCodeline::listCodeLineReg() {
 				}
 				else {
 					// 第一个不是参数
-					BaseAssert(invokeParam.paramList.size() > 0);
+					CBaseAssert(invokeParam.paramList.size() > 0);
 					std::shared_ptr<CSmaliRegister> reg = std::make_shared<CSmaliRegister>(nRegIndexCount++, CSmaliRegister::REG_INPUT,
 						getStringNoComma(invokeParam.paramList[0]), invokeParam.objectType, this, __LINE__);
 					this->regCheckIn(reg);
@@ -1420,7 +1115,7 @@ void CSmaliCodeline::listCodeLineReg() {
 
 						*/
 						if (m[1] == "invoke-polymorphic/range") {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 						else {
 							std::vector<std::string> strRegList;
@@ -1440,7 +1135,7 @@ void CSmaliCodeline::listCodeLineReg() {
 								std::regex regType("^\\s*([\\[]*L[\\w/$.-]+;|[\\[]*B|[\\[]*C|[\\[]*D|[\\[]*F|[\\[]*I|[\\[]*J|[\\[]*S|[\\[]*Z|V)\\s*");
 								std::smatch m2;
 								bool found = std::regex_search(strp2, m2, regType);
-								BaseAssert(found && (m2.size() == 2));
+								CBaseAssert(found && (m2.size() == 2));
 								if (found) {
 									strRegTypeList.push_back(m2[1]);
 									strp2 = strp2.substr(m2[0].length());
@@ -1471,7 +1166,7 @@ void CSmaliCodeline::listCodeLineReg() {
 						}
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 
@@ -1484,17 +1179,13 @@ void CSmaliCodeline::listCodeLineReg() {
 			case k4rcc://,  // op {VCCCC .. v(CCCC+AA-1)}, meth@BBBB, proto@HHHH (AA: count)
 			{
 				// invoke-polymorphic/range
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 			break;
-
-
 			}
 		}
 		else {
-			//BaseAssert(0);
+			//CBaseAssert(0);
 		}
 	}
-
-	this->bitState |= (1 << ASM_CODE_LIST_REG);
 }

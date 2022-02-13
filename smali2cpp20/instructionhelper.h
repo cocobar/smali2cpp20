@@ -472,9 +472,6 @@ public:
 	std::string strOp;				// 8
 	std::string strExp;				// 9
 
-	//const char* pLeftExpFormat;		// 左表达式模板
-	//const char* pRightExpFormat;	// 右表达式模板
-
 	uint8_t indexType;
 	uint16_t instFlags;
 	uint32_t externedFlags;

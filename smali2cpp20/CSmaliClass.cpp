@@ -1,4 +1,4 @@
-#include "BaseObject.h"
+#include "CBaseAssert.h"
 #include <map>
 #include <any>
 #include <variant>
@@ -8,16 +8,16 @@
 #include "stringhelper.h"
 #include "instructionhelper.h"
 #include "CodeDumper.h"
-#include "SmaliMethod.h"
+#include "CSmaliMethod.h"
 #include <filesystem>
 #include <cassert>
 #include <filesystem>
 #include <fstream>
-#include "config.hpp"
-#include "SmaliClass.h"
-#include "SmaliType.h"
+#include "CSmaliClass.h"
+#include "CSmaliType.h"
 #include <algorithm>
 #include "TestAnnotationSignature.h"
+#include "CMultiWorkThread.h"
 
 // clang-format -style=Microsoft -i com.smali.helloworld.cpp		这个可以
 // clang-format -style=WebKit -i com.smali.helloworld.cpp			这个也好看
@@ -29,12 +29,13 @@ CSmaliClass::CSmaliClass() {
 }
 
 CSmaliClass::CSmaliClass(std::string strFilePath) {
-	this->listImportSaver = std::make_shared<SmaliImportSaver>();
+	//this->listImportSaver = std::make_shared<SmaliImportSaver>();
 	this->strFilePath = strFilePath;
 }
 
 std::string CSmaliClass::getClassCppSaveName() {
-	return SmaliType(this->strClassName).getBaseType()->getCppFileName();
+	return CSmaliType(strClassName, nullptr).getBaseType()->getCppFileName();
+	//return this->ptrClassName->getBaseType()->getCppFileName();
 }
 
 // 把文件中的数据全部加载到 listSmaliFileData 上去
@@ -65,48 +66,15 @@ bool CSmaliClass::loadFile(void) {
 	return false;
 }
 
-
-std::string CSmaliClass::getClassName() {
-	return this->strClassName;
-}
-
-unsigned long CSmaliClass::isJavaAnnotationFlags(std::string str) {
-	if (str == "annotation") return CSmaliClass::kAccAnnotation;
-	return 0;
-}
-unsigned long CSmaliClass::isJavaSyntheticFlags(std::string str) {
-	if (str == "synthetic") return CSmaliClass::kAccSynthetic;
-	return 0;
-}
-
-unsigned long CSmaliClass::isJavaEnumFlags(std::string str) {
-	if (str == "enum") return CSmaliClass::kAccEnum;
-	return 0;
-}
-
-unsigned long CSmaliClass::isJavaAccessFlags(std::string str) {
-	if (str == "public") return CSmaliClass::kAccPublic;
-	if (str == "protected") return CSmaliClass::kAccProtected;
-	if (str == "private") return CSmaliClass::kAccPrivate;
-	if (str == "final") return CSmaliClass::kAccFinal;
-	if (str == "static") return CSmaliClass::kAccStatic;
-	if (str == "abstract") return CSmaliClass::kAccAbstract;
-	if (str == "interface") return CSmaliClass::kAccInterface;
-	if (str == "transient") return CSmaliClass::kAccTransient;
-	if (str == "volatile") return CSmaliClass::kAccVolatile;
-	if (str == "synchronized") return CSmaliClass::kAccSynchronized;
-	return 0;
-}
-
 bool CSmaliClass::isJavaClassName(std::string str) {
 	if ((str[0] == 'L') && (str[str.size() - 1]) == ';') return true;
 	return false;
 }
 
-bool CSmaliClass::insertTemplateParam(std::string strType, std::string strClass) {	
+bool CSmaliClass::insertTemplateParam(std::string strType, std::string strClass) {
 	auto a = listTemplateParam.find(strType);
 	if (a != listTemplateParam.end()) {
-		BaseAssert(a->second == strClass);
+		CBaseAssert(a->second == strClass);
 		return false;
 	}
 	this->listTemplateParam.insert(std::make_pair(strType, strClass));
@@ -140,7 +108,7 @@ std::string CSmaliClass::getTemplateUseString() {
 	return strTemplateParam;
 }
 
-std::string CSmaliClass::getTemplateDefineString(CSmaliMethod * pMethod) {
+std::string CSmaliClass::getTemplateDefineString(CSmaliMethod* pMethod) {
 	std::string strTemplateParam = "template <";
 
 	std::map<std::string, std::string> listTemplateTmpParam = listTemplateParam;
@@ -176,126 +144,35 @@ std::string CSmaliClass::getTemplateDefineString(CSmaliMethod * pMethod) {
 void CSmaliClass::dumpToCpp(CodeDumper* d) {
 
 	CodeDumper cppMethodDumper;
-	this->eOutType = config::OUT_CPP;
-	//SmaliImportSaver::clearCache();
-	this->listImportSaver->clearCache();
+	//this->eOutType = config::OUT_CPP;
+	//this->listImportSaver->clearCache();
 
 	// 如果是模板類， CPP 文件中不放東西，全部放到 H 文件中
 	if (!(this->listTemplateParam.size() > 0)) {
-		// CPP 文件
 		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
-			(*a)->dumpAllField(&cppMethodDumper, this);
+			(*a)->dumpAllField(OUT_CPP, &cppMethodDumper, this);
 		}
-
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
-			(*a)->dumpAllMethod(&cppMethodDumper);
+			(*a)->dumpAllMethod(OUT_CPP, &cppMethodDumper);
 		}
 	}
-	else {
-		// 模板類，放進去編譯看看
-		this->listImportSaver->checkJavaClass(this->strClassName);
-	}
-	// 引入 include 
+
 	d->add("// CPP ").add(this->strFilePath).newline();
-
-	//SmaliImportSaver::checkJavaClass("Ljava/lang/Object;");
-	//SmaliImportSaver::remove(this->strClassName);
-
-
-
-	// 定义头文件
-
-	d->add("#include \"").add("java2ctype").add(".h\"").newline();
-	std::vector<std::string> listImport = this->listImportSaver->getCachedClassType();
-	std::sort(listImport.begin(), listImport.end());
-	for (auto imp = listImport.begin(); imp != listImport.end(); imp++) {
-		std::string strInc = SmaliType(*imp).getBaseType()->getCppFileName();
-		d->add("#include \"").add(strInc).add(".h\"").newline();
-	}
-	d->newline();
-
-	// 增加代码实体
+	d->add("#include \"").add(this->getClassCppSaveName()).add(".h\"").newline();
 	d->add(cppMethodDumper);
-
-
 	d->newline();
-	d->reFormat();
+	d->format();
 }
 
-void CSmaliClass::dumpToCpp20Cpp(CodeDumper* d) {
-
-	CodeDumper cppMethodDumper;
-	this->eOutType = config::OUT_CPP;
-	//SmaliImportSaver::clearCache();
-	this->listImportSaver->clearCache();
-
-	// 如果是模板類， CPP 文件中不放東西，全部放到 H 文件中
-	if (!(this->listTemplateParam.size() > 0)) {
-		// CPP 文件
-		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
-			(*a)->dumpAllField(&cppMethodDumper, this);
-		}
-
-		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
-			(*a)->dumpAllMethod(&cppMethodDumper);
-		}
-	}
-	else {
-		// 模板類，放進去編譯看看
-		this->listImportSaver->checkJavaClass(this->strClassName);
-	}
-
-	{
-		std::string strClassCppName = SmaliType(this->strClassName).getBaseType()->getCppType(this, true);
-		std::string strModuleName = strClassCppName;
-		stringhelper::replace(strModuleName, "::", ".");
-		d->add("module ").add(strModuleName).add(";").newline();
-	}
-
-	// 引入 include 
-	d->add("// CPP ").add(this->strFilePath).newline();
-
-	// 定义头文件
-
-	d->add("import ").add("java2ctype").add(";").newline();
-	std::vector<std::string> listImport = this->listImportSaver->getCachedClassType();
-	std::sort(listImport.begin(), listImport.end());
-	for (auto imp = listImport.begin(); imp != listImport.end(); imp++) {
-		std::string strInc = SmaliType(*imp).getBaseType()->getCppFileName();
-		d->add("import ").add(strInc).add(";").newline();
-	}
-	d->newline();
-
-	// 增加代码实体
-	d->add(cppMethodDumper);
-
-
-	d->newline();
-	d->reFormat();
-}
-
-// 返回一个使用类型，必然会返回的，不会有失败的可能性
-std::shared_ptr<CTypeDefine> CSmaliClass::findUsedType(std::string strClass) {
-	auto a = this->usedTypeMap.find(strClass);
-	if (a == this->usedTypeMap.end()) {
-		auto b = std::make_shared<CTypeDefine>(strClass);
-		this->usedTypeMap.insert(std::make_pair(strClass, b));
-		return b;
-	}
-	else {
-		return a->second;
-	}
-}
-
-void CSmaliClass::dumpToH(CodeDumper* d) {
+// 输出 H 文件中的类型定义
+void CSmaliClass::dumpToHdefine(CodeDumper* d, std::shared_ptr<CTypeDefine> cTypeDef, CSmaliClass* pClass) {
 	std::string strSelfHName = this->getClassCppSaveName();
 	CodeDumper hMethodDumper;
-	this->eOutType = config::OUT_H;
-	//SmaliImportSaver::clearCache();
-	this->listImportSaver->clearCache();
+	//this->eOutType = config::OUT_H;
+	//this->listImportSaver->clearCache();
 
 	// 获得完整的类名  XXX::XXXX::XXXXX:XXX
-	std::string strClassCppName = SmaliType(this->strClassName).getBaseType()->getCppType(this, true);
+	std::string strClassCppName = this->ptrClassName->getBaseType()->getCppType(true);
 	std::string strNameSpace = "";
 	std::string strClassName = "";
 	int nFindLast = (int)strClassCppName.find_last_of("::");
@@ -307,7 +184,7 @@ void CSmaliClass::dumpToH(CodeDumper* d) {
 		strClassName = strClassCppName;
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 
 	// 先输出 namespace 空间
@@ -320,276 +197,102 @@ void CSmaliClass::dumpToH(CodeDumper* d) {
 			hMethodDumper.add(strTemplateParam).newline();
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 
 	// 输出继承类
-	if ((listStrImplements.size() > 0) && (this->strSuperName == "Ljava/lang/Object;")) {
+	if ((listStrImplements.size() > 0) && (this->ptrSuperName->getFullTypeSmaliString() == "Ljava/lang/Object;")) {
 		hMethodDumper.add("class ").add(strClassName).add(" : ");
 		for (auto a = listStrImplements.begin(); a != listStrImplements.end(); a++) {
-			hMethodDumper.add("public ").add(SmaliType(*a).getCppType(this));
+			hMethodDumper.add("public ").add((*a)->getCppType());
 			auto b = a; b++;
 			if (b != listStrImplements.end()) {
 				hMethodDumper.add(", ");
 			}
 		}
-
 		hMethodDumper.add(" {").newline();
 	}
 	else {
-
-		if ((this->strClassName == "Ljava/lang/Object;") && (this->strSuperName == "")) {
+		if ((this->ptrClassName->getBaseTypeSmaliString() == "Ljava/lang/Object;") && (!this->ptrSuperName)) {
 			hMethodDumper.add("class ").add(strClassName).add(" : ").add("public ").add("java2cBase");
 		}
 		else {
-			hMethodDumper.add("class ").add(strClassName).add(" : ").add("public ").add(SmaliType(this->strSuperName).getCppType(this));
+			hMethodDumper.add("class ").add(strClassName).add(" : ").add("public ").add(this->ptrSuperName->getCppType());
 		}
-
 		if (listStrImplements.size() > 0) {
 			hMethodDumper.add(", ");
 		}
 		for (auto a = listStrImplements.begin(); a != listStrImplements.end(); a++) {
-			hMethodDumper.add("public ").add(SmaliType(*a).getCppType(this));
+			hMethodDumper.add("public ").add((*a)->getCppType());
 			auto b = a; b++;
 			if (b != listStrImplements.end()) {
 				hMethodDumper.add(", ");
 			}
 		}
-
 		hMethodDumper.add(" {").newline();
 	}
-
-	// 输出函数
-#if 0
-	{
-		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
-			(*a)->dumpAllMethod(&hMethodDumper);
-		}
-	}
-#else
+	// 输出函数和
 	{
 		hMethodDumper.add("protected:").newline();
-		hMethodDumper.addNestDepth();
+		hMethodDumper.addIndent();
 		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
-			if ((*a)->getProtctedType()) {
-				(*a)->dumpAllField(&hMethodDumper, this);
+			if ((*a)->getProtctedType() && cTypeDef->hasField((*a)->fieldName)) {
+				(*a)->dumpAllField(OUT_H, &hMethodDumper, this);
 			}
 		}
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
-			if ((*a)->getProtctedType()) {
-				(*a)->dumpAllMethod(&hMethodDumper);
+			if ((*a)->getProtctedType() && cTypeDef->hasMethod((*a)->getMethodSignature())) {
+				(*a)->dumpAllMethod(OUT_H, &hMethodDumper);
 			}
 		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.subIndent();
 		hMethodDumper.add("private:").newline();
-		hMethodDumper.addNestDepth();
+		hMethodDumper.addIndent();
 		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
-			if ((*a)->getPrivateType()) {
-				(*a)->dumpAllField(&hMethodDumper, this);
+			if ((*a)->getPrivateType() && cTypeDef->hasField((*a)->fieldName)) {
+				(*a)->dumpAllField(OUT_H, &hMethodDumper, this);
 			}
 		}
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
-			if ((*a)->getPrivateType()) {
-				(*a)->dumpAllMethod(&hMethodDumper);
+			if ((*a)->getPrivateType() && cTypeDef->hasMethod((*a)->getMethodSignature())) {
+				(*a)->dumpAllMethod(OUT_H, &hMethodDumper);
 			}
 		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.subIndent();
 		hMethodDumper.add("public:").newline();
-		hMethodDumper.addNestDepth();
+		hMethodDumper.addIndent();
 		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
-			if ((*a)->getPublicType()) {
-				(*a)->dumpAllField(&hMethodDumper, this);
+			if ((*a)->getPublicType() && cTypeDef->hasField((*a)->fieldName)) {
+				(*a)->dumpAllField(OUT_H, &hMethodDumper, this);
 			}
 		}
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
-			if ((*a)->getPublicType()) {
-				(*a)->dumpAllMethod(&hMethodDumper);
+			if ((*a)->getPublicType() && cTypeDef->hasMethod((*a)->getMethodSignature())) {
+				(*a)->dumpAllMethod(OUT_H, &hMethodDumper);
 			}
 		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.subIndent();
 	}
 
-#endif
-
 	// 如果有静态初始化代码,那么就生成静态初始化的调用过程
-	if (this->listImportSaver->hasStaticInit()) {
+	if (this->hasStaticInit()) {
 		CodeDumper hStaticInitDumper;
-		this->listImportSaver->dumpStaticInited(&hStaticInitDumper);
+		this->dumpStaticInited(&hStaticInitDumper);
 		hMethodDumper.add(hStaticInitDumper);
 	}
 
-	// 增加虚析构函数
-	if (!this->listImportSaver->dumpDestructor(&hMethodDumper)) {
+	// 增加虚析构函数, 检测是否有构造函数
+	if (!this->dumpDestructor(&hMethodDumper)) {
 		// 没有增加成功,那么意味着构造也没有,需要补齐
-
-		//hMethodDumper.add("public:").newline();
-		hMethodDumper.addNestDepth();
-		{
-			hMethodDumper.add(SmaliType(this->strClassName).getBaseType()->getCppShortType());
-			hMethodDumper.add("(){ }").endl().newline();
-
-			hMethodDumper.add("virtual ~");
-			hMethodDumper.add(SmaliType(this->strClassName).getBaseType()->getCppShortType());
-			hMethodDumper.add("(){ }").endl().newline();
-
-		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.addIndent();
+		hMethodDumper.add(this->ptrClassName->getBaseType()->getCppShortType());
+		hMethodDumper.add("(){ }").endl().newline();
+		hMethodDumper.add("virtual ~");
+		hMethodDumper.add(this->ptrClassName->getBaseType()->getCppShortType());
+		hMethodDumper.add("(){ }").endl().newline();
+		hMethodDumper.subIndent();
 	}
-
-	// 增加函数多态表示
-	if (listMethodRename.size() > 0){
-		hMethodDumper.addNestDepth();
-		for (auto a = listMethodRename.begin(); a != listMethodRename.end(); a++) {
-#if 1
-			// 先定义一个Class
-			hMethodDumper.add("class ").add(a->first).add("_data_").add(" {").newline();
-			hMethodDumper.addNestDepth();
-			hMethodDumper.add("public:").newline();
-			hMethodDumper.add(strClassName).add(" * pHost = nullptr;").newline();
-
-			std::vector<std::string> listCreatedStruct;
-
-			// 循环定义结构体
-			for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-				std::string strStructName = "struct__";
-				strStructName.append(ss->strOldName).append("_").append(ss->strInputParam);
-				stringhelper::replace(strStructName, "$", "_");
-				stringhelper::replace(strStructName, "/", "_");
-				stringhelper::replace(strStructName, ".", "_");
-				stringhelper::replace(strStructName, ";", "_");
-				stringhelper::replace(strStructName, "[", "_");
-
-				CSmaliCodeline cscodeline;
-				std::vector<std::string> listParam = cscodeline.getJavaTypeList(ss->strInputParam);
-
-				// 创建结构体,创建过了就不要再创建了
-				if (std::find(listCreatedStruct.begin(), listCreatedStruct.end(), strStructName) == listCreatedStruct.end()) {
-					// 增加第一个结构体
-					int nIndexVal = 0;
-					hMethodDumper.add("struct ").add(strStructName).add(" {").newline();
-					hMethodDumper.add("\tbool").add(" ").add("inited;").newline();
-					for (auto c = listParam.begin(); c != listParam.end(); c++) {
-						std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-						std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-						hMethodDumper.add("\t").add(strTypedef).add(" ").add("__").add(strTypeVal).add(";").newline();
-					}
-					hMethodDumper.add("}").add(strStructName).add("_data").add(";").newline();	// 变量
-					listCreatedStruct.push_back(strStructName);
-				}
-			}
-
-			// 定义一个结构体初始化函数
-			hMethodDumper.add("void initAllFlags(){").newline();
-			for (auto sd = listCreatedStruct.begin(); sd != listCreatedStruct.end(); sd++) {
-				hMethodDumper.add("\t").add(*sd).add("_data.inited = false;").newline();
-			}
-			hMethodDumper.add("}").newline();
-
-
-			// 定义操作结构
-			std::vector<std::string> listReturnType;  // 先找出有多少种返回类型
-			for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-				for (auto b = ss->methodCall.begin(); b != ss->methodCall.end(); b++) {
-					if (std::find(listReturnType.begin(), listReturnType.end(), b->first) == listReturnType.end()) {
-						listReturnType.push_back(b->first);
-					}
-				}
-			}
-
-			// 生成操作
-			for (auto dd = listReturnType.begin(); dd != listReturnType.end(); dd++) {
-				hMethodDumper.add("operator ").add(SmaliType(*dd).getCppDefineType(this)).add("(").add(")").add("{").newline();
-				hMethodDumper.addNestDepth();
-				for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-					for (auto b = ss->methodCall.begin(); b != ss->methodCall.end(); b++) {
-						if ((*dd) == b->first) {
-							// 这里生成一些列的条件调用
-							std::string strStructName = "struct__";
-							strStructName.append(ss->strOldName).append("_").append(ss->strInputParam);
-							stringhelper::replace(strStructName, "$", "_");
-							stringhelper::replace(strStructName, "/", "_");
-							stringhelper::replace(strStructName, ".", "_");
-							stringhelper::replace(strStructName, ";", "_");
-							stringhelper::replace(strStructName, "[", "_");
-
-							hMethodDumper.add("if ( ").add(strStructName).add("_data.inited ) {").newline();
-							CSmaliCodeline cscodeline;
-							std::vector<std::string> listParam = cscodeline.getJavaTypeList(ss->strInputParam);
-
-							// 减少长度
-							hMethodDumper.add("\tauto c = &").add(strStructName).add("_data;").newline();
-							int nIndexVal = 0;
-							std::string strCallParam;
-							for (auto c = listParam.begin(); c != listParam.end(); c++) {
-
-								if (!strCallParam.empty()) {
-									strCallParam.append(", ");
-								}
-								//std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-								std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-								strCallParam.append("c->__").append(strTypeVal);
-							}
-							hMethodDumper.add("\treturn pHost->").add(b->second).add("(").add(strCallParam).add(")").add(";").newline();
-							hMethodDumper.add("}").newline();
-						}
-					}
-				}
-				hMethodDumper.add("return nullptr;").newline();
-				hMethodDumper.subNestDepth();
-				hMethodDumper.add("}").newline();
-			}
-
-			hMethodDumper.subNestDepth();
-			hMethodDumper.add("};").newline();
-
-			// bridge synthetic 的函數需要隱藏，不顯示
-
-			// 定义构造函数
-			for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-				std::string strStructName = "struct__";
-				strStructName.append(ss->strOldName).append("_").append(ss->strInputParam);
-				stringhelper::replace(strStructName, "$", "_");
-				stringhelper::replace(strStructName, "/", "_");
-				stringhelper::replace(strStructName, ".", "_");
-				stringhelper::replace(strStructName, ";", "_");
-				stringhelper::replace(strStructName, "[", "_");
-
-				CSmaliCodeline cscodeline;
-				std::vector<std::string> listParam = cscodeline.getJavaTypeList(ss->strInputParam);
-
-
-				std::string strValDefine;		// 定义声明函数的
-				int nIndexVal = 0;
-				for (auto c = listParam.begin(); c != listParam.end(); c++) {
-					if (!strValDefine.empty()) {
-						strValDefine.append(",");
-					}
-					std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-					std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-					strValDefine.append(strTypedef).append(" ").append(strTypeVal);
-				}
-				// .add("class ")
-				hMethodDumper.add(a->first).add("_data_").add(" ").add(ss->strOldName).add("(").add(strValDefine).add(") {").newline();
-				nIndexVal = 0;
-				// .add("\tclass ")
-				hMethodDumper.add("\t").add(a->first).add("_data_").add(" ").add("c").add(";").newline();
-				hMethodDumper.add("\t").add("c.initAllFlags();").newline();
-				hMethodDumper.add("\t").add("c.pHost = this;").newline();
-				hMethodDumper.add("\t").add("c.").add(strStructName).add("_data").add(".inited = true;").newline();
-				for (auto c = listParam.begin(); c != listParam.end(); c++) {
-					std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-					std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-					hMethodDumper.add("\t").add("c.").add(strStructName).add("_data").add(".__").add(strTypeVal).add(" = ").add(strTypeVal).add(";").newline();
-				}
-				hMethodDumper.add("\treturn c;").newline();
-				hMethodDumper.add("}").newline();
-			}
-#endif 
-		}
-		hMethodDumper.subNestDepth();
-	}
-
 
 	hMethodDumper.newline();
 	hMethodDumper.add("}; // class ").add(strClassName).newline();
@@ -597,98 +300,185 @@ void CSmaliClass::dumpToH(CodeDumper* d) {
 
 	// 如果是模板類，就需要單獨多生成一些代碼
 	if (this->listTemplateParam.size() > 0) {
-		//BaseAssert(0);
 		CodeDumper cppMethodDumper;
-		// CPP 文件
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
-			(*a)->dumpAllMethodForTemplate(&cppMethodDumper);
+			if (cTypeDef->hasMethod((*a)->getMethodSignature())) {
+				(*a)->dumpAllMethodForTemplate(&cppMethodDumper);
+			}
 		}
-
-		// 合并到文件定義尾部
 		hMethodDumper.add(cppMethodDumper);
 	}
 
-	d->add("#ifndef ").add("__").add(SmaliType(this->strClassName).getBaseType()->getCppFileMacroDefine()).add("__").newline();
-	d->add("#define ").add("__").add(SmaliType(this->strClassName).getBaseType()->getCppFileMacroDefine()).add("__").newline();
-
 	d->add("// H ").add(this->strFilePath).newline();
+	d->add(hMethodDumper);
+	d->newline();
+}
 
-	//SmaliImportSaver::checkJavaClass("Ljava/lang/Object;");
-	//SmaliImportSaver::remove(this->strClassName);
+// 定义状态下收集
+void CSmaliClass::colloectDefine(std::shared_ptr<CTypeDefine> typeDef, std::map<std::string, std::shared_ptr<CTypeDefine>>& cType) {
+	this->collect(cType);
+	for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
+		if (typeDef->hasField((*a)->fieldName)) {
+			(*a)->collect(cType);
+		}
+	}
+	if (this->listTemplateParam.size() > 0) {
+		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
+			if (typeDef->hasMethod((*a)->getMethodSignature())) {
+				(*a)->collectAllCode(cType);
+			}
+		}
+	}
+	else {
+		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
+			if (typeDef->hasMethod((*a)->getMethodSignature())) {
+				(*a)->collect(cType);
+			}
+		}
+	}
+}
 
-	d->add("#include \"").add("java2ctype").add(".h\"").newline();
+// 排序
+std::vector<std::string> CSmaliClass::sortSuperType(std::map<std::string, std::shared_ptr<CTypeDefine>>& cType) {
 
-#if 1
-	std::vector<std::string> listImport = this->listImportSaver->getCachedClassType();
-	std::sort(listImport.begin(), listImport.end());
-	for (auto imp = listImport.begin(); imp != listImport.end(); imp++) {
-		std::string strInc = SmaliType(*imp).getBaseType()->getCppFileName();
-		if (strSelfHName != strInc) {  // 不是自己类的
-			bool bSuper = false;
-			if (this->strSuperName.size() > 0) {
-				std::string strInc2 = SmaliType(this->strSuperName).getBaseType()->getCppFileName();
-				if (strInc == strInc2) {
-					std::string strInc3 = this->strSuperName;
-					if (((int)strInc3.find("<")) > 0) {
-						d->add("#include \"").add(strInc).add(".h\"").newline();
-					}
-					else {
-						d->add("#include \"").add(strInc).add(".h\"").newline();
-					}
-					bSuper = true;
+	struct typeRec {
+		std::string strName;
+		std::vector<std::string> listSuper;
+	};
+
+	std::vector<std::string> listSorted;
+
+	// 提取出所有的依赖
+	std::vector<struct typeRec> listRec;
+	for (auto h = cType.begin(); h != cType.end(); h++) {
+		if (!CSmaliType(h->second->strClassName, nullptr).getBaseType()->isPrimitiveType()) {
+			std::map<std::string, std::shared_ptr<CTypeDefine>> newCollect;
+			struct typeRec rec;
+			auto s = CSmaliType(h->second->strClassName, nullptr).getBaseType()->getCppFileName();
+			auto v = CMultiWorkThread::mapSmaliFile.find(s);
+			if (v != CMultiWorkThread::mapSmaliFile.end()) {
+				v->second->colloectDefine(h->second, newCollect);
+			}
+			else {
+				CBaseAssert(0);
+			}
+			rec.strName = CSmaliType(h->second->strClassName, nullptr).getBaseType()->getFullTypeSmaliString();
+			for (auto a = newCollect.begin(); a != newCollect.end(); a++) {
+				rec.listSuper.push_back(a->first);
+			}
+			listRec.push_back(rec);
+		}
+	}
+
+	while (listRec.size() > 0) {
+		// 生成完整的名称数据
+		std::vector<std::string> listFull;
+		for (auto a = listRec.begin(); a != listRec.end(); a++) {
+			listFull.push_back(a->strName);
+		}
+
+		// 如果被引用了就删掉
+		for (auto a = listRec.begin(); a != listRec.end(); a++) {
+			for (auto b = a->listSuper.begin(); b != a->listSuper.end(); b++) {
+				auto c = std::find(listFull.begin(), listFull.end(), *b);
+				if (c != listFull.end()) {
+					listFull.erase(c);
 				}
 			}
+		}
 
-			if (!bSuper) {
-				bool bFind = false;
-				for (auto aaa = listStrImplements.begin(); aaa != listStrImplements.end(); aaa++) {
-					std::string strInc2 = SmaliType(*imp).getBaseType()->getCppFileName();
-					if (strInc == strInc2) {
-						std::string strInc3 = *aaa;
-						if (((int)strInc3.find("<")) > 0) {
-							d->add("#include \"").add(strInc).add(".h\"").newline();
-						}
-						else {
-							d->add("#include \"").add(strInc).add(".h\"").newline();
-						}
-						bFind = true;
-						break;
-					}
-				}
-				if (!bFind) {
-					// 不需要用到构造函数
-					d->add("#include \"").add(strInc).add(".h\"").newline();
+		CBaseAssert(listFull.size() > 0);
+		for (auto c = listFull.begin(); c != listFull.end(); c++) {
+			listSorted.push_back(*c);
+			for (auto a = listRec.begin(); a != listRec.end(); a++) {
+				if (a->strName == (*c)) {
+					listRec.erase(a);
+					break;
 				}
 			}
 		}
 	}
-#else
-	std::vector<std::string> listImport = this->listImportSaver->getCachedClassType();
-	std::sort(listImport.begin(), listImport.end());
-	for (auto imp = listImport.begin(); imp != listImport.end(); imp++) {
-		std::string strInc = SmaliType(*imp).getBaseType()->getCppType(this);
-		d->add("class ").add(strInc).add(";").newline();
-	}
-#endif
-	d->newline();
 
-	//d->add("#ifndef ").add("__").add(SmaliType(this->strClassName).getBaseType()->getCppFileMacroDefine()).add("__").newline();
-	//d->add("#define ").add("__").add(SmaliType(this->strClassName).getBaseType()->getCppFileMacroDefine()).add("__").newline();
-
-	d->add(hMethodDumper);
-	d->newline();
-	d->add("#endif //").add("__").add(SmaliType(this->strClassName).getBaseType()->getCppFileMacroDefine()).add("__").newline();
+	return listSorted;
 }
 
+void CSmaliClass::collectSuperType(std::map<std::string, std::shared_ptr<CTypeDefine>>& cType) {
+	bool bNeedLoop = true;
+	int nLoopCount = 0;
 
-void CSmaliClass::dumpToModule(CodeDumper* d) {
+	while(bNeedLoop) {
+		bNeedLoop = false;
+		nLoopCount++;
+		// 临时收集下来
+		std::map<std::string, std::shared_ptr<CTypeDefine>> newCollect;
+		for (auto h = cType.begin(); h != cType.end(); h++) {
+			if (!CSmaliType(h->second->strClassName, nullptr).getBaseType()->isPrimitiveType()) {
+				auto s = CSmaliType(h->second->strClassName, nullptr).getBaseType()->getCppFileName();
+				auto v = CMultiWorkThread::mapSmaliFile.find(s);
+				if (v != CMultiWorkThread::mapSmaliFile.end()) {
+					v->second->colloectDefine(h->second, newCollect);
+				}
+				else {
+					CBaseAssert(0);
+				}
+			}
+		}
+		for (auto a = newCollect.begin(); a != newCollect.end(); a++) {
+			auto b = cType.find(a->first);
+			if (b == cType.end()) {
+				std::string strClassName = a->first;
+				auto c = std::make_shared<CTypeDefine>(strClassName);
+				cType.insert(std::make_pair(strClassName, c));
+				b = cType.find(a->first);
+				CBaseAssert(b != cType.end());
+			}
+			for (auto c = a->second->listUsedField.begin(); c != a->second->listUsedField.end(); c++) {
+				if (!b->second->hasField(*c)) {
+					b->second->addUsedField(*c);
+					bNeedLoop = true;
+				}
+			}
+			for (auto c = a->second->listUsedMethod.begin(); c != a->second->listUsedMethod.end(); c++) {
+				if (!b->second->hasMethod(*c)) {
+					b->second->addUsedMethod(*c);
+					bNeedLoop = true;
+				}
+			}
+		}
+		CBaseAssert(nLoopCount < 1000);
+	}
+}
+
+// 输出 H 文件 
+void CSmaliClass::dumpToH(CodeDumper* d) {
 	std::string strSelfHName = this->getClassCppSaveName();
 	CodeDumper hMethodDumper;
-	this->eOutType = config::OUT_H;
-	this->listImportSaver->clearCache();
+
+	// 收集所有的变量和引用
+	this->collectTypeMap.clear();
+	this->collect(this->collectTypeMap);
+	for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
+			(*a)->collect(this->collectTypeMap);
+	}
+	for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
+		(*a)->collectAllCode(this->collectTypeMap);
+	}
+	// 删除自己
+	auto c = this->collectTypeMap.find(this->strClassName);
+	if (c != this->collectTypeMap.end()) {
+		this->collectTypeMap.erase(c);
+	}
+
+	// 去收集父类的
+	collectSuperType(this->collectTypeMap);
+	std::vector<std::string> sortedType = sortSuperType(this->collectTypeMap);
+
+	CBaseAssert(sortedType.size() == this->collectTypeMap.size());
+
+
 
 	// 获得完整的类名  XXX::XXXX::XXXXX:XXX
-	std::string strClassCppName = SmaliType(this->strClassName).getBaseType()->getCppType(this, true);
+	std::string strClassCppName = this->ptrClassName->getBaseType()->getCppType(true);
 	std::string strNameSpace = "";
 	std::string strClassName = "";
 	int nFindLast = (int)strClassCppName.find_last_of("::");
@@ -700,16 +490,11 @@ void CSmaliClass::dumpToModule(CodeDumper* d) {
 		strClassName = strClassCppName;
 	}
 	else {
-		BaseAssert(0);
-	}
-	{
-		std::string strModuleName = strClassCppName;
-		stringhelper::replace(strModuleName, "::", ".");
-		d->add("export module ").add(strModuleName).add(";").newline();
+		CBaseAssert(0);
 	}
 
 	// 先输出 namespace 空间
-	hMethodDumper.add("export namespace ").add(strNameSpace).add("{").newline();
+	hMethodDumper.add("namespace ").add(strNameSpace).add("{").newline();
 
 	// 生成类模板
 	if (this->listTemplateParam.size() > 0) {
@@ -718,15 +503,15 @@ void CSmaliClass::dumpToModule(CodeDumper* d) {
 			hMethodDumper.add(strTemplateParam).newline();
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 
 	// 输出继承类
-	if ((listStrImplements.size() > 0) && (this->strSuperName == "Ljava/lang/Object;")) {
+	if ((listStrImplements.size() > 0) && (this->ptrSuperName->getFullTypeSmaliString() == "Ljava/lang/Object;")) {
 		hMethodDumper.add("class ").add(strClassName).add(" : ");
 		for (auto a = listStrImplements.begin(); a != listStrImplements.end(); a++) {
-			hMethodDumper.add("public ").add(SmaliType(*a).getCppType(this));
+			hMethodDumper.add("public ").add((*a)->getCppType());
 			auto b = a; b++;
 			if (b != listStrImplements.end()) {
 				hMethodDumper.add(", ");
@@ -736,18 +521,19 @@ void CSmaliClass::dumpToModule(CodeDumper* d) {
 		hMethodDumper.add(" {").newline();
 	}
 	else {
-		if ((this->strClassName == "Ljava/lang/Object;") && (this->strSuperName == "")) {
+
+		if ((this->ptrClassName->getBaseTypeSmaliString() == "Ljava/lang/Object;") && (this->ptrSuperName->getFullTypeSmaliString() == "")) {
 			hMethodDumper.add("class ").add(strClassName).add(" : ").add("public ").add("java2cBase");
 		}
 		else {
-			hMethodDumper.add("class ").add(strClassName).add(" : ").add("public ").add(SmaliType(this->strSuperName).getCppType(this));
+			hMethodDumper.add("class ").add(strClassName).add(" : ").add("public ").add(this->ptrSuperName->getCppType());
 		}
 
 		if (listStrImplements.size() > 0) {
 			hMethodDumper.add(", ");
 		}
 		for (auto a = listStrImplements.begin(); a != listStrImplements.end(); a++) {
-			hMethodDumper.add("public ").add(SmaliType(*a).getCppType(this));
+			hMethodDumper.add("public ").add((*a)->getCppType(this));
 			auto b = a; b++;
 			if (b != listStrImplements.end()) {
 				hMethodDumper.add(", ");
@@ -760,222 +546,67 @@ void CSmaliClass::dumpToModule(CodeDumper* d) {
 	// 输出函数
 	{
 		hMethodDumper.add("protected:").newline();
-		hMethodDumper.addNestDepth();
+		hMethodDumper.addIndent();
 		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
 			if ((*a)->getProtctedType()) {
-				(*a)->dumpAllField(&hMethodDumper, this);
+				(*a)->dumpAllField(OUT_H, &hMethodDumper, this);
 			}
 		}
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
 			if ((*a)->getProtctedType()) {
-				(*a)->dumpAllMethod(&hMethodDumper);
+				(*a)->dumpAllMethod(OUT_H, &hMethodDumper);
 			}
 		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.subIndent();
 		hMethodDumper.add("private:").newline();
-		hMethodDumper.addNestDepth();
+		hMethodDumper.addIndent();
 		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
 			if ((*a)->getPrivateType()) {
-				(*a)->dumpAllField(&hMethodDumper, this);
+				(*a)->dumpAllField(OUT_H, &hMethodDumper, this);
 			}
 		}
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
 			if ((*a)->getPrivateType()) {
-				(*a)->dumpAllMethod(&hMethodDumper);
+				(*a)->dumpAllMethod(OUT_H, &hMethodDumper);
 			}
 		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.subIndent();
 		hMethodDumper.add("public:").newline();
-		hMethodDumper.addNestDepth();
+		hMethodDumper.addIndent();
 		for (auto a = this->listField.begin(); a != this->listField.end(); a++) {
 			if ((*a)->getPublicType()) {
-				(*a)->dumpAllField(&hMethodDumper, this);
+				(*a)->dumpAllField(OUT_H, &hMethodDumper, this);
 			}
 		}
 		for (auto a = this->listMethod.begin(); a != this->listMethod.end(); a++) {
 			if ((*a)->getPublicType()) {
-				(*a)->dumpAllMethod(&hMethodDumper);
+				(*a)->dumpAllMethod(OUT_H, &hMethodDumper);
 			}
 		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.subIndent();
 	}
 
 	// 如果有静态初始化代码,那么就生成静态初始化的调用过程
-	if (this->listImportSaver->hasStaticInit()) {
+	if (this->hasStaticInit()) {
 		CodeDumper hStaticInitDumper;
-		this->listImportSaver->dumpStaticInited(&hStaticInitDumper);
+		this->dumpStaticInited(&hStaticInitDumper);
 		hMethodDumper.add(hStaticInitDumper);
 	}
 
 	// 增加虚析构函数
-	if (!this->listImportSaver->dumpDestructor(&hMethodDumper)) {
+	if (!this->dumpDestructor(&hMethodDumper)) {
 		// 没有增加成功,那么意味着构造也没有,需要补齐
-
-		//hMethodDumper.add("public:").newline();
-		hMethodDumper.addNestDepth();
+		hMethodDumper.addIndent();
 		{
-			hMethodDumper.add(SmaliType(this->strClassName).getBaseType()->getCppShortType());
+			hMethodDumper.add(this->ptrClassName->getBaseType()->getCppShortType());
 			hMethodDumper.add("(){ }").endl().newline();
-
 			hMethodDumper.add("virtual ~");
-			hMethodDumper.add(SmaliType(this->strClassName).getBaseType()->getCppShortType());
+			hMethodDumper.add(this->ptrClassName->getBaseType()->getCppShortType());
 			hMethodDumper.add("(){ }").endl().newline();
 
 		}
-		hMethodDumper.subNestDepth();
+		hMethodDumper.subIndent();
 	}
-
-	// 增加函数多态表示
-	if (listMethodRename.size() > 0) {
-		hMethodDumper.addNestDepth();
-		for (auto a = listMethodRename.begin(); a != listMethodRename.end(); a++) {
-			// 先定义一个Class
-			hMethodDumper.add("class ").add(a->first).add("_data_").add(" {").newline();
-			hMethodDumper.addNestDepth();
-			hMethodDumper.add("public:").newline();
-			hMethodDumper.add(strClassName).add(" * pHost = nullptr;").newline();
-
-			std::vector<std::string> listCreatedStruct;
-
-			// 循环定义结构体
-			for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-				std::string strStructName = "struct__";
-				strStructName.append(ss->strOldName).append("_").append(ss->strInputParam);
-				stringhelper::replace(strStructName, "$", "_");
-				stringhelper::replace(strStructName, "/", "_");
-				stringhelper::replace(strStructName, ".", "_");
-				stringhelper::replace(strStructName, ";", "_");
-				stringhelper::replace(strStructName, "[", "_");
-
-				CSmaliCodeline cscodeline;
-				std::vector<std::string> listParam = cscodeline.getJavaTypeList(ss->strInputParam);
-
-				// 创建结构体,创建过了就不要再创建了
-				if (std::find(listCreatedStruct.begin(), listCreatedStruct.end(), strStructName) == listCreatedStruct.end()) {
-					// 增加第一个结构体
-					int nIndexVal = 0;
-					hMethodDumper.add("struct ").add(strStructName).add(" {").newline();
-					hMethodDumper.add("\tbool").add(" ").add("inited;").newline();
-					for (auto c = listParam.begin(); c != listParam.end(); c++) {
-						std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-						std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-						hMethodDumper.add("\t").add(strTypedef).add(" ").add("__").add(strTypeVal).add(";").newline();
-					}
-					hMethodDumper.add("}").add(strStructName).add("_data").add(";").newline();	// 变量
-					listCreatedStruct.push_back(strStructName);
-				}
-			}
-
-			// 定义一个结构体初始化函数
-			hMethodDumper.add("void initAllFlags(){").newline();
-			for (auto sd = listCreatedStruct.begin(); sd != listCreatedStruct.end(); sd++) {
-				hMethodDumper.add("\t").add(*sd).add("_data.inited = false;").newline();
-			}
-			hMethodDumper.add("}").newline();
-
-
-			// 定义操作结构
-			std::vector<std::string> listReturnType;  // 先找出有多少种返回类型
-			for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-				for (auto b = ss->methodCall.begin(); b != ss->methodCall.end(); b++) {
-					if (std::find(listReturnType.begin(), listReturnType.end(), b->first) == listReturnType.end()) {
-						listReturnType.push_back(b->first);
-					}
-				}
-			}
-
-			// 生成操作
-			for (auto dd = listReturnType.begin(); dd != listReturnType.end(); dd++) {
-				hMethodDumper.add("operator ").add(SmaliType(*dd).getCppDefineType(this)).add("(").add(")").add("{").newline();
-				hMethodDumper.addNestDepth();
-				for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-					for (auto b = ss->methodCall.begin(); b != ss->methodCall.end(); b++) {
-						if ((*dd) == b->first) {
-							// 这里生成一些列的条件调用
-							std::string strStructName = "struct__";
-							strStructName.append(ss->strOldName).append("_").append(ss->strInputParam);
-							stringhelper::replace(strStructName, "$", "_");
-							stringhelper::replace(strStructName, "/", "_");
-							stringhelper::replace(strStructName, ".", "_");
-							stringhelper::replace(strStructName, ";", "_");
-							stringhelper::replace(strStructName, "[", "_");
-
-							hMethodDumper.add("if ( ").add(strStructName).add("_data.inited ) {").newline();
-							CSmaliCodeline cscodeline;
-							std::vector<std::string> listParam = cscodeline.getJavaTypeList(ss->strInputParam);
-
-							// 减少长度
-							hMethodDumper.add("\tauto c = &").add(strStructName).add("_data;").newline();
-							int nIndexVal = 0;
-							std::string strCallParam;
-							for (auto c = listParam.begin(); c != listParam.end(); c++) {
-
-								if (!strCallParam.empty()) {
-									strCallParam.append(", ");
-								}
-								//std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-								std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-								strCallParam.append("c->__").append(strTypeVal);
-							}
-							hMethodDumper.add("\treturn pHost->").add(b->second).add("(").add(strCallParam).add(")").add(";").newline();
-							hMethodDumper.add("}").newline();
-						}
-					}
-				}
-				hMethodDumper.add("return nullptr;").newline();
-				hMethodDumper.subNestDepth();
-				hMethodDumper.add("}").newline();
-			}
-
-			hMethodDumper.subNestDepth();
-			hMethodDumper.add("};").newline();
-
-			// bridge synthetic 的函數需要隱藏，不顯示
-
-			// 定义构造函数
-			for (auto ss = a->second.begin(); ss != a->second.end(); ss++) {
-				std::string strStructName = "struct__";
-				strStructName.append(ss->strOldName).append("_").append(ss->strInputParam);
-				stringhelper::replace(strStructName, "$", "_");
-				stringhelper::replace(strStructName, "/", "_");
-				stringhelper::replace(strStructName, ".", "_");
-				stringhelper::replace(strStructName, ";", "_");
-				stringhelper::replace(strStructName, "[", "_");
-
-				CSmaliCodeline cscodeline;
-				std::vector<std::string> listParam = cscodeline.getJavaTypeList(ss->strInputParam);
-
-
-				std::string strValDefine;		// 定义声明函数的
-				int nIndexVal = 0;
-				for (auto c = listParam.begin(); c != listParam.end(); c++) {
-					if (!strValDefine.empty()) {
-						strValDefine.append(",");
-					}
-					std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-					std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-					strValDefine.append(strTypedef).append(" ").append(strTypeVal);
-				}
-				// .add("class ")
-				hMethodDumper.add(a->first).add("_data_").add(" ").add(ss->strOldName).add("(").add(strValDefine).add(") {").newline();
-				nIndexVal = 0;
-				// .add("\tclass ")
-				hMethodDumper.add("\t").add(a->first).add("_data_").add(" ").add("c").add(";").newline();
-				hMethodDumper.add("\t").add("c.initAllFlags();").newline();
-				hMethodDumper.add("\t").add("c.pHost = this;").newline();
-				hMethodDumper.add("\t").add("c.").add(strStructName).add("_data").add(".inited = true;").newline();
-				for (auto c = listParam.begin(); c != listParam.end(); c++) {
-					std::string strTypedef = SmaliType(*c).getCppDefineType(this);
-					std::string strTypeVal = stringhelper::formatString("tval%d", nIndexVal++);
-					hMethodDumper.add("\t").add("c.").add(strStructName).add("_data").add(".__").add(strTypeVal).add(" = ").add(strTypeVal).add(";").newline();
-				}
-				hMethodDumper.add("\treturn c;").newline();
-				hMethodDumper.add("}").newline();
-			}
-		}
-		hMethodDumper.subNestDepth();
-	}
-
 
 	hMethodDumper.newline();
 	hMethodDumper.add("}; // class ").add(strClassName).newline();
@@ -990,44 +621,61 @@ void CSmaliClass::dumpToModule(CodeDumper* d) {
 		hMethodDumper.add(cppMethodDumper);
 	}
 
-	d->add("// Module ").add(this->strFilePath).newline();
-	d->add("import ").add("java2ctype").add(";").newline();
-	std::vector<std::string> listImport = this->listImportSaver->getCachedClassType();
-	std::sort(listImport.begin(), listImport.end());
-	for (auto imp = listImport.begin(); imp != listImport.end(); imp++) {
-		std::string strInc = SmaliType(*imp).getBaseType()->getCppFileName();
-		if (strSelfHName != strInc) {  // 不是自己类的
-			d->add("import ").add(strInc).add(";").newline();
+	d->add("#ifndef ").add("__").add(this->ptrClassName->getBaseType()->getCppFileMacroDefine()).add("__").newline();
+	d->add("#define ").add("__").add(this->ptrClassName->getBaseType()->getCppFileMacroDefine()).add("__").newline();
+	d->add("// H ").add(this->strFilePath).newline();
+	d->add("#include \"").add("java2ctype").add(".h\"").newline();
+
+
+	for (auto h = sortedType.rbegin(); h != sortedType.rend(); h++) {
+		auto b = this->collectTypeMap.find(*h);
+		CBaseAssert(b != this->collectTypeMap.end());
+		if (!CSmaliType(b->second->strClassName, nullptr).getBaseType()->isPrimitiveType()) {
+			auto s = CSmaliType(b->second->strClassName, nullptr).getBaseType()->getCppFileName();
+			auto v = CMultiWorkThread::mapSmaliFile.find(s);
+			if (v != CMultiWorkThread::mapSmaliFile.end()) {
+				CodeDumper hDumper;
+				v->second->dumpToHdefine(&hDumper, b->second, this);
+				d->add(hDumper);
+			}
+			else {
+				d->add("can not find class: ").add(s).endl().newline();
+				CBaseAssert(0);
+			}
 		}
 	}
+
+	for (auto h = this->collectTypeMap.begin(); h != this->collectTypeMap.end(); h++) {
+
+	}
 	d->newline();
+
 	d->add(hMethodDumper);
 	d->newline();
+	d->add("#endif //").add("__").add(this->ptrClassName->getBaseType()->getCppFileMacroDefine()).add("__").newline();
 }
 
 // 处理 .class
+// .class public final Landroid/icu/impl/CalendarAstronomer$Ecliptic;
+// .class interface abstract annotation Ldalvik/annotation/AnnotationDefault;
+//it->strLine = ".class final synthetic Ldalvik/system/-$Lambda$xxvwQBVHC44UYbpcpA8j0sUqLOo;"
 std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineClass(std::vector<CSmaliClass::FileStringLine>::iterator it) {
-	std::vector<std::string> listSymbol = it->listSymbol;
-	this->classFlag = 0;
-	for (auto k = listSymbol.begin() + 1; k != listSymbol.end(); k++) {
-		if (isJavaAccessFlags(*k) > 0) {			// 获得访问权限
-			this->classFlag |= isJavaAccessFlags(*k);
-		}
-		else if (isJavaAnnotationFlags(*k) > 0) {	// 注解类？
-			this->classFlag |= isJavaAnnotationFlags(*k);
-		}
-		else if (isJavaSyntheticFlags(*k) > 0) {
-			this->classFlag |= isJavaSyntheticFlags(*k);
-		}
-		else if (isJavaEnumFlags(*k) > 0) {
-			this->classFlag |= isJavaEnumFlags(*k);
-		}
-		else if (isJavaClassName(*k)) {				// 获得类的名字
-			this->strClassName = (*k);
-		}
-		else {
-			BaseAssert(0);
-		}
+	constexpr auto pf = RegexStart
+		"[.]class" "\\s+"
+		"((?:" PatternClassFlags "\\s+" ")*)"		// 所有的属性
+		"((?:" RegexSmaliBaseType "))"				// 类名字
+		RegexEnd;
+
+	std::smatch m;
+	if (std::regex_search(it->strLine, m, std::regex(pf)) && (m.size() == 3)) {
+		std::string strFlags = m[1];
+		std::string strName = m[2];
+		this->strClassName = strName;
+		this->ptrClassName = std::make_shared<CSmaliType>(strName, this);
+		this->setFlags(strFlags);
+	}
+	else {
+		CBaseAssert(0);
 	}
 	return it;
 }
@@ -1037,15 +685,14 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineClass(std
 std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineSuper(std::vector<CSmaliClass::FileStringLine>::iterator it) {
 	std::smatch m;
 	if (std::regex_search(it->strLine, m, CRegexString::matchDotSuperClass) && (m.size() == 2)) {
-		this->strSuperName = m[1];
+		this->ptrSuperName = std::make_shared<CSmaliType>(m[1], this);
 
-		// 设置这个类型
-		this->findUsedType(this->strSuperName)->setUsedCreate();
-
-		this->insertClassRecord("super", this->strSuperName);
+		std::string strTemp = this->ptrSuperName->getFullTypeSmaliString();
+		useType(strTemp, "<init>()V", true);
+		this->insertClassRecord("super", strTemp);
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 	return it;
 }
@@ -1058,7 +705,7 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineSource(st
 		this->strSourceName = m[1];
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 	return it;
 }
@@ -1068,16 +715,13 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineSource(st
 std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineImplements(std::vector<CSmaliClass::FileStringLine>::iterator it) {
 	std::smatch m;
 	if (std::regex_search(it->strLine, m, CRegexString::matchDotImplementsClass) && (m.size() == 2)) {
-		this->listStrImplements.push_back(m[1]);
+		this->listStrImplements.push_back(std::make_shared<CSmaliType>(m[1], this));
 		std::string strImplements = m[1];
-
-		// 设置这个类型
-		this->findUsedType(strImplements)->setUsedCreate();
-
+		useType(strImplements, "<init>()V", true);
 		this->insertClassRecord("imple", strImplements);
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 	return it;
 }
@@ -1151,43 +795,12 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 		std::string strType = m[3];		// 类型名字
 		std::string strValue = m[4];
 
-		// 设置这个类型
-		this->findUsedType(strType)->setUsedCreate();
-
-		std::vector<std::string> listFlags = regexGetStringList(strFlags, "\\s*(" PatternFieldFlags ")\\s*", 2, 1);
-		for (auto k = listFlags.begin(); k != listFlags.end(); k++) {
-			if (isJavaAccessFlags(*k) > 0) {		// 获得访问权限
-				smaliField->fieldFlag |= isJavaAccessFlags(*k);
-				if ((*k) == "static") {
-					smaliField->isStatic = 1;
-				}
-			}
-			else if (isJavaAnnotationFlags(*k) > 0) {	// 注解类？
-				smaliField->fieldFlag |= isJavaAnnotationFlags(*k);
-			}
-			else if (isJavaSyntheticFlags(*k) > 0) {
-				smaliField->fieldFlag |= isJavaSyntheticFlags(*k);
-			}
-			else if (isJavaEnumFlags(*k) > 0) {
-				smaliField->fieldFlag |= isJavaEnumFlags(*k);
-			}
-			else {
-				BaseAssert(0);
-			}
-		}
-
-		if (smaliField->fieldFlag & CSmaliClass::kAccPublic) {
-			smaliField->setPublicType();
-		}
-		else if (smaliField->fieldFlag & CSmaliClass::kAccPrivate) {
-			smaliField->setPrivateType();
-		}
-		else if (smaliField->fieldFlag & CSmaliClass::kAccProtected) {
-			smaliField->setProtctedType();
-		}
-
+		smaliField->setFlags(strFlags);
 		smaliField->fieldName = strName;
-		smaliField->fieldType = strType;
+		smaliField->fieldType = std::make_shared<CSmaliType>(strType, this);
+
+		// 放在 Field 上
+		smaliField->useType(smaliField->fieldType->getBaseType()->getFullTypeSmaliString(), "<init>()V", true);
 
 		// 变量赋值
 		smaliField->hasValue = 0;
@@ -1207,7 +820,7 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 		}
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 
 	// 看一下注解类
@@ -1237,17 +850,17 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 										strValue = m_cut[1];
 									}
 									else {
-										BaseAssert(0);
+										CBaseAssert(0);
 									}
 									std::string strFieldLine = it->strLine;
 									strFieldLine = stringhelper::trim(strFieldLine);
 									TestAnnotationSignature::insertFieldRecord(this->strFilePath, strFieldLine, strValue);
 									std::string strTypeRename = TestAnnotationSignature::fieldResolver(strFieldLine, strValue, this);
 
-									smaliField->fieldType = strTypeRename;
+									smaliField->fieldType = std::make_shared<CSmaliType>(strTypeRename, this);
 								}
 								else {
-									BaseAssert(0);
+									CBaseAssert(0);
 								}
 							}
 							else if (strAnnotationClass == "Ldalvik/annotation/EnclosingClass;") {
@@ -1266,7 +879,7 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 						}
 						else if (strAnnotationType == "runtime") {
@@ -1289,11 +902,11 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 						it1 = ss;
 					}
@@ -1303,7 +916,7 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 				}
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 	}
@@ -1324,11 +937,11 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 	//				smaliField->fieldTypeSignature = strSignature;
 	//			}
 	//			else {
-	//				BaseAssert(0);
+	//				CBaseAssert(0);
 	//			}
 	//		}
 	//		else {
-	//			BaseAssert(0);
+	//			CBaseAssert(0);
 	//		}
 	//	}
 	//}
@@ -1338,7 +951,9 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineField(std
 
 // 处理 .method
 std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineMethod(std::vector<CSmaliClass::FileStringLine>::iterator it) {
-	std::shared_ptr<CSmaliMethod> cSmaliMethod = std::make_shared<CSmaliMethod>(this->strClassName, this);
+	std::shared_ptr<CSmaliMethod> cSmaliMethod = std::make_shared<CSmaliMethod>(this->ptrClassName, this);
+	cSmaliMethod->getMethodName(it->strLine);
+
 	for (auto ss = it; ss != listSmaliFileData.end(); ss++) {
 		std::vector<std::string> listSymbol = ss->listSymbol;
 
@@ -1390,7 +1005,7 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineClassAnno
 								strValue = m_cut[1];
 							}
 							else {
-								BaseAssert(0);
+								CBaseAssert(0);
 							}
 
 							this->insertClassRecord("Templ", strValue);
@@ -1398,16 +1013,16 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineClassAnno
 							AnnotationClassSignature Templ = TestAnnotationSignature::classResolver(strValue, this);
 
 							int nMatchStart = 0;
-							if (this->strSuperName.size() > 0) {
-								this->strSuperName = Templ.listClassType[0];
+							if (this->ptrSuperName->getFullTypeSmaliString().size() > 0) {
+								this->ptrSuperName = std::make_shared<CSmaliType>(Templ.listClassType[0], this);
 								nMatchStart++;
 							}
 							for (int vi = nMatchStart, ind = 0; vi < Templ.listClassType.size(); vi++, ind++) {
-								this->listStrImplements[ind] = Templ.listClassType[vi];
+								this->listStrImplements[ind] = std::make_shared<CSmaliType>(Templ.listClassType[vi], this);
 							}
 						}
 						else {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 					}
 					else if (strAnnotationClass == "Ldalvik/annotation/EnclosingClass;") {
@@ -1426,7 +1041,7 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineClassAnno
 
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else if (strAnnotationType == "runtime") {
@@ -1449,11 +1064,11 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineClassAnno
 
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
 				else {
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 
 				return ss;
@@ -1464,7 +1079,7 @@ std::vector<CSmaliClass::FileStringLine>::iterator CSmaliClass::dotLineClassAnno
 		}
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 
 	return it;
@@ -1509,7 +1124,7 @@ void CSmaliClass::processAllLine() {
 			// 除了空行,什么都不能有
 			if ((listSymbol.size() > 0)) {
 				if (listSymbol[0] != "#") { // 注释行
-					BaseAssert(0);
+					CBaseAssert(0);
 				}
 			}
 		}
@@ -1517,7 +1132,7 @@ void CSmaliClass::processAllLine() {
 
 	// 保存真实的模板名字
 	if (this->listTemplateParam.size() > 0) {
-		std::string strCppType = SmaliType(this->strClassName).getBaseType()->getCppType(this);
+		std::string strCppType = this->ptrClassName->getBaseType()->getCppType();
 		std::string strTmplateType = strCppType + getTemplateUseString();
 		listTemplateTranslate.insert(std::make_pair(strCppType, strTmplateType));
 	}
@@ -1539,7 +1154,7 @@ void CSmaliClass::processAllLine() {
 			}
 		}
 		else {
-			BaseAssert(0);
+			CBaseAssert(0);
 		}
 	}
 
@@ -1569,7 +1184,7 @@ void CSmaliClass::processAllLine() {
 						std::string strMethodType = m[3];
 						std::string strMethodReturnType = m[3];		// 返回参数
 						if (listMethodRenameTranslation.find(*b) != listMethodRenameTranslation.end()) {
-							BaseAssert(0);
+							CBaseAssert(0);
 						}
 
 						stringhelper::replace(strMethodReturnType, "$", "_");
@@ -1585,10 +1200,10 @@ void CSmaliClass::processAllLine() {
 						item.methodCall.insert(std::make_pair(strMethodType, strNewName));
 					}
 					else {
-						BaseAssert(0);
+						CBaseAssert(0);
 					}
 				}
-				BaseAssert(item.methodCall.size() == a->second.size());
+				CBaseAssert(item.methodCall.size() == a->second.size());
 
 				auto pItem = listMethodRename.find(strMethodOldName);
 				if (pItem == listMethodRename.end()) {
@@ -1598,13 +1213,15 @@ void CSmaliClass::processAllLine() {
 				}
 				else {
 					pItem->second.push_back(item);
-				}				
+				}
 			}
 			else {
-				BaseAssert(0);
+				CBaseAssert(0);
 			}
 		}
 	}
+
+
 }
 
 std::string CSmaliClass::strMethodRenameTranslation(std::string str) {
@@ -1625,7 +1242,7 @@ void CSmaliClass::insertMethodSignatureType(std::string str) {
 	if (std::regex_search(str, m, std::regex("^\\s*([^(]*)[(]([^)]*)[)](\\S+)\\s*$")) && (m.size() == 4)) {
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 #endif
 
@@ -1634,7 +1251,7 @@ void CSmaliClass::insertMethodSignatureType(std::string str) {
 		this->listAllMethodSignatureType.push_back(str);
 	}
 	else {
-		BaseAssert(0);
+		CBaseAssert(0);
 	}
 }
 

@@ -1,6 +1,6 @@
 #ifndef __SmaliClass_H__
 #define __SmaliClass_H__
-#include "BaseObject.h"
+#include "CBaseAssert.h"
 #include <map>
 #include <any>
 #include <variant>
@@ -10,19 +10,19 @@
 #include "stringhelper.h"
 #include "instructionhelper.h"
 #include "CodeDumper.h"
-#include "SmaliMethod.h"
+#include "CSmaliMethod.h"
 #include <filesystem>
 #include <cassert>
 #include <filesystem>
 #include <fstream>
 #include <memory>
-#include "SmaliField.h"
-#include "SmaliType.h"
+#include "CSmaliField.h"
+#include "CSmaliType.h"
 #include <regex>
-#include "config.hpp"
 #include "CTypeDefine.h"
+#include "CSmaliAbstract.h"
 
-class CSmaliClass :public CBaseObject {
+class CSmaliClass :public CSmaliAbstract {
 
 private:
 	CSmaliClass();
@@ -33,10 +33,15 @@ private:
 	std::vector<std::shared_ptr<CSmaliField>> listField;
 
 	std::string strClassName;		// 类名字
+	std::shared_ptr<CSmaliType> ptrClassName;
+
 	unsigned long classFlag;				// 属性
-	std::string strSuperName;		// 父类名字
+	//std::string strSuperName;		// 父类名字
+	std::shared_ptr<CSmaliType> ptrSuperName;
+
 	std::string strSourceName;		// 源文件名
-	std::vector<std::string> listStrImplements;
+	//std::vector<std::string> listStrImplements;
+	std::vector<std::shared_ptr<CSmaliType>> listStrImplements;
 
 	typedef struct tagFileStringLine {
 		int nLine;
@@ -59,69 +64,94 @@ private:
 
 	std::vector<std::string> listAllMethodSignatureType;	// 所有的函数类型签名，不能有重复的
 
-	unsigned long isJavaAnnotationFlags(std::string str);
-	unsigned long isJavaSyntheticFlags(std::string str);
-	unsigned long isJavaEnumFlags(std::string str);
-	unsigned long isJavaAccessFlags(std::string str);
 	bool isJavaClassName(std::string str);
 
-	std::map<std::string, std::shared_ptr<CTypeDefine>> usedTypeMap;
+	// 当前定义的信息
+	std::map<std::string, std::shared_ptr<CTypeDefine>> collectTypeMap;
+
+	std::vector<std::string> listStaticInit;
+	std::string strDestructor;
+
+	void collectSuperType(std::map<std::string, std::shared_ptr<CTypeDefine>>& cType);
+	std::vector<std::string> sortSuperType(std::map<std::string, std::shared_ptr<CTypeDefine>>& cType);
+
+	void colloectDefine(std::shared_ptr<CTypeDefine> typeDef, std::map<std::string, std::shared_ptr<CTypeDefine>>& cType);
 
 public:
+	bool hasStaticInit() {
+		if (listStaticInit.size() > 0) {
+			return true;
+		}
+		return false;
+	}
 
-	std::shared_ptr<CTypeDefine> findUsedType(std::string strClass);
+	bool addStaticInited(std::string str) {
+		listStaticInit.push_back(str);
+		return true;
+	}
+
+	bool setDestructor(std::string str) {
+		strDestructor = str;
+		return true;
+	}
+
+	bool dumpDestructor(CodeDumper* d) {
+		if (!strDestructor.empty()) {
+			d->add("public:").newline();
+			{
+				d->addIndent();
+				d->add(strDestructor).add("{").newline();
+				d->add("}").newline();
+				d->subIndent();
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	// 生成静态初始化的调用代码
+	void dumpStaticInited(CodeDumper* d) {
+		d->add("private:").newline();
+		{
+			d->addIndent();
+			d->add("class static_init_class {").newline();
+			d->add("public:").newline();
+			d->addIndent();
+			d->add("static_init_class(){").newline();
+			{
+				d->addIndent();
+				for (auto a = listStaticInit.begin(); a != listStaticInit.end(); a++) {
+					d->add(*a).endl().newline();
+				}
+				d->subIndent();
+			}
+			d->add("}").newline();
+			d->subIndent();
+			d->add("};").newline();
+			d->add("static inline std::shared_ptr<static_init_class> tmp = std::make_shared<static_init_class>()").endl().newline();
+			d->subIndent();
+		}
+	}
 
 	std::string& getFilePath() {
 		return strFilePath;
 	}
 
-	std::string& getSuperName() {
-		return strSuperName;
+	std::shared_ptr<CSmaliType> getSuperNamePtr() {
+		return ptrSuperName;
 	}
 
-	std::vector<std::string>& getListImplements() {
+	std::vector<std::shared_ptr<CSmaliType>>& getListImplements() {
 		return listStrImplements;
 	}
 
-	static constexpr uint32_t kAccPublic = 0x0001;  // class, field, method, ic
-	static constexpr uint32_t kAccPrivate = 0x0002;  // field, method, ic
-	static constexpr uint32_t kAccProtected = 0x0004;  // field, method, ic
-	static constexpr uint32_t kAccStatic = 0x0008;  // field, method, ic
-	static constexpr uint32_t kAccFinal = 0x0010;  // class, field, method, ic
-	static constexpr uint32_t kAccSynchronized = 0x0020;  // method (only allowed on natives)
-	static constexpr uint32_t kAccSuper = 0x0020;  // class (not used in dex)
-	static constexpr uint32_t kAccVolatile = 0x0040;  // field
-	static constexpr uint32_t kAccBridge = 0x0040;  // method (1.5)
-	static constexpr uint32_t kAccTransient = 0x0080;  // field
-	static constexpr uint32_t kAccVarargs = 0x0080;  // method (1.5)
-	static constexpr uint32_t kAccNative = 0x0100;  // method
-	static constexpr uint32_t kAccInterface = 0x0200;  // class, ic
-	static constexpr uint32_t kAccAbstract = 0x0400;  // class, method, ic
-	static constexpr uint32_t kAccStrict = 0x0800;  // method
-	static constexpr uint32_t kAccSynthetic = 0x1000;  // class, field, method, ic
-	static constexpr uint32_t kAccAnnotation = 0x2000;  // class, ic (1.5)
-	static constexpr uint32_t kAccEnum = 0x4000;  // class, field, ic (1.5)
 
-	static constexpr uint32_t kAccConstructor = 0x00010000;  // method (dex only) <(cl)init>
-	static constexpr uint32_t kAccDeclaredSynchronized = 0x00020000;  // method (dex only)
 
-	static constexpr uint32_t kAllMethodFlags =
-		kAccPublic |
-		kAccPrivate |
-		kAccProtected |
-		kAccStatic |
-		kAccFinal |
-		kAccSynchronized |
-		kAccBridge |
-		kAccVarargs |
-		kAccNative |
-		kAccAbstract |
-		kAccStrict |
-		kAccSynthetic;
+	//config::otType eOutType;
 
-	config::otType eOutType;
-
-	std::shared_ptr<SmaliImportSaver> listImportSaver;
+	//std::shared_ptr<SmaliImportSaver> listImportSaver;
 
 	CSmaliClass(std::string strFilePath);
 
@@ -167,13 +197,15 @@ public:
 	// 把文件中的数据全部加载到 listSmaliFileData 上去
 	bool loadFile(void);
 
-	std::string getClassName();
+	//std::string getClassName();
+	std::shared_ptr<CSmaliType> getClassType() {
+		return ptrClassName;
+	}
 
 	// dump 到 CPP 格式
 	void dumpToCpp(CodeDumper* d);
-	void dumpToCpp20Cpp(CodeDumper* d);
 	void dumpToH(CodeDumper* d);
-	void dumpToModule(CodeDumper* d);
+	void dumpToHdefine(CodeDumper* d, std::shared_ptr<CTypeDefine> cTypeDef, CSmaliClass* pClass);
 };
 
 #endif
